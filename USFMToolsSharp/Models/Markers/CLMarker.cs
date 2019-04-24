@@ -5,15 +5,15 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Major title marker
+    /// Chapter label marker
     /// </summary>
-    public class MTMarker : Marker
+    public class CLMarker : Marker
     {
-        public string Title;
-        public override string Identifier => "mt";
+        public string Label;
+        public override string Identifier => "cl";
         public override void Populate(string input)
         {
-            Title = input;
+            Label = input;
         }
     }
 }

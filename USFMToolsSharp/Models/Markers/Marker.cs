@@ -40,5 +40,26 @@ namespace USFMToolsSharp.Models.Markers
             }
             return false;
         }
+
+        /// <summary>
+        /// A recursive search for 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public List<T> GetChildMarkers<T>() where T : Marker
+        {
+            List<T> output = new List<T>();
+
+            foreach(Marker i in Contents)
+            {
+                if(i is T)
+                {
+                    output.Add((T)i);
+                }
+                output.AddRange(i.GetChildMarkers<T>());
+            }
+
+            return output;
+        }
     }
 }

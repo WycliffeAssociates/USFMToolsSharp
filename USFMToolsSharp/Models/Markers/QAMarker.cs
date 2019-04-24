@@ -5,15 +5,15 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Major title marker
+    /// Acrostic heading for poetry
     /// </summary>
-    public class MTMarker : Marker
+    public class QAMarker : Marker
     {
-        public string Title;
-        public override string Identifier => "mt";
+        public string Heading;
+        public override string Identifier => "qa";
         public override void Populate(string input)
         {
-            Title = input;
+            Heading = input;
         }
     }
 }

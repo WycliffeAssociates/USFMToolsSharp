@@ -5,15 +5,18 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Major title marker
+    /// Bold Marker
     /// </summary>
-    public class MTMarker : Marker
+    public class BDMarker : Marker
     {
-        public string Title;
-        public override string Identifier => "mt";
+        /// <summary>
+        /// Text that is bolded
+        /// </summary>
+        public string Text;
+        public override string Identifier => "bd";
         public override void Populate(string input)
         {
-            Title = input;
+            Text = input;
         }
     }
 }

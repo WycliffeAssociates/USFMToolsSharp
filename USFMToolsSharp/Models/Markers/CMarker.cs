@@ -4,6 +4,9 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
+    /// <summary>
+    /// Chapter marker
+    /// </summary>
     public class CMarker : Marker
     {
         public int Number;
@@ -16,6 +19,12 @@ namespace USFMToolsSharp.Models.Markers
             typeof(VMarker),
             typeof(PMarker),
             typeof(CDMarker),
+            typeof(CPMarker),
+            typeof(DMarker),
+            typeof(CLMarker),
+            typeof(QAMarker),
+            typeof(QMarker),
+            typeof(NBMarker),
         };
     }
 }

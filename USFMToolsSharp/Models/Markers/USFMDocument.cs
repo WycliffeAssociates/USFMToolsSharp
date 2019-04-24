@@ -4,9 +4,9 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
-    public class Book: Marker
+    public class USFMDocument: Marker
     {
-        public Book()
+        public USFMDocument()
         {
             Contents = new List<Marker>();
         }
@@ -26,6 +26,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(TOC3Marker),
                     typeof(MTMarker),
                     typeof(CMarker),
+                    typeof(CLMarker),
                 };
             }
         }

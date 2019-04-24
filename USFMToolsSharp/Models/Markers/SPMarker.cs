@@ -5,15 +5,15 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Major title marker
+    /// A speaker Marker (Used mostly in Job and Songs of Solomon)
     /// </summary>
-    public class MTMarker : Marker
+    public class SPMarker : Marker
     {
-        public string Title;
-        public override string Identifier => "mt";
+        public string Speaker;
+        public override string Identifier => "sp";
         public override void Populate(string input)
         {
-            Title = input;
+            Speaker = input;
         }
     }
 }

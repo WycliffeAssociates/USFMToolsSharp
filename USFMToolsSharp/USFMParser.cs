@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
@@ -7,18 +8,30 @@ namespace USFMToolsSharp
 {
     public class USFMParser
     {
-        public Book ParseFromString(string input)
+        private readonly List<string> IgnoredTags;
+
+        public USFMParser()
         {
-            Regex splitRegex = new Regex("\\\\(\\S+)(.*)");
-            Book output = new Book();
+            IgnoredTags = new List<string>();
+        }
+
+        public USFMParser(List<string> tagsToIgnore)
+        {
+            IgnoredTags = tagsToIgnore;
+        }
+
+        public USFMDocument ParseFromString(string input)
+        {
+            Regex splitRegex = new Regex("\\\\([a-z*]+)([^\\\\]*)");
+            USFMDocument output = new USFMDocument();
 
             foreach(Match match in splitRegex.Matches(input))
             {
-                //Skip s5 for the time being
-                if(match.Groups[1].Value == "s5")
+                if(IgnoredTags.Contains(match.Groups[1].Value))
                 {
                     continue;
                 }
+
                 Marker tmp = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
                 if (!output.TryInsert(tmp))
                 {
@@ -60,8 +73,37 @@ namespace USFMToolsSharp
                     return new PMarker();
                 case "v":
                     return new VMarker();
+                case "q":
+                case "q1":
+                    return new QMarker();
+                case "q2":
+                    return new QMarker() { Depth = 2 };
+                case "q3":
+                    return new QMarker() { Depth = 3 };
+                case "m":
+                    return new MMarker();
+                case "d":
+                    return new DMarker();
+                case "ms":
+                    return new MSMarker();
+                case "cl":
+                    return new CLMarker();
+                case "qs":
+                    return new QSMarker();
+                case "f":
+                    return new FMarker();
+                case "qa":
+                    return new QAMarker();
+                case "nb":
+                    return new NBMarker();
+                case "fqa":
+                    return new FQAMarker();
+                case "pi":
+                    return new PIMarker();
+                case "sp":
+                    return new SPMarker();
                 default:
-                    return new UnknownMarker();
+                    return new UnknownMarker() { ParsedIdentifier = identifier };
             }
         }
     }

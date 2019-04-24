@@ -10,5 +10,9 @@ namespace USFMToolsSharp.Models.Markers
         public string ParsedValue;
 
         public override string Identifier => string.Empty;
+        public override void Populate(string input)
+        {
+            ParsedValue = input;
+        }
     }
 }
