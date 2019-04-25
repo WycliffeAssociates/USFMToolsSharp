@@ -11,26 +11,22 @@ namespace USFMToolsSharp.Models.Markers
         public int Number;
         public string Text;
         public override string Identifier => "v";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Regex pattern = new Regex("([0-9]+) (.*)");
             Match match = pattern.Match(input);
             Number = int.Parse(match.Groups[1].Value);
-            Text = match.Groups[2].Value;
+            return match.Groups[2].Value;
         }
-        public override List<Type> AllowedContents
-        {
-            get
-            {
-                return new List<Type>()
+        public override List<Type> AllowedContents => new List<Type>()
                 {
                     typeof(BMarker),
                     typeof(QMarker),
                     typeof(MMarker),
                     typeof(FMarker),
-                    typeof(SPMarker)
+                    typeof(SPMarker),
+                    typeof(TextBlock),
+                    typeof(FEndMarker),
                 };
-            }
-        }
     }
 }

@@ -11,9 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string LongTableOfContentsText;
         public override string Identifier => "toc1";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             LongTableOfContentsText = input;
+            return string.Empty;
         }
     }
 }

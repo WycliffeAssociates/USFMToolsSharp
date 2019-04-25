@@ -11,9 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int Number;
         public override string Identifier => "c";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Number = int.Parse(input);
+            return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(VMarker),

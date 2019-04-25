@@ -22,7 +22,7 @@ namespace USFMToolsSharp
 
         public USFMDocument ParseFromString(string input)
         {
-            Regex splitRegex = new Regex("\\\\([a-z*]+)([^\\\\]*)");
+            Regex splitRegex = new Regex("\\\\([a-z0-9*]+)([^\\\\]*)");
             USFMDocument output = new USFMDocument();
 
             foreach(Match match in splitRegex.Matches(input))
@@ -32,21 +32,33 @@ namespace USFMToolsSharp
                     continue;
                 }
 
-                Marker tmp = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
-                if (!output.TryInsert(tmp))
+                // This is a tuple FYI
+                (Marker marker, string remainingText) result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
+
+
+                TopLevelInsert(output, result.marker);
+
+                if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
-                    // Since this is the root then add them anyway
-                    output.Contents.Add(tmp);
+                    TopLevelInsert(output, new TextBlock(result.remainingText));
                 }
             }
 
             return output;
         }
-        private Marker ConvertToMarker(string identifier, string value)
+        private void TopLevelInsert(USFMDocument topLevel, Marker marker)
+        {
+            if (!topLevel.TryInsert(marker))
+            {
+                // Since this is the root then add them anyway
+                topLevel.Contents.Add(marker);
+            }
+        }
+        private (Marker marker, string remainingText) ConvertToMarker(string identifier, string value)
         {
             Marker output = SelectMarker(identifier);
-            output.Populate(value.TrimStart());
-            return output;
+            string tmp = output.PreProcess(value.TrimStart());
+            return (output, tmp);
         }
 
         private Marker SelectMarker(string identifier)
@@ -102,6 +114,12 @@ namespace USFMToolsSharp
                     return new PIMarker();
                 case "sp":
                     return new SPMarker();
+                case "ft":
+                    return new FTMarker();
+                case "fqa*":
+                    return new FQAEndMarker();
+                case "f*":
+                    return new FEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

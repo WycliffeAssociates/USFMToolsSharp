@@ -27,6 +27,16 @@ namespace USFMToolsSharp.Models.Markers
 
         }
 
+        /// <summary>
+        /// Pre-process the text contents before creating text elements inside of it
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public virtual string PreProcess(string input)
+        {
+            return input;
+        }
+
         public bool TryInsert(Marker input)
         {
             if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))

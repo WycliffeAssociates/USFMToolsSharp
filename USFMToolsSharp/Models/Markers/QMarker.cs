@@ -24,6 +24,7 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     typeof(VMarker),
                     typeof(QSMarker),
+                    typeof(TextBlock),
                 };
             }
         }
