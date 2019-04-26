@@ -32,8 +32,7 @@ namespace USFMToolsSharp
                     continue;
                 }
 
-                // This is a tuple FYI
-                (Marker marker, string remainingText) result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
+                ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
 
                 TopLevelInsert(output, result.marker);
@@ -54,11 +53,11 @@ namespace USFMToolsSharp
                 topLevel.Contents.Add(marker);
             }
         }
-        private (Marker marker, string remainingText) ConvertToMarker(string identifier, string value)
+        private ConvertToMarkerResult ConvertToMarker(string identifier, string value)
         {
             Marker output = SelectMarker(identifier);
             string tmp = output.PreProcess(value.TrimStart());
-            return (output, tmp);
+            return new ConvertToMarkerResult(output, tmp);
         }
 
         private Marker SelectMarker(string identifier)
@@ -120,6 +119,14 @@ namespace USFMToolsSharp
                     return new FQAEndMarker();
                 case "f*":
                     return new FEndMarker();
+                case "bd":
+                    return new BDMarker();
+                case "bd*":
+                    return new BDEndMarker();
+                case "it":
+                    return new ITMarker();
+                case "it*":
+                    return new ITEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

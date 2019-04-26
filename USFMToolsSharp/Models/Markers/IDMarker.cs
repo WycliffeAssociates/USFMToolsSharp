@@ -8,9 +8,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string TextIdentifier;
         public override string Identifier => "id";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             TextIdentifier = input;
+            return string.Empty;
         }
     }
 }

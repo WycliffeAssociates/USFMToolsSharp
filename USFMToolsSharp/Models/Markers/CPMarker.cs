@@ -12,9 +12,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string PublishedChapterMarker;
         public override string Identifier => "cp";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             PublishedChapterMarker = input;
+            return string.Empty;
         }
     }
 }

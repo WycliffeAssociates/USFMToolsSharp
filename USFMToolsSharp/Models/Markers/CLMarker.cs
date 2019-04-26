@@ -11,9 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Label;
         public override string Identifier => "cl";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Label = input;
+            return string.Empty;
         }
     }
 }

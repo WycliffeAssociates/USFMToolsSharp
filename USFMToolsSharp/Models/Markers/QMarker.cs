@@ -12,10 +12,6 @@ namespace USFMToolsSharp.Models.Markers
         public int Depth = 1;
         public string Text;
         public override string Identifier => "q";
-        public override void Populate(string input)
-        {
-            Text = input;
-        }
         public override List<Type> AllowedContents
         {
             get

@@ -9,11 +9,15 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class QAMarker : Marker
     {
+        /// <summary>
+        /// Heading for the poetry
+        /// </summary>
         public string Heading;
         public override string Identifier => "qa";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Heading = input;
+            return string.Empty;
         }
     }
 }

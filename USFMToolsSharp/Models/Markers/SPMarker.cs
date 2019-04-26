@@ -11,9 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Speaker;
         public override string Identifier => "sp";
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Speaker = input;
+            return string.Empty;
         }
     }
 }

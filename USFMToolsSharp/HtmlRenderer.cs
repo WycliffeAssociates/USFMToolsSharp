@@ -7,11 +7,24 @@ namespace USFMToolsSharp
 {
     public class HtmlRenderer
     {
+        public List<string> UnrenderableTags;
+
+        public HtmlRenderer()
+        {
+            UnrenderableTags = new List<string>();
+        }
+
         public string Render(USFMDocument input)
         {
+            UnrenderableTags = new List<string>();
+            string encoding = GetEncoding(input);
             StringBuilder output = new StringBuilder();
             output.Append("<html>");
             output.Append("<head>");
+            if (!string.IsNullOrEmpty(encoding))
+            {
+                output.AppendLine($"<meta charset=\"{encoding}\">");
+            }
             output.Append("<link rel=\"stylesheet\" href=\"style.css\">");
             output.Append("</head>");
             output.Append("<body>");
@@ -25,7 +38,18 @@ namespace USFMToolsSharp
             output.Append("</html>");
             return output.ToString();
         }
-        public string RenderMarker(Marker input)
+
+        private string GetEncoding(USFMDocument input)
+        {
+            var encodingSearch = input.GetChildMarkers<IDEMarker>();
+            if (encodingSearch.Count > 0)
+            {
+                return encodingSearch[0].Encoding;
+            }
+            return null;
+        }
+
+        private string RenderMarker(Marker input)
         {
             StringBuilder output = new StringBuilder();
             switch (input)
@@ -46,23 +70,22 @@ namespace USFMToolsSharp
                     }
                     break;
                 case VMarker vMarker:
-                    output.Append($"<div class=\"verse\">");
-                    output.Append($"<div class=\"versemarker\">{vMarker.Number}</div>");
-                    output.Append(vMarker.Text);
+                    output.Append($"<span class=\"verse\">");
+                    output.Append($"<span class=\"versemarker\">{vMarker.Number}</span>");
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.Append($"</div>");
+                    output.Append($"</span>");
                     break;
                 case QMarker qMarker:
-                    output.Append("<div class=\"poetry\">");
+                    output.Append("<span class=\"poetry\">");
                     output.Append(qMarker.Text);
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.Append("</div>");
+                    output.Append("</span>");
                     break;
                 case MMarker mMarker:
                     output.Append("<div class=\"resetmargin\">");
@@ -72,8 +95,32 @@ namespace USFMToolsSharp
                     }
                     output.Append("</div>");
                     break;
+                case TextBlock textBlock:
+                    output.Append(textBlock.Text);
+                    break;
+                case BDMarker bdMarker:
+                    output.Append("<b>");
+                    foreach(Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.Append("</b>");
+                    break;
+                case HMarker hMarker:
+                    output.Append("<div class=\"header\">");
+                    output.Append(hMarker.HeaderText);
+                    output.Append("</div>");
+                    break;
+                case MTMarker mTMarker:
+                    output.Append("<div class=\"majortitle\">");
+                    output.Append(mTMarker.Title);
+                    output.Append("</div>");
+                    break;
+                case IDEMarker _:
+                case IDMarker _:
+                    break;
                 default:
-                    Console.WriteLine($"HTML renderer is unable to handle {input.Identifier}");
+                    UnrenderableTags.Add(input.Identifier);
                     break;
             }
             return output.ToString();

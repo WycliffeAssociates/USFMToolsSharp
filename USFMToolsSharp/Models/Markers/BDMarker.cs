@@ -14,9 +14,9 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         public string Text;
         public override string Identifier => "bd";
-        public override void Populate(string input)
+        public override List<Type> AllowedContents => new List<Type>()
         {
-            Text = input;
-        }
+            typeof(TextBlock),
+        };
     }
 }

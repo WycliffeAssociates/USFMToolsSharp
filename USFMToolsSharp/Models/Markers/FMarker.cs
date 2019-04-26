@@ -16,6 +16,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FTMarker),
             typeof(FQAMarker),
             typeof(FQAEndMarker),
+            typeof(TextBlock),
         };
     }
 }
