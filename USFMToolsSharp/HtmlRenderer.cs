@@ -19,23 +19,23 @@ namespace USFMToolsSharp
             UnrenderableTags = new List<string>();
             string encoding = GetEncoding(input);
             StringBuilder output = new StringBuilder();
-            output.Append("<html>");
-            output.Append("<head>");
+            output.AppendLine("<html>");
+            output.AppendLine("<head>");
             if (!string.IsNullOrEmpty(encoding))
             {
                 output.AppendLine($"<meta charset=\"{encoding}\">");
             }
-            output.Append("<link rel=\"stylesheet\" href=\"style.css\">");
-            output.Append("</head>");
-            output.Append("<body>");
+            output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
+            output.AppendLine("</head>");
+            output.AppendLine("<body>");
 
             foreach(Marker marker in input.Contents)
             {
-                output.Append(RenderMarker(marker));
+                output.AppendLine(RenderMarker(marker));
             }
 
-            output.Append("</body>");
-            output.Append("</html>");
+            output.AppendLine("</body>");
+            output.AppendLine("</html>");
             return output.ToString();
         }
 
@@ -55,66 +55,68 @@ namespace USFMToolsSharp
             switch (input)
             {
                 case PMarker _:
-                    output.Append("<p>");
+                    output.AppendLine("<p>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
-                    output.Append("</p>");
+                    output.AppendLine("</p>");
                     break;
                 case CMarker cMarker:
-                    output.Append($"<div class=\"chapter\">{cMarker.Number}</div>");
+                    output.AppendLine("<div class=\"chapter\">");
+                    output.AppendLine($"<span class=\"chaptermarker\">{cMarker.Number}</span>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
+                    output.AppendLine("</div>");
                     break;
                 case VMarker vMarker:
-                    output.Append($"<span class=\"verse\">");
-                    output.Append($"<span class=\"versemarker\">{vMarker.Number}</span>");
+                    output.AppendLine($"<span class=\"verse\">");
+                    output.AppendLine($"<span class=\"versemarker\">{vMarker.Number}</span>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
-                    output.Append($"</span>");
+                    output.AppendLine($"</span>");
                     break;
                 case QMarker qMarker:
-                    output.Append("<span class=\"poetry\">");
-                    output.Append(qMarker.Text);
+                    output.AppendLine("<span class=\"poetry\">");
+                    output.AppendLine(qMarker.Text);
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
-                    output.Append("</span>");
+                    output.AppendLine("</span>");
                     break;
                 case MMarker mMarker:
-                    output.Append("<div class=\"resetmargin\">");
+                    output.AppendLine("<div class=\"resetmargin\">");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
-                    output.Append("</div>");
+                    output.AppendLine("</div>");
                     break;
                 case TextBlock textBlock:
-                    output.Append(textBlock.Text);
+                    output.AppendLine(textBlock.Text);
                     break;
                 case BDMarker bdMarker:
-                    output.Append("<b>");
+                    output.AppendLine("<b>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.Append(RenderMarker(marker));
+                        output.AppendLine(RenderMarker(marker));
                     }
-                    output.Append("</b>");
+                    output.AppendLine("</b>");
                     break;
                 case HMarker hMarker:
-                    output.Append("<div class=\"header\">");
-                    output.Append(hMarker.HeaderText);
-                    output.Append("</div>");
+                    output.AppendLine("<div class=\"header\">");
+                    output.AppendLine(hMarker.HeaderText);
+                    output.AppendLine("</div>");
                     break;
                 case MTMarker mTMarker:
-                    output.Append("<div class=\"majortitle\">");
-                    output.Append(mTMarker.Title);
-                    output.Append("</div>");
+                    output.AppendLine("<div class=\"majortitle\">");
+                    output.AppendLine(mTMarker.Title);
+                    output.AppendLine("</div>");
                     break;
                 case IDEMarker _:
                 case IDMarker _:

@@ -56,7 +56,7 @@ namespace USFMToolsSharp
         private ConvertToMarkerResult ConvertToMarker(string identifier, string value)
         {
             Marker output = SelectMarker(identifier);
-            string tmp = output.PreProcess(value.TrimStart());
+            string tmp = output.PreProcess(value.Trim());
             return new ConvertToMarkerResult(output, tmp);
         }
 
