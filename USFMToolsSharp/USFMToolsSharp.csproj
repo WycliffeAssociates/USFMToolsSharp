@@ -7,7 +7,9 @@
     <Copyright />
     <PackageLicenseUrl>https://github.com/WycliffeAssociates/USFMToolsSharp/blob/master/LICENSE</PackageLicenseUrl>
     <Version>0.1.0</Version>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Company>Wycliffe Associates</Company>
+    <Authors>@rbnswartz</Authors>
   </PropertyGroup>
 
 </Project>
