@@ -9,9 +9,10 @@ namespace USFMToolsSharp.Models.Markers
         public string Comment;
         public override string Identifier => "rem";
 
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Comment = input;
+            return string.Empty;
         }
     }
 }

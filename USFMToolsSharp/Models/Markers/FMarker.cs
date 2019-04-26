@@ -11,5 +11,12 @@ namespace USFMToolsSharp.Models.Markers
     {
         // TODO: Flesh this out a bit better once I understand them a bit better
         public override string Identifier => "f";
+        public override List<Type> AllowedContents => new List<Type>()
+        {
+            typeof(FTMarker),
+            typeof(FQAMarker),
+            typeof(FQAEndMarker),
+            typeof(TextBlock),
+        };
     }
 }

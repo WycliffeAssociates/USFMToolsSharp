@@ -4,14 +4,18 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
+    /// <summary>
+    /// Encoding marker
+    /// </summary>
     public class IDEMarker : Marker
     {
         public string Encoding;
         public override string Identifier => "ide";
 
-        public override void Populate(string input)
+        public override string PreProcess(string input)
         {
             Encoding = input;
+            return string.Empty;
         }
     }
 }

@@ -4,12 +4,11 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
-    public class PMarker : Marker
+    public class FTMarker : Marker
     {
-        public override string Identifier => "p";
+        public override string Identifier => "ft";
         public override List<Type> AllowedContents => new List<Type>() {
-            typeof(VMarker),
-            typeof(SPMarker),
+            typeof(FQAMarker),
             typeof(TextBlock),
         };
     }

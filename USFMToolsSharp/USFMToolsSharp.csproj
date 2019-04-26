@@ -1,7 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <PackageProjectUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</RepositoryUrl>
+    <Copyright />
+    <PackageLicenseUrl>https://github.com/WycliffeAssociates/USFMToolsSharp/blob/master/LICENSE</PackageLicenseUrl>
+    <Version>0.0.1</Version>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

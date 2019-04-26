@@ -19,12 +19,13 @@ namespace USFMToolsSharp.Models.Markers
         }
 
         /// <summary>
-        /// Populates properties on the marker
+        /// Pre-process the text contents before creating text elements inside of it
         /// </summary>
         /// <param name="input"></param>
-        public virtual void Populate(string input)
+        /// <returns></returns>
+        public virtual string PreProcess(string input)
         {
-
+            return input;
         }
 
         public bool TryInsert(Marker input)
@@ -42,7 +43,7 @@ namespace USFMToolsSharp.Models.Markers
         }
 
         /// <summary>
-        /// A recursive search for 
+        /// A recursive search for children of a certain type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
