@@ -35,23 +35,15 @@ namespace USFMToolsSharp
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
 
-                TopLevelInsert(output, result.marker);
+                output.Insert(result.marker);
 
                 if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
-                    TopLevelInsert(output, new TextBlock(result.remainingText));
+                    output.Insert(new TextBlock(result.remainingText));
                 }
             }
 
             return output;
-        }
-        private void TopLevelInsert(USFMDocument topLevel, Marker marker)
-        {
-            if (!topLevel.TryInsert(marker))
-            {
-                // Since this is the root then add them anyway
-                topLevel.Contents.Add(marker);
-            }
         }
         private ConvertToMarkerResult ConvertToMarker(string identifier, string value)
         {

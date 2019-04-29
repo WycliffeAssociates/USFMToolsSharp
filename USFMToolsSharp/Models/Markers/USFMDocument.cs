@@ -30,5 +30,26 @@ namespace USFMToolsSharp.Models.Markers
                 };
             }
         }
+        public void Insert(Marker input)
+        {
+            if (!TryInsert(input))
+            {
+                // Since this is the root then add them anyway
+                Contents.Add(input);
+            }
+
+        }
+        public void Insert(USFMDocument document)
+        {
+            InsertMultiple(document.Contents);
+        }
+        public void InsertMultiple(IEnumerable<Marker> input)
+        {
+            foreach(Marker i in input)
+            {
+                Insert(i);
+            }
+
+        }
     }
 }
