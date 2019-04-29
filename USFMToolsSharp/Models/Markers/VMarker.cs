@@ -7,15 +7,14 @@ namespace USFMToolsSharp.Models.Markers
 {
     public class VMarker : Marker
     {
-        // TODO: This needs to be altered to handle verse bridges
-        public int Number;
-        public string Text;
+        // This is a string because of verse bridges. In the future this should have starting and ending verse
+        public string VerseNumber;
         public override string Identifier => "v";
         public override string PreProcess(string input)
         {
-            Regex pattern = new Regex("([0-9]+) (.*)");
+            Regex pattern = new Regex("([0-9-]+) (.*)");
             Match match = pattern.Match(input);
-            Number = int.Parse(match.Groups[1].Value);
+            VerseNumber = match.Groups[1].Value;
             return match.Groups[2].Value;
         }
         public override List<Type> AllowedContents => new List<Type>()

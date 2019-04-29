@@ -23,7 +23,7 @@ namespace USFMToolsSharp
             output.AppendLine("<head>");
             if (!string.IsNullOrEmpty(encoding))
             {
-                output.AppendLine($"<meta charset=\"{encoding}\">");
+                output.Append($"<meta charset=\"{encoding}\">");
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
             output.AppendLine("</head>");
@@ -31,7 +31,7 @@ namespace USFMToolsSharp
 
             foreach(Marker marker in input.Contents)
             {
-                output.AppendLine(RenderMarker(marker));
+                output.Append(RenderMarker(marker));
             }
 
             output.AppendLine("</body>");
@@ -58,7 +58,7 @@ namespace USFMToolsSharp
                     output.AppendLine("<p>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</p>");
                     break;
@@ -67,16 +67,16 @@ namespace USFMToolsSharp
                     output.AppendLine($"<span class=\"chaptermarker\">{cMarker.Number}</span>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
-                    output.AppendLine($"<span class=\"versemarker\">{vMarker.Number}</span>");
+                    output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseNumber}</span>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine($"</span>");
                     break;
@@ -85,7 +85,7 @@ namespace USFMToolsSharp
                     output.AppendLine(qMarker.Text);
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</span>");
                     break;
@@ -93,7 +93,7 @@ namespace USFMToolsSharp
                     output.AppendLine("<div class=\"resetmargin\">");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
                     break;
@@ -104,13 +104,13 @@ namespace USFMToolsSharp
                     output.AppendLine("<b>");
                     foreach(Marker marker in input.Contents)
                     {
-                        output.AppendLine(RenderMarker(marker));
+                        output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</b>");
                     break;
                 case HMarker hMarker:
                     output.AppendLine("<div class=\"header\">");
-                    output.AppendLine(hMarker.HeaderText);
+                    output.Append(hMarker.HeaderText);
                     output.AppendLine("</div>");
                     break;
                 case MTMarker mTMarker:
