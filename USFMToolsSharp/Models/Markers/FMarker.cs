@@ -9,8 +9,13 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class FMarker : Marker
     {
-        // TODO: Flesh this out a bit better once I understand them a bit better
         public override string Identifier => "f";
+        public string FootNoteCaller;
+        public override string PreProcess(string input)
+        {
+            FootNoteCaller = input;
+            return string.Empty;
+        }
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(FTMarker),
