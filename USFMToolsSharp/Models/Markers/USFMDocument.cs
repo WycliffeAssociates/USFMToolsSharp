@@ -11,7 +11,7 @@ namespace USFMToolsSharp.Models.Markers
             Contents = new List<Marker>();
         }
 
-        public override string Identifier => throw new NotImplementedException();
+        public override string Identifier => "";
 
         public override List<Type> AllowedContents
         {
