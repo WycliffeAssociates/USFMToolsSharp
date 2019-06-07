@@ -8,10 +8,20 @@ namespace USFMToolsSharp
     public class HtmlRenderer
     {
         public List<string> UnrenderableTags;
-
+        private bool isSingleSpaced = true;
+        private bool hasOneColumn = true;
+        private bool isL2RDirection = true;
+        private bool isTextJustified = true;
         public HtmlRenderer()
         {
             UnrenderableTags = new List<string>();
+        }
+        public HtmlRenderer(bool isSingleSpaced, bool hasOneColumn, bool isL2RDirection, bool isTextJustified)
+        {
+            this.isSingleSpaced = isSingleSpaced;
+            this.hasOneColumn = hasOneColumn;
+            this.isL2RDirection = isL2RDirection;
+            this.isTextJustified = isTextJustified;
         }
 
         public string Render(USFMDocument input)
@@ -27,14 +37,14 @@ namespace USFMToolsSharp
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
             output.AppendLine("</head>");
-            output.AppendLine("<body>");
+            output.AppendLine($"<body class=\"{(isSingleSpaced? "":"double-space")} {(hasOneColumn ? "" : "multi-column")} {(isTextJustified ? "":"justified")}\"> {(isL2RDirection ? "" : "<bdo dir=\"rtl\">")}");
 
             foreach(Marker marker in input.Contents)
             {
                 output.Append(RenderMarker(marker));
             }
 
-            output.AppendLine("</body>");
+            output.AppendLine($"{(isL2RDirection ? "" : "</bdo>")}</body>");
             output.AppendLine("</html>");
             return output.ToString();
         }
@@ -70,6 +80,7 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
+                    output.AppendLine("<br class=\"pagebreak\"></br>");
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
@@ -81,13 +92,12 @@ namespace USFMToolsSharp
                     output.AppendLine($"</span>");
                     break;
                 case QMarker qMarker:
-                    output.AppendLine("<span class=\"poetry\">");
-                    output.AppendLine(qMarker.Text);
+                    output.AppendLine($"<div class=\"poetry-{qMarker.Depth}\">");
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine("</span>");
+                    output.AppendLine("</div>");
                     break;
                 case MMarker mMarker:
                     output.AppendLine("<div class=\"resetmargin\">");
