@@ -100,6 +100,7 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
+                    output.AppendLine(RenderFootnotes());
 
                     // Page breaks after each chapter
                     output.AppendLine($"{(separateChapters?"<br class=\"pagebreak\"></br>" : "")}");
@@ -194,13 +195,16 @@ namespace USFMToolsSharp
         private string RenderFootnotes()
         {
             StringBuilder output = new StringBuilder();
-            output.AppendLine("<br class=\"pagebreak\"></br>");
-            output.AppendLine("<div class=\"header\">Footnotes</div>");
-            foreach (string footnote in FootnoteTextTags)
+            if (FootnoteTextTags.Count > 0)
             {
-                output.AppendLine("<div>");
-                output.Append(footnote);
-                output.AppendLine("</div>");
+                output.AppendLine("<div class=\"header\">Footnotes</div>");
+                foreach (string footnote in FootnoteTextTags)
+                {
+                    output.AppendLine("<div>");
+                    output.Append(footnote);
+                    output.AppendLine("</div>");
+                }
+                FootnoteTextTags.Clear();
             }
             return output.ToString();
         }
