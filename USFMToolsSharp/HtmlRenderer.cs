@@ -37,14 +37,23 @@ namespace USFMToolsSharp
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
             output.AppendLine("</head>");
-            output.AppendLine($"<body class=\"{(isSingleSpaced? "":"double-space")} {(hasOneColumn ? "" : "multi-column")} {(isTextJustified ? "":"justified")}\"> {(isL2RDirection ? "" : "<bdo dir=\"rtl\">")}");
+            
+            // HTML tags can only have one class, when render to docx
+            output.AppendLine($"<body class=\"{(isSingleSpaced ? "" : "double-space")}\">");
+            output.AppendLine($"<div class=\"{ (hasOneColumn ? "" : "multi-column")}\">");
+            output.AppendLine($"<div class=\"{ (isTextJustified ? "" : "justified")}\"> ");
+            output.AppendLine($"<div class=\"{ (isL2RDirection ? "" : "rtl-direct")}\"> ");
 
-            foreach(Marker marker in input.Contents)
+            foreach (Marker marker in input.Contents)
             {
                 output.Append(RenderMarker(marker));
             }
 
-            output.AppendLine($"{(isL2RDirection ? "" : "</bdo>")}</body>");
+            output.AppendLine("</div>");
+            output.AppendLine("</div>");
+            output.AppendLine("</div>");
+            output.AppendLine("</div>");
+            output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
         }
