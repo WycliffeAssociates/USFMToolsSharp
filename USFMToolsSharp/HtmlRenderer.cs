@@ -107,6 +107,17 @@ namespace USFMToolsSharp
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
+
+                    //Interpret VPMarker
+                    switch (input.Contents[0])
+                    {
+                        case VPMarker vPMarker:
+
+                            break;
+                        default:
+                            break;
+                    }
+
                     output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseNumber}</span>");
                     foreach(Marker marker in input.Contents)
                     {
@@ -176,13 +187,12 @@ namespace USFMToolsSharp
                     }
                     FootnoteTextTags.Add(footnote);
                     break;
-                case FQAEndMarker fQAEndMarker:
-                    FootnoteTextTags[FootnoteTextTags.Count-1] += "</span>" + " ";
+                case FQAMarker _:
                     break;
-
-                //case FootnoteTextBlock footnoteTextBlock:
-                //    FootnoteTextTags.Add(footnoteTextBlock.Text);
-                //    break;
+                case FQAEndMarker fQAEndMarker:
+                    if(FootnoteTextTags.Count > 0)
+                        FootnoteTextTags[FootnoteTextTags.Count-1] += "</span>" + " ";
+                    break;
                 case IDEMarker _:
                 case IDMarker _:
                     break;

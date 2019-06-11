@@ -17,8 +17,14 @@ namespace USFMToolsSharp.Models.Markers
             VerseNumber = match.Groups[1].Value;
             return match.Groups[2].Value;
         }
+        public void setVerseCharacter(string NumChar)
+        {
+            VerseNumber = NumChar;
+        }
         public override List<Type> AllowedContents => new List<Type>()
                 {
+                    typeof(VPMarker),
+                    typeof(VPEndMarker),
                     typeof(BMarker),
                     typeof(BDMarker),
                     typeof(BDEndMarker),

@@ -118,3 +118,4 @@ Eventially the goal is to support the whole USFM spec but for the moment the fol
 - bd
 - h
 - mt
+- f
