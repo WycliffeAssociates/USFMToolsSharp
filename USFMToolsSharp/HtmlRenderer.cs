@@ -112,7 +112,7 @@ namespace USFMToolsSharp
                     switch (input.Contents[0])
                     {
                         case VPMarker vPMarker:
-
+                            vMarker.setVerseCharacter(vPMarker.VerseCharacter);
                             break;
                         default:
                             break;
@@ -195,6 +195,9 @@ namespace USFMToolsSharp
                     break;
                 case IDEMarker _:
                 case IDMarker _:
+                    break;
+                case VPMarker _:
+                case VPEndMarker _:
                     break;
                 default:
                     UnrenderableTags.Add(input.Identifier);

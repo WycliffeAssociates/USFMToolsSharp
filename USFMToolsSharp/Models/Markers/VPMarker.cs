@@ -5,7 +5,7 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Marker for a Custom Verse Number System
+    /// Marker for Custom Verse Number
     /// </summary>
     public class VPMarker : Marker
     {
@@ -13,7 +13,8 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "vp";
         public override string PreProcess(string input)
         {
-            return base.PreProcess(input);
+            VerseCharacter = input;
+            return string.Empty;
         }
     }
 }
