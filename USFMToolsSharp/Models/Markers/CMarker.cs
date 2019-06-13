@@ -17,12 +17,16 @@ namespace USFMToolsSharp.Models.Markers
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {
+            typeof(MMarker),
+            typeof(DMarker),
             typeof(VMarker),
             typeof(PMarker),
             typeof(CDMarker),
             typeof(CPMarker),
             typeof(DMarker),
             typeof(CLMarker),
+            typeof(QSMarker),
+            typeof(QSEndMarker),
             typeof(QAMarker),
             typeof(QMarker),
             typeof(NBMarker),

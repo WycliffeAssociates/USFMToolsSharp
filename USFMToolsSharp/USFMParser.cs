@@ -97,6 +97,8 @@ namespace USFMToolsSharp
                     return new CLMarker();
                 case "qs":
                     return new QSMarker();
+                case "qs*":
+                    return new QSEndMarker();
                 case "f":
                     return new FMarker();
                 case "qa":

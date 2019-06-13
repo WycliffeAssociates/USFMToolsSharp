@@ -15,6 +15,9 @@ namespace USFMToolsSharp
         private bool isL2RDirection = true;
         private bool isTextJustified = false;
         private bool separateChapters = false;
+
+        private string InsertedHTML = "";
+        private string InsertedFooter = "";
         public HtmlRenderer()
         {
             UnrenderableTags = new List<string>();
@@ -45,7 +48,13 @@ namespace USFMToolsSharp
                 output.Append($"<meta charset=\"{encoding}\">");
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
-            output.AppendLine("</head>");
+            if (InsertedHTML.Length > 1)
+            {
+                output.AppendLine(InsertedHTML);
+            }
+            else {
+                output.AppendLine("</head>");
+            }
             
             // HTML tags can only have one class, when render to docx
             output.AppendLine($"<body class=\"{(isSingleSpaced ? "" : "double-space")}\">");
@@ -53,11 +62,14 @@ namespace USFMToolsSharp
             output.AppendLine($"<div class=\"{ (isTextJustified ? "justified" : "")}\"> ");
             output.AppendLine($"<div class=\"{ (isL2RDirection ? "" : "rtl-direct")}\"> ");
 
+            
+
             foreach (Marker marker in input.Contents)
             {
                 output.Append(RenderMarker(marker));
             }
 
+            output.AppendLine(InsertedFooter);
             output.AppendLine(RenderFootnotes());
 
             output.AppendLine("</div>");
@@ -67,6 +79,18 @@ namespace USFMToolsSharp
             output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
+        }
+
+        public void InsertFooters(string input)
+        {
+            InsertedFooter = input;
+
+            
+
+        }
+        public void InsertFirstPage(string input)
+        {
+            InsertedHTML = input;
         }
 
         private string GetEncoding(USFMDocument input)
@@ -101,9 +125,9 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     output.AppendLine(RenderFootnotes());
-
                     // Page breaks after each chapter
-                    output.AppendLine($"{(separateChapters?"<br class=\"pagebreak\"></br>" : "")}");
+                    output.AppendLine($"{(separateChapters ? "<br class=\"pagebreak\"></br>" : "")}");
+
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
@@ -132,8 +156,10 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
+
                     break;
                 case MMarker mMarker:
+
                     output.AppendLine("<div class=\"resetmargin\">");
                     foreach(Marker marker in input.Contents)
                     {
@@ -207,19 +233,20 @@ namespace USFMToolsSharp
         }
         private string RenderFootnotes()
         {
-            StringBuilder output = new StringBuilder();
+            StringBuilder footnoteHTML = new StringBuilder();
             if (FootnoteTextTags.Count > 0)
             {
-                output.AppendLine("<div class=\"header\">Footnotes</div>");
+                footnoteHTML.AppendLine("<div class=\"header\">Footnotes</div>");
                 foreach (string footnote in FootnoteTextTags)
                 {
-                    output.AppendLine("<div>");
-                    output.Append(footnote);
-                    output.AppendLine("</div>");
+                    footnoteHTML.AppendLine("<div>");
+                    footnoteHTML.Append(footnote);
+                    footnoteHTML.AppendLine("</div>");
                 }
                 FootnoteTextTags.Clear();
             }
-            return output.ToString();
+            return footnoteHTML.ToString();
         }
+        
     }
 }
