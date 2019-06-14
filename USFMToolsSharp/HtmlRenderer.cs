@@ -48,7 +48,8 @@ namespace USFMToolsSharp
                 output.Append($"<meta charset=\"{encoding}\">");
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
-            if (InsertedHTML.Length > 1)
+
+            if (InsertedHTML.Contains("</head>"))
             {
                 output.AppendLine(InsertedHTML);
             }
