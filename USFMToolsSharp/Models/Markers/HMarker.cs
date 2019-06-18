@@ -17,5 +17,6 @@ namespace USFMToolsSharp.Models.Markers
             HeaderText = input;
             return string.Empty;
         }
+        
     }
 }

@@ -170,16 +170,22 @@ namespace USFMToolsSharp
                     output.AppendLine("</b>");
                     break;
                 case HMarker hMarker:
-                    output.AppendLine($"{(separateChapters ? "":"<br class=\"pagebreak\"></br>" )}");
+                    
 
                     output.AppendLine("<div class=\"header\">");
                     output.Append(hMarker.HeaderText);
                     output.AppendLine("</div>");
+                    
                     break;
                 case MTMarker mTMarker:
                     output.AppendLine("<div class=\"majortitle\">");
                     output.AppendLine(mTMarker.Title);
                     output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine($"{(separateChapters ? "" : "<br class=\"pagebreak\"></br>")}");
                     break;
                 case FMarker fMarker:
                     output.AppendLine("<div class=\"footnote\">");
