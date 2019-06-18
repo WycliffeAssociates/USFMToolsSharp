@@ -16,14 +16,15 @@ namespace USFMToolsSharp
         private bool isTextJustified = false;
         private bool separateChapters = false;
 
-        private string InsertedHTML = "";
-        private string InsertedFooter = "";
+        public string FrontMatterHTML { get; set; }
+        public string InsertedFooter { get; set;}
+
         public HtmlRenderer()
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
         }
-        public HtmlRenderer(bool isSingleSpaced, bool hasOneColumn, bool isL2RDirection, bool isTextJustified, bool separateChapters)
+        public HtmlRenderer(bool isSingleSpaced=true, bool hasOneColumn=true, bool isL2RDirection=true, bool isTextJustified=false, bool separateChapters=false)
         {
             this.isSingleSpaced = isSingleSpaced;
             this.hasOneColumn = hasOneColumn;
@@ -49,19 +50,20 @@ namespace USFMToolsSharp
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
 
-            if (InsertedHTML.Contains("</head>"))
+            if (FrontMatterHTML.Contains("</head>"))
             {
-                output.AppendLine(InsertedHTML);
+                output.AppendLine(FrontMatterHTML);
             }
             else {
                 output.AppendLine("</head>");
             }
             
             // HTML tags can only have one class, when render to docx
-            output.AppendLine($"<body class=\"{(isSingleSpaced ? "" : "double-space")}\">");
-            output.AppendLine($"<div class=\"{ (hasOneColumn ? "" : "multi-column")}\">");
-            output.AppendLine($"<div class=\"{ (isTextJustified ? "justified" : "")}\"> ");
-            output.AppendLine($"<div class=\"{ (isL2RDirection ? "" : "rtl-direct")}\"> ");
+            output.AppendLine($"<body{(isSingleSpaced ? "" : " class=\"double-space\">")}");
+            output.AppendLine($"{ (hasOneColumn ? "" : "< div class=\"multi-column\">")}");
+
+            output.AppendLine($"{ (isTextJustified ? "<div class=\"justified\">" : "")}");
+            output.AppendLine($"{ (isL2RDirection ? "" : "<div class=\"rtl-direct\">")}");
 
             
 
@@ -73,25 +75,12 @@ namespace USFMToolsSharp
             output.AppendLine(InsertedFooter);
             output.AppendLine(RenderFootnotes());
 
-            output.AppendLine("</div>");
-            output.AppendLine("</div>");
-            output.AppendLine("</div>");
-            output.AppendLine("</div>");
+            output.AppendLine($"{ (hasOneColumn ? "" :"</div>")}");
+            output.AppendLine($"{ (isTextJustified ? "":"</div>")}");
+            output.AppendLine($"{ (isL2RDirection ? "" : "</div>")}");
             output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
-        }
-
-        public void InsertFooters(string input)
-        {
-            InsertedFooter = input;
-
-            
-
-        }
-        public void InsertFirstPage(string input)
-        {
-            InsertedHTML = input;
         }
 
         private string GetEncoding(USFMDocument input)
@@ -134,10 +123,11 @@ namespace USFMToolsSharp
                     output.AppendLine($"<span class=\"verse\">");
 
                     //Interpret VPMarker
+
                     switch (input.Contents[0])
                     {
                         case VPMarker vPMarker:
-                            vMarker.setVerseCharacter(vPMarker.VerseCharacter);
+                            vMarker.VerseCharacter=vPMarker.VerseCharacter;
                             break;
                         default:
                             break;
@@ -180,6 +170,8 @@ namespace USFMToolsSharp
                     output.AppendLine("</b>");
                     break;
                 case HMarker hMarker:
+                    output.AppendLine($"{(separateChapters ? "":"<br class=\"pagebreak\"></br>" )}");
+
                     output.AppendLine("<div class=\"header\">");
                     output.Append(hMarker.HeaderText);
                     output.AppendLine("</div>");
@@ -190,39 +182,31 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case FMarker fMarker:
+                    output.AppendLine("<div class=\"footnote\">");
                     foreach (Marker marker in input.Contents)
                     {
                         RenderMarker(marker);
                     }
+                    output.AppendLine("</div>");
                     break;
                 case FTMarker fTMarker:
-                    string footnote="";
+                    StringBuilder footnote=new StringBuilder();
                     foreach(Marker marker in input.Contents)
                     {
-                        switch (marker)
-                        {
-                            case TextBlock textBlock:
-                                footnote += textBlock.Text+" ";
-                                break;
-                            case FQAMarker fQAMarker:
-                                footnote += "<span class=\"footnote-quote\">";
-                                break;
-                            default:
-                                break;
-                        }
-
+                        footnote.Append(RenderMarker(marker));
                     }
-                    FootnoteTextTags.Add(footnote);
+                    FootnoteTextTags.Add(footnote.ToString());
                     break;
                 case FQAMarker _:
+                    output.Append("<span class=\"footnote-alternate-translation\">");
                     break;
                 case FQAEndMarker fQAEndMarker:
                     if(FootnoteTextTags.Count > 0)
                         FootnoteTextTags[FootnoteTextTags.Count-1] += "</span>" + " ";
                     break;
+                case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:
-                    break;
                 case VPMarker _:
                 case VPEndMarker _:
                     break;

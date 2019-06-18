@@ -9,6 +9,8 @@ namespace USFMToolsSharp.Models.Markers
     {
         // This is a string because of verse bridges. In the future this should have starting and ending verse
         public string VerseNumber;
+
+        public string VerseCharacter;
         public override string Identifier => "v";
         public override string PreProcess(string input)
         {
@@ -16,10 +18,6 @@ namespace USFMToolsSharp.Models.Markers
             Match match = pattern.Match(input);
             VerseNumber = match.Groups[1].Value;
             return match.Groups[2].Value;
-        }
-        public void setVerseCharacter(string NumChar)
-        {
-            VerseNumber = NumChar;
         }
         public override List<Type> AllowedContents => new List<Type>()
                 {
