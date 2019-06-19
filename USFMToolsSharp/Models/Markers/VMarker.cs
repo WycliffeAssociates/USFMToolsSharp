@@ -10,7 +10,19 @@ namespace USFMToolsSharp.Models.Markers
         // This is a string because of verse bridges. In the future this should have starting and ending verse
         public string VerseNumber;
 
-        public string VerseCharacter;
+        public string VerseCharacter {
+            get {
+                var firstCharacterMarker = GetChildMarkers<VPMarker>();
+                if (firstCharacterMarker != null)
+                {
+                    return firstCharacterMarker[0].VerseCharacter;
+                }
+                else
+                {
+                    return VerseNumber;
+                }
+            }
+        }
         public override string Identifier => "v";
         public override string PreProcess(string input)
         {
@@ -19,6 +31,7 @@ namespace USFMToolsSharp.Models.Markers
             VerseNumber = match.Groups[1].Value;
             return match.Groups[2].Value;
         }
+
         public override List<Type> AllowedContents => new List<Type>()
                 {
                     typeof(VPMarker),

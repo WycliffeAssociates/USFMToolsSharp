@@ -122,18 +122,7 @@ namespace USFMToolsSharp
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
 
-                    //Interpret VPMarker
-
-                    switch (input.Contents[0])
-                    {
-                        case VPMarker vPMarker:
-                            vMarker.VerseCharacter=vPMarker.VerseCharacter;
-                            break;
-                        default:
-                            break;
-                    }
-
-                    output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseNumber}</span>");
+                    output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseCharacter}</span>");
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
