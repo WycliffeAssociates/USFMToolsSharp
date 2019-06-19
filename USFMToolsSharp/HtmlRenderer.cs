@@ -54,16 +54,30 @@ namespace USFMToolsSharp
             {
                 output.AppendLine(FrontMatterHTML);
             }
-            else {
+            else
+            {
                 output.AppendLine("</head>");
             }
-            
-            // HTML tags can only have one class, when render to docx
-            output.AppendLine($"<body{(isSingleSpaced ? "" : " class=\"double-space\">")}");
-            output.AppendLine($"{ (hasOneColumn ? "" : "< div class=\"multi-column\">")}");
 
-            output.AppendLine($"{ (isTextJustified ? "<div class=\"justified\">" : "")}");
-            output.AppendLine($"{ (isL2RDirection ? "" : "<div class=\"rtl-direct\">")}");
+            output.AppendLine("<body>");
+
+            // HTML tags can only have one class, when render to docx
+            if (!isSingleSpaced)
+            {
+                output.AppendLine("<div class=\"double-space\">");
+            }
+            if (!hasOneColumn)
+            {
+                output.AppendLine($"< div class=\"multi-column\">");
+            }
+            if(isTextJustified)
+            {
+                output.AppendLine($"<div class=\"justified\">");
+            }
+            if (!isL2RDirection)
+            {
+                output.AppendLine($"<div class=\"rtl-direct\">");
+            }
 
             
 
@@ -75,9 +89,24 @@ namespace USFMToolsSharp
             output.AppendLine(InsertedFooter);
             output.AppendLine(RenderFootnotes());
 
-            output.AppendLine($"{ (hasOneColumn ? "" :"</div>")}");
-            output.AppendLine($"{ (isTextJustified ? "":"</div>")}");
-            output.AppendLine($"{ (isL2RDirection ? "" : "</div>")}");
+
+            if (!isSingleSpaced)
+            {
+                output.AppendLine("</div>");
+            }
+            if (!hasOneColumn)
+            {
+                output.AppendLine($"</div>");
+            }
+            if (isTextJustified)
+            {
+                output.AppendLine($"</div");
+            }
+            if (!isL2RDirection)
+            {
+                output.AppendLine($"</div>");
+            }
+
             output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
@@ -117,7 +146,10 @@ namespace USFMToolsSharp
                     output.AppendLine(RenderFootnotes());
 
                     // Page breaks after each chapter
-                    output.AppendLine($"{(separateChapters ? "<br class=\"pagebreak\"></br>" : "")}");
+                    if (separateChapters)
+                    {
+                        output.AppendLine("<br class=\"pagebreak\"></br>");
+                    }
 
                     break;
                 case VMarker vMarker:
@@ -174,7 +206,11 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine($"{(separateChapters ? "" : "<br class=\"pagebreak\"></br>")}");
+
+                    if (!separateChapters)   // No double page breaks before books
+                    {
+                        output.AppendLine("<br class=\"pagebreak\"></br>");
+                    }
                     break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
