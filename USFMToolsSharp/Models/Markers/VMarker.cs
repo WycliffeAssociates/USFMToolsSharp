@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public string VerseCharacter {
             get {
                 var firstCharacterMarker = GetChildMarkers<VPMarker>();
-                if (firstCharacterMarker != null)
+                if (firstCharacterMarker.Count > 0)
                 {
                     return firstCharacterMarker[0].VerseCharacter;
                 }

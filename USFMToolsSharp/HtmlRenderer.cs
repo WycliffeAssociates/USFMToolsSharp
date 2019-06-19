@@ -115,13 +115,13 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     output.AppendLine(RenderFootnotes());
+
                     // Page breaks after each chapter
                     output.AppendLine($"{(separateChapters ? "<br class=\"pagebreak\"></br>" : "")}");
 
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
-
                     output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseCharacter}</span>");
                     foreach(Marker marker in input.Contents)
                     {
@@ -177,27 +177,29 @@ namespace USFMToolsSharp
                     output.AppendLine($"{(separateChapters ? "" : "<br class=\"pagebreak\"></br>")}");
                     break;
                 case FMarker fMarker:
-                    output.AppendLine("<div class=\"footnote\">");
+                    StringBuilder footnote = new StringBuilder();
+                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{fMarker.FootNoteCaller}</span>";
+                    output.AppendLine(footnoteCallerHTML);
+                    footnote.Append(footnoteCallerHTML);
                     foreach (Marker marker in input.Contents)
-                    {
-                        RenderMarker(marker);
-                    }
-                    output.AppendLine("</div>");
-                    break;
-                case FTMarker fTMarker:
-                    StringBuilder footnote=new StringBuilder();
-                    foreach(Marker marker in input.Contents)
                     {
                         footnote.Append(RenderMarker(marker));
                     }
                     FootnoteTextTags.Add(footnote.ToString());
                     break;
+                case FTMarker fTMarker:
+                    
+                    foreach(Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    
+                    break;
                 case FQAMarker _:
                     output.Append("<span class=\"footnote-alternate-translation\">");
                     break;
                 case FQAEndMarker fQAEndMarker:
-                    if(FootnoteTextTags.Count > 0)
-                        FootnoteTextTags[FootnoteTextTags.Count-1] += "</span>" + " ";
+                    output.Append("</span>");
                     break;
                 case FEndMarker _:
                 case IDEMarker _:
