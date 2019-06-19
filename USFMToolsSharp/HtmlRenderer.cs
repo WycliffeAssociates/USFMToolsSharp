@@ -191,8 +191,6 @@ namespace USFMToolsSharp
                     output.AppendLine("</b>");
                     break;
                 case HMarker hMarker:
-                    
-
                     output.AppendLine("<div class=\"header\">");
                     output.Append(hMarker.HeaderText);
                     output.AppendLine("</div>");
@@ -214,7 +212,8 @@ namespace USFMToolsSharp
                     break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
-                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{fMarker.FootNoteCaller}</span>";
+                    fMarker.FootNoteID = $"{(char)(FootnoteTextTags.Count+97)}";
+                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{fMarker.FootNoteID}</span>";
                     output.AppendLine(footnoteCallerHTML);
                     footnote.Append(footnoteCallerHTML);
                     foreach (Marker marker in input.Contents)
