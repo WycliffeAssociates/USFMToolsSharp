@@ -18,6 +18,7 @@ namespace USFMToolsSharp
 
         public string FrontMatterHTML { get; set; }
         public string InsertedFooter { get; set;}
+        public string InsertedHead { get; set; }
 
         public HtmlRenderer()
         {
@@ -43,6 +44,8 @@ namespace USFMToolsSharp
             string encoding = GetEncoding(input);
             StringBuilder output = new StringBuilder();
             output.AppendLine("<html>");
+
+
             output.AppendLine("<head>");
             if (!string.IsNullOrEmpty(encoding))
             {
@@ -50,16 +53,11 @@ namespace USFMToolsSharp
             }
             output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
 
-            if (FrontMatterHTML.Contains("</head>"))
-            {
-                output.AppendLine(FrontMatterHTML);
-            }
-            else
-            {
-                output.AppendLine("</head>");
-            }
+            output.AppendLine("</head>");
 
             output.AppendLine("<body>");
+
+            output.AppendLine(FrontMatterHTML);
 
             // HTML tags can only have one class, when render to docx
             if (!isSingleSpaced)
@@ -68,7 +66,7 @@ namespace USFMToolsSharp
             }
             if (!hasOneColumn)
             {
-                output.AppendLine($"< div class=\"multi-column\">");
+                output.AppendLine($"<div class=\"multi-column\">");
             }
             if(isTextJustified)
             {
