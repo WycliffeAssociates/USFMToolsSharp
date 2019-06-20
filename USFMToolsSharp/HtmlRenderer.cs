@@ -45,15 +45,17 @@ namespace USFMToolsSharp
             StringBuilder output = new StringBuilder();
             output.AppendLine("<html>");
 
-
-            output.AppendLine("<head>");
-            if (!string.IsNullOrEmpty(encoding))
+            if (InsertedHead == null)
             {
-                output.Append($"<meta charset=\"{encoding}\">");
-            }
-            output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
+                output.AppendLine("<head>");
+                if (!string.IsNullOrEmpty(encoding))
+                {
+                    output.Append($"<meta charset=\"{encoding}\">");
+                }
+                output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
 
-            output.AppendLine("</head>");
+                output.AppendLine("</head>");
+            }
 
             output.AppendLine("<body>");
 
