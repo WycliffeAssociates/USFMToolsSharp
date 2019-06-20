@@ -56,6 +56,10 @@ namespace USFMToolsSharp
 
                 output.AppendLine("</head>");
             }
+            else
+            {
+                output.AppendLine(InsertedHead);
+            }
 
             output.AppendLine("<body>");
 
