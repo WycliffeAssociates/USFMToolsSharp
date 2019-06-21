@@ -251,6 +251,10 @@ namespace USFMToolsSharp
                     break;
                 case FQAMarker _:
                     output.Append("<span class=\"footnote-alternate-translation\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
                     break;
                 case FQAEndMarker fQAEndMarker:
                     output.Append("</span>");

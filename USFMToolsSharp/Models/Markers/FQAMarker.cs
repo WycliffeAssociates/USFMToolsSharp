@@ -10,5 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class FQAMarker : Marker
     {
         public override string Identifier => "fqa";
+
+        public override List<Type> AllowedContents => new List<Type>()
+        {
+            typeof(TextBlock),
+        };
     }
 }
