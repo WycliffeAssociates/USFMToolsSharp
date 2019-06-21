@@ -216,8 +216,23 @@ namespace USFMToolsSharp
                     break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
-                    fMarker.FootNoteID = $"{(char)(FootnoteTextTags.Count+97)}";
-                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{fMarker.FootNoteID}</span>";
+
+                    string footnoteId;
+                    switch (fMarker.FootNoteCaller)
+                    {
+                        case "-":
+                            footnoteId = "";
+                            break;
+                        case "+":
+                            footnoteId = $"{FootnoteTextTags.Count+1}";
+                            break;
+                        default:
+                            footnoteId = fMarker.FootNoteCaller;
+                            break;
+
+                    }
+
+                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{footnoteId}</span>";
                     output.AppendLine(footnoteCallerHTML);
                     footnote.Append(footnoteCallerHTML);
                     foreach (Marker marker in input.Contents)

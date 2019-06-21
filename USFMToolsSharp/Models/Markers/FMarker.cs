@@ -12,28 +12,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "f";
         public string FootNoteCaller;
 
-        // Placeholder 
-        private string footnoteId = "";
-        public string FootNoteID{
-            get {
-                return footnoteId;
-            }
-            set {
-                switch (FootNoteCaller)
-                {
-                    case "-":
-                        footnoteId = "";
-                        break;
-                    case "+":
-                        footnoteId = value;
-                        break;
-                    default:
-                        footnoteId = FootNoteCaller;
-                        break;
-
-                }
-            }
-        }
+        
         public override string PreProcess(string input)
         {
             FootNoteCaller = input;
