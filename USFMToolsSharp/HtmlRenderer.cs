@@ -90,7 +90,7 @@ namespace USFMToolsSharp
                 output.Append(RenderMarker(marker));
             }
 
-            output.AppendLine(InsertedFooter);
+            
             output.AppendLine(RenderFootnotes());
 
 
@@ -110,7 +110,7 @@ namespace USFMToolsSharp
             {
                 output.AppendLine($"</div>");
             }
-
+            output.AppendLine(InsertedFooter);
             output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
