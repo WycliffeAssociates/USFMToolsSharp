@@ -2,21 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 using USFMToolsSharp.Models.Markers;
+using USFMToolsSharp.Models;
 
 namespace USFMToolsSharp
 {
-    struct HTMLConfig
-    {
-        public string encoding;
-        public List<string> divClasses;
-        public bool separateChapters;
-    }
     public class HtmlRenderer
     {
         public List<string> UnrenderableTags;
         public List<string> FootnoteTextTags;
-        private HTMLConfig ConfigurationHTML;
-
+        public HTMLConfig ConfigurationHTML;
         
 
         public string FrontMatterHTML { get; set; }
@@ -27,12 +21,12 @@ namespace USFMToolsSharp
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
+            ConfigurationHTML=new HTMLConfig();
         }
-        public HtmlRenderer(string[] container_styles,bool separateChapters = false)
+        public HtmlRenderer(HTMLConfig config)
         {
 
-            ConfigurationHTML.divClasses = container_styles;
-            ConfigurationHTML.separateChapters = separateChapters;
+            ConfigurationHTML = config;
 
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
@@ -70,7 +64,8 @@ namespace USFMToolsSharp
 
             foreach(string class_names in ConfigurationHTML.divClasses)
             {
-                output.AppendLine($"<div class=\"{class_names}\">");
+                if(class_names.Length>0)
+                    output.AppendLine($"<div class=\"{class_names}\">");
             }
 
             
@@ -83,9 +78,10 @@ namespace USFMToolsSharp
             output.AppendLine(InsertedFooter);
             output.AppendLine(RenderFootnotes());
 
-            for(int i = 0; i < ConfigurationHTML.divClasses.Length; i++)
+            foreach (string class_names in ConfigurationHTML.divClasses)
             {
-                output.AppendLine($"</div>");
+                if (class_names.Length > 0)
+                    output.AppendLine($"</div>");
             }
 
 
