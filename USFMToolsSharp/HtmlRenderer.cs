@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using USFMToolsSharp.Models.Markers;
+using USFMToolsSharp.Models;
 
 namespace USFMToolsSharp
 {
@@ -9,12 +10,8 @@ namespace USFMToolsSharp
     {
         public List<string> UnrenderableTags;
         public List<string> FootnoteTextTags;
-
-        private bool isSingleSpaced = true;
-        private bool hasOneColumn = true;
-        private bool isL2RDirection = true;
-        private bool isTextJustified = false;
-        private bool separateChapters = false;
+        public HTMLConfig ConfigurationHTML;
+        
 
         public string FrontMatterHTML { get; set; }
         public string InsertedFooter { get; set;}
@@ -24,14 +21,13 @@ namespace USFMToolsSharp
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
+
+            ConfigurationHTML = new HTMLConfig();
         }
-        public HtmlRenderer(bool isSingleSpaced=true, bool hasOneColumn=true, bool isL2RDirection=true, bool isTextJustified=false, bool separateChapters=false)
+        public HtmlRenderer(HTMLConfig config)
         {
-            this.isSingleSpaced = isSingleSpaced;
-            this.hasOneColumn = hasOneColumn;
-            this.isL2RDirection = isL2RDirection;
-            this.isTextJustified = isTextJustified;
-            this.separateChapters = separateChapters;
+
+            ConfigurationHTML = config;
 
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
@@ -41,16 +37,16 @@ namespace USFMToolsSharp
         public string Render(USFMDocument input)
         {
             UnrenderableTags = new List<string>();
-            string encoding = GetEncoding(input);
+            ConfigurationHTML.encoding = GetEncoding(input);
             StringBuilder output = new StringBuilder();
             output.AppendLine("<html>");
 
             if (InsertedHead == null)
             {
                 output.AppendLine("<head>");
-                if (!string.IsNullOrEmpty(encoding))
+                if (!string.IsNullOrEmpty(ConfigurationHTML.encoding))
                 {
-                    output.Append($"<meta charset=\"{encoding}\">");
+                    output.Append($"<meta charset=\"{ConfigurationHTML.encoding}\">");
                 }
                 output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
 
@@ -66,21 +62,11 @@ namespace USFMToolsSharp
             output.AppendLine(FrontMatterHTML);
 
             // HTML tags can only have one class, when render to docx
-            if (!isSingleSpaced)
+
+            foreach(string class_names in ConfigurationHTML.divClasses)
             {
-                output.AppendLine("<div class=\"double-space\">");
-            }
-            if (!hasOneColumn)
-            {
-                output.AppendLine($"<div class=\"multi-column\">");
-            }
-            if(isTextJustified)
-            {
-                output.AppendLine($"<div class=\"justified\">");
-            }
-            if (!isL2RDirection)
-            {
-                output.AppendLine($"<div class=\"rtl-direct\">");
+                if(class_names.Length>0)
+                    output.AppendLine($"<div class=\"{class_names}\">");
             }
 
             
@@ -93,24 +79,13 @@ namespace USFMToolsSharp
             
             output.AppendLine(RenderFootnotes());
 
+            foreach (string class_names in ConfigurationHTML.divClasses)
+            {
+                if (class_names.Length > 0)
+                    output.AppendLine($"</div>");
+            }
 
-            if (!isSingleSpaced)
-            {
-                output.AppendLine("</div>");
-            }
-            if (!hasOneColumn)
-            {
-                output.AppendLine($"</div>");
-            }
-            if (isTextJustified)
-            {
-                output.AppendLine($"</div>");
-            }
-            if (!isL2RDirection)
-            {
-                output.AppendLine($"</div>");
-            }
-            output.AppendLine(InsertedFooter);
+
             output.AppendLine("</body>");
             output.AppendLine("</html>");
             return output.ToString();
@@ -150,7 +125,7 @@ namespace USFMToolsSharp
                     output.AppendLine(RenderFootnotes());
 
                     // Page breaks after each chapter
-                    if (separateChapters)
+                    if (ConfigurationHTML.separateChapters)
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
                     }
@@ -209,7 +184,7 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
 
-                    if (!separateChapters)   // No double page breaks before books
+                    if (!ConfigurationHTML.separateChapters)   // No double page breaks before books
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
                     }
