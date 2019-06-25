@@ -104,7 +104,7 @@ namespace USFMToolsSharp
             }
             if (isTextJustified)
             {
-                output.AppendLine($"</div");
+                output.AppendLine($"</div>");
             }
             if (!isL2RDirection)
             {
