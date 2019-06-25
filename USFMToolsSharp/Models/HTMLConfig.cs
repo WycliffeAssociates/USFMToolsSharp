@@ -6,6 +6,11 @@ namespace USFMToolsSharp.Models
 {
     public class HTMLConfig
     {
+        public List<string> divClasses;
+        public string encoding;
+        public bool separateChapters;
+
+
         public HTMLConfig()
         {
             this.divClasses = new List<string>();
@@ -17,8 +22,6 @@ namespace USFMToolsSharp.Models
             this.separateChapters = separateChapters;
         }
         
-        public List<string> divClasses;
-        public string encoding;
-        public bool separateChapters;
+        
     }
 }
