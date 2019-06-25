@@ -21,7 +21,8 @@ namespace USFMToolsSharp
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
-            ConfigurationHTML=new HTMLConfig();
+
+            ConfigurationHTML = new HTMLConfig();
         }
         public HtmlRenderer(HTMLConfig config)
         {
