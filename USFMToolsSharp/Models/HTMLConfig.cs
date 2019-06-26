@@ -15,9 +15,9 @@ namespace USFMToolsSharp.Models
             this.divClasses = new List<string>();
             separateChapters = false;
         }
-        public HTMLConfig(List<string> classNames, bool separateChapters=false)
+        public HTMLConfig(List<string> divClasses, bool separateChapters=false)
         {
-            this.divClasses = classNames;
+            this.divClasses = divClasses;
             this.separateChapters = separateChapters;
         }
         
