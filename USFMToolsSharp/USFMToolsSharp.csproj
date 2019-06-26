@@ -1,15 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.0</TargetFramework>
     <PackageProjectUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</RepositoryUrl>
     <Copyright />
-    <PackageLicenseUrl>https://github.com/WycliffeAssociates/USFMToolsSharp/blob/master/LICENSE</PackageLicenseUrl>
-    <Version>0.3.1</Version>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <Version>0.4.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Wycliffe Associates</Company>
     <Authors>@rbnswartz</Authors>
+    <AssemblyVersion>0.4.0.0</AssemblyVersion>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
 
 </Project>
