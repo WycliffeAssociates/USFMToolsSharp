@@ -63,10 +63,9 @@ namespace USFMToolsSharp
 
             // HTML tags can only have one class, when render to docx
 
-            foreach(string class_names in ConfigurationHTML.divClasses)
+            foreach(string class_name in ConfigurationHTML.divClasses)
             {
-                if(class_names.Length>0)
-                    output.AppendLine($"<div class=\"{class_names}\">");
+                output.AppendLine($"<div class=\"{class_name}\">");
             }
 
             
@@ -79,10 +78,9 @@ namespace USFMToolsSharp
             
             output.AppendLine(RenderFootnotes());
 
-            foreach (string class_names in ConfigurationHTML.divClasses)
+            foreach (string class_name in ConfigurationHTML.divClasses)
             {
-                if (class_names.Length > 0)
-                    output.AppendLine($"</div>");
+                output.AppendLine($"</div>");
             }
 
 
