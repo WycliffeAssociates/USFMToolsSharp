@@ -37,16 +37,16 @@ namespace USFMToolsSharp
         public string Render(USFMDocument input)
         {
             UnrenderableTags = new List<string>();
-            ConfigurationHTML.encoding = GetEncoding(input);
+            var encoding = GetEncoding(input);
             StringBuilder output = new StringBuilder();
             output.AppendLine("<html>");
 
             if (InsertedHead == null)
             {
                 output.AppendLine("<head>");
-                if (!string.IsNullOrEmpty(ConfigurationHTML.encoding))
+                if (!string.IsNullOrEmpty(encoding))
                 {
-                    output.Append($"<meta charset=\"{ConfigurationHTML.encoding}\">");
+                    output.Append($"<meta charset=\"{encoding}\">");
                 }
                 output.AppendLine("<link rel=\"stylesheet\" href=\"style.css\">");
 

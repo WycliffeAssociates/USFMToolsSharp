@@ -7,7 +7,6 @@ namespace USFMToolsSharp.Models
     public class HTMLConfig
     {
         public List<string> divClasses;
-        public string encoding;
         public bool separateChapters;
 
 
