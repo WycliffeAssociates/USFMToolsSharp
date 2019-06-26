@@ -11,6 +11,8 @@ namespace USFMToolsSharp.Models.Markers
     {
         public override string Identifier => "f";
         public string FootNoteCaller;
+
+        
         public override string PreProcess(string input)
         {
             FootNoteCaller = input;

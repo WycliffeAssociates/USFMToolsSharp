@@ -76,6 +76,10 @@ namespace USFMToolsSharp
                     return new PMarker();
                 case "v":
                     return new VMarker();
+                case "vp":
+                    return new VPMarker();
+                case "vp*":
+                    return new VPEndMarker();
                 case "q":
                 case "q1":
                     return new QMarker();
@@ -93,6 +97,8 @@ namespace USFMToolsSharp
                     return new CLMarker();
                 case "qs":
                     return new QSMarker();
+                case "qs*":
+                    return new QSEndMarker();
                 case "f":
                     return new FMarker();
                 case "qa":
