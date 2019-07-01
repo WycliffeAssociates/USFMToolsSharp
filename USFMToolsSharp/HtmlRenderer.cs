@@ -137,6 +137,12 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine($"</span>");
+
+                    // New Line after each Verse
+                    if (ConfigurationHTML.separateVerses)
+                    {
+                        output.AppendLine("<br class=\"versebreak\"/>");
+                    }
                     break;
                 case QMarker qMarker:
                     output.AppendLine($"<div class=\"poetry-{qMarker.Depth}\">");
