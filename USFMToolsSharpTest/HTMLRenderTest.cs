@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using USFMToolsSharp.Models;
 
 namespace USFMToolsSharpTest
 {
@@ -13,49 +14,22 @@ namespace USFMToolsSharpTest
     [TestClass]
     public class HTMLRenderTest
     {
-        private USFMToolsSharp.USFMParser parser = new USFMToolsSharp.USFMParser();
-        private USFMToolsSharp.HtmlRenderer render = new USFMToolsSharp.HtmlRenderer();
+        private USFMToolsSharp.USFMParser parser;
+        private USFMToolsSharp.HtmlRenderer render;
+        private HTMLConfig configHTML;
 
-        public class TestCase
+        [TestInitialize]
+        public void SetUpTestCase()
         {
-            public dynamic expected;
-            public dynamic actual;
-
-            public TestCase(string e, string a)
-            {
-                StringBuilder output = new StringBuilder();
-
-
-                output.AppendLine(e);
-                actual = a.Replace("\r", "").Replace("\n","");
-                expected = output.ToString();
-                expected = expected.Replace("\r", "").Replace("\n", "");
-            }
+            parser = new USFMToolsSharp.USFMParser();
+            render = new USFMToolsSharp.HtmlRenderer();
+            configHTML = new HTMLConfig(new List<string>(), partialHTML = true);
         }
-        public class TestStyleCase
-        {
-            public dynamic expected;
-            public dynamic actual;
-            private USFMToolsSharp.USFMParser USFMParser = new USFMToolsSharp.USFMParser();
-
-            public TestStyleCase(string e, string USFMText, USFMToolsSharp.Models.HTMLConfig config)
-            {
-                USFMToolsSharp.HtmlRenderer renderer = new USFMToolsSharp.HtmlRenderer(config);
-                string a = renderer.Render(USFMParser.ParseFromString(USFMText));
-                StringBuilder output = new StringBuilder();
-
-
-                output.AppendLine(e);
-                actual = a.Replace("\r", "").Replace("\n", "");
-                expected = output.ToString();
-                expected = expected.Replace("\r", "").Replace("\n", "");
-            }
-        }
-        
-
         [TestMethod]
         public void TestHeaderRender()
         {
+            Assert.AreEqual("<div class=\"header\">Genesis</div>", render.Render(parser.ParseFromString("\\h Genesis")));
+
             // RenderMarker(Marker input)
             TestCase[] tests =
             {
@@ -172,6 +146,10 @@ namespace USFMToolsSharpTest
             {
                 Assert.IsTrue(test.actual.Contains(test.expected));
             }
+        }
+        public string strip_WhiteSpace(string input)
+        {
+            return input.Replace("\r", "").Replace("\n", "");
         }
 
     }
