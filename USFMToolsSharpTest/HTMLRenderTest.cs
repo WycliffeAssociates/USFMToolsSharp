@@ -21,131 +21,82 @@ namespace USFMToolsSharpTest
         [TestInitialize]
         public void SetUpTestCase()
         {
+            configHTML = new HTMLConfig(new List<string>(), partialHTML: true);
+
             parser = new USFMToolsSharp.USFMParser();
-            render = new USFMToolsSharp.HtmlRenderer();
-            configHTML = new HTMLConfig(new List<string>(), partialHTML = true);
+            render = new USFMToolsSharp.HtmlRenderer(configHTML);
+            
         }
         [TestMethod]
         public void TestHeaderRender()
         {
-            Assert.AreEqual("<div class=\"header\">Genesis</div>", render.Render(parser.ParseFromString("\\h Genesis")));
-
-            // RenderMarker(Marker input)
-            TestCase[] tests =
-            {
-                new TestCase("<div class=\"header\">Genesis</div>",render.Render(parser.ParseFromString("\\h Genesis"))),
-                new TestCase("<div class=\"header\">1 John</div>",render.Render(parser.ParseFromString("\\h 1 John"))),
-                new TestCase("<div class=\"header\"></div>",render.Render(parser.ParseFromString("\\h"))),
-                new TestCase("<div class=\"header\"></div>",render.Render(parser.ParseFromString("\\h      ")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
-
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("<div class=\"header\">Genesis</div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\h Genesis"))));
+            Assert.AreEqual("<div class=\"header\">1 John</div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\h 1 John"))));
+            Assert.AreEqual("<div class=\"header\"></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\h"))));
+            Assert.AreEqual("<div class=\"header\"></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\h      "))));
+            
         }
         [TestMethod]
         public void TestChapterRender()
         {
-            TestCase[] tests =
-            {
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">1</span></div>",render.Render(parser.ParseFromString("\\c 1"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">1000</span></div>",render.Render(parser.ParseFromString("\\c 1000"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">-1</span></div>",render.Render(parser.ParseFromString("\\c -1"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">0</span></div>",render.Render(parser.ParseFromString("\\c 0")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
 
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 1"))));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1000</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 1000"))));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">-1</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c -1"))));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">0</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 0"))));
+            
         }
 
         [TestMethod]
         public void TestVerseRender()
         {
-            TestCase[] tests =
-            {
-                new TestCase("<span class=\"verse\"><span class=\"versemarker\">200</span>Genesis</span>",render.Render(parser.ParseFromString("\\v 200 Genesis"))),
-                //new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span></span>",render.Render(parser.ParseFromString("\\v 0"))),
-                new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span>fff</span>",render.Render(parser.ParseFromString("\\v 0 fff"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>asdfasdf</span></div>",render.Render(parser.ParseFromString("\\c 1  \\v 1 asdfasdf")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
 
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">200</span>Genesis</span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 200 Genesis"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">0</span>fff</span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 0 fff"))));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>asdfasdf</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 1  \\v 1 asdfasdf"))));
+
         }
         [TestMethod]
         public void TestFootnoteRender()
         {
-            TestCase[] tests =
-            {
-                new TestCase("<span class=\"versemarker\">26</span>This is a footnote<span class=\"footnotecaller\">1</span>",render.Render(parser.ParseFromString("\\v 26 This is a footnote \\f + \\f*"))),
-                //new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span></span>",render.Render(parser.ParseFromString("\\v 0"))),
-                new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span>fff</span>",render.Render(parser.ParseFromString("\\v 0 fff"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>asdfasdf</span></div>",render.Render(parser.ParseFromString("\\c 1  \\v 1 asdfasdf")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
 
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>This is a footnote<span class=\"footnotecaller\">1</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 This is a footnote \\f + \\f*"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\"<span class=\"footnotecaller\">2</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\" \\f + \\ft Some ancient copies have: \\fqa ... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth \\fqa*  . \\f*"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">1</span>Sam Paul!<span class=\"footnotecaller\">3</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 1 Sam Paul! \\f + \\ft Sample Simple Footnote. \\f*"))));
+
         }
+        [TestMethod]
         public void TestVPRender()
         {
-            TestCase[] tests =
-            {
-                new TestCase("<span class=\"versemarker\">26</span>This is a footnote<span class=\"footnotecaller\">1</span>",render.Render(parser.ParseFromString("\\v 26 This is a footnote \\f + \\f*"))),
-                //new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span></span>",render.Render(parser.ParseFromString("\\v 0"))),
-                new TestCase("<span class=\"verse\"><span class=\"versemarker\">0</span>fff</span>",render.Render(parser.ParseFromString("\\v 0 fff"))),
-                new TestCase("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>asdfasdf</span></div>",render.Render(parser.ParseFromString("\\c 1  \\v 1 asdfasdf")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
-
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">1a</span>This is not Scripture</span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 1 \\vp 1a \\vp* This is not Scripture"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">2b</span>This is not Scripture</span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 2 \\vp 2b \\vp* This is not Scripture"))));
         }
         [TestMethod]
         public void TestStyleRender()
         {
-            TestStyleCase[] tests =
-            {
-                new TestStyleCase("<div class=\"two-columns\">","\\v 26 This is a footnote \\f + \\f*",new USFMToolsSharp.Models.HTMLConfig(new List<string>{ "two-columns"})),
-                //new TestStyleCase("<span class=\"verse\"><span class=\"versemarker\">0</span></span>","\\v 0"))),
-                new TestStyleCase("<div class=\"justified\"><div class=\"single-space\">","\\v 0 fff",new USFMToolsSharp.Models.HTMLConfig(new List<string>{ "justified","single-space"})),
-                new TestStyleCase("<br class=\"pagebreak\"></br>","\\c 1  \\v 1 asdfasdf \\c 2",new USFMToolsSharp.Models.HTMLConfig(new List<string>(),true))
-            };
-            List<TestStyleCase> TestUSFM = new List<TestStyleCase>(tests);
+            render.ConfigurationHTML.divClasses.Add("two-columns");
+            Assert.AreEqual("<div class=\"two-columns\"><span class=\"verse\"><span class=\"versemarker\">200</span>Genesis</span></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 200 Genesis"))));
+            render.ConfigurationHTML.divClasses.Add("justified");
+            Assert.AreEqual("<div class=\"two-columns\"><div class=\"justified\"><span class=\"verse\"><span class=\"versemarker\">200</span>Genesis</span></div></div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 200 Genesis"))));
 
-            foreach (TestStyleCase test in TestUSFM)
-            {
+        }
+        [TestMethod]
+        public void TestChapterBreak()
+        {
+            render.ConfigurationHTML.separateChapters = true;
+            Assert.AreEqual("<div class=\"majortitle\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\c 3"))));
+            Assert.AreEqual("<div class=\"majortitle\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"majortitle\">Exodus</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\mt Exodus \\c 1"))));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>First</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span><span class=\"verse\"><span class=\"versemarker\">1</span>Second</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span><span class=\"verse\"><span class=\"versemarker\">1</span>Third</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 1 \\v 1 First \\c 2 \\v 1 Second \\c 3 \\v 1 Third"))));
 
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
         }
         [TestMethod]
         public void TestUnknownMarkerRender()
         {
-            TestCase[] tests =
-            {
-                new TestCase("",render.Render(parser.ParseFromString("\\yy"))),
-                new TestCase("<div class=\"header\">1 John</div>",render.Render(parser.ParseFromString("\\h 1 John \\test"))),
-                new TestCase("",render.Render(parser.ParseFromString("\\123 sdfgsgdfg")))
-            };
-            List<TestCase> TestUSFM = new List<TestCase>(tests);
 
-            foreach (TestCase test in TestUSFM)
-            {
-                Assert.IsTrue(test.actual.Contains(test.expected));
-            }
+            Assert.AreEqual("", strip_WhiteSpace(render.Render(parser.ParseFromString("\\yy"))));
+            Assert.AreEqual("<div class=\"header\">1 John</div>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\h 1 John \\test"))));
+            Assert.AreEqual("", strip_WhiteSpace(render.Render(parser.ParseFromString("\\123 sdfgsgdfg"))));
+
         }
         public string strip_WhiteSpace(string input)
         {
