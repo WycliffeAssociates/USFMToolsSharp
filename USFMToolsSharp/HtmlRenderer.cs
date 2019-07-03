@@ -222,6 +222,12 @@ namespace USFMToolsSharp
                     }
                     
                     break;
+                case FRMarker fRMarker:
+                    output.Append($"<b> {fRMarker.VerseReference} </b>");
+                    break;
+                case FKMarker fKMarker:
+                    output.Append(" " + fKMarker.FootNoteKeyword + ": ");
+                    break;
                 case FQAMarker _:
                     output.Append("<span class=\"footnote-alternate-translation\">");
                     foreach (Marker marker in input.Contents)
