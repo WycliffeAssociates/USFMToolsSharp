@@ -226,7 +226,7 @@ namespace USFMToolsSharp
                     output.Append($"<b> {fRMarker.VerseReference} </b>");
                     break;
                 case FKMarker fKMarker:
-                    output.Append(" " + fKMarker.FootNoteKeyword + ": ");
+                    output.Append($" {fKMarker.FootNoteKeyword.ToUpper()}: ");
                     break;
                 case FQAMarker _:
                     output.Append("<span class=\"footnote-alternate-translation\">");

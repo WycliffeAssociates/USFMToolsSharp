@@ -15,7 +15,7 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string PreProcess(string input)
         {
-            FootNoteKeyword = input.ToUpper();
+            FootNoteKeyword = input;
             return string.Empty;
         }
     }
