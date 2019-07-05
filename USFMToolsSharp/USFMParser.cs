@@ -138,6 +138,13 @@ namespace USFMToolsSharp
                     return new REMMarker();
                 case "b":
                     return new BMarker();
+                case "s":
+                case "s1":
+                    return new SMarker();
+                case "s2":
+                    return new SMarker() { Weight = 2 };
+                case "s3":
+                    return new SMarker() { Weight = 3 };
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
