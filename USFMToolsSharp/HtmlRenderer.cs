@@ -278,7 +278,16 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</span>");
                     break;
+                case SCMarker scMarker:
+                    output.AppendLine($"<span class=\"small-caps\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
                 case TLEndMarker _:
+                case SCEndMarker _:
                 case ADDEndMarker _:
                 case BKEndMarker _:
                 case FEndMarker _:
