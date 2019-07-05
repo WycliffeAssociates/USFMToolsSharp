@@ -238,6 +238,9 @@ namespace USFMToolsSharp
                 case FQAEndMarker fQAEndMarker:
                     output.Append("</span>");
                     break;
+                case BMarker bMarker:
+                    output.Append("<br/><br/>");
+                    break;
                 case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:
