@@ -160,19 +160,16 @@ namespace USFMToolsSharp
                     return new ADDMarker();
                 case "add*":
                     return new ADDEndMarker();
-<<<<<<< HEAD
                 case "tl":
                     return new TLMarker();
                 case "tl*":
                     return new TLEndMarker();
                 case "mi":
                     return new MIMarker();
-=======
                 case "sc":
                     return new SCMarker();
                 case "sc*":
                     return new SCEndMarker();
->>>>>>> Added small cap text support
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
