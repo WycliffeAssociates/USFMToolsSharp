@@ -160,6 +160,10 @@ namespace USFMToolsSharp
                     return new ADDMarker();
                 case "add*":
                     return new ADDEndMarker();
+                case "tl":
+                    return new TLMarker();
+                case "tl*":
+                    return new TLEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

@@ -270,6 +270,15 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</span>");
                     break;
+                case TLMarker tlMarker:
+                    output.AppendLine($"<span class=\"transliterated\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case TLEndMarker _:
                 case ADDEndMarker _:
                 case BKEndMarker _:
                 case FEndMarker _:
