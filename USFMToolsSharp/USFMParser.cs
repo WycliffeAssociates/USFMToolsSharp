@@ -125,6 +125,8 @@ namespace USFMToolsSharp
                     return new ITMarker();
                 case "it*":
                     return new ITEndMarker();
+                case "rem":
+                    return new REMMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
