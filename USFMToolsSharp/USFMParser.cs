@@ -9,6 +9,7 @@ namespace USFMToolsSharp
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
+        public List<UnknownMarker> UnknownMarkers;
 
         public USFMParser()
         {
@@ -34,12 +35,18 @@ namespace USFMToolsSharp
 
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
-
-                output.Insert(result.marker);
-
-                if (!string.IsNullOrWhiteSpace(result.remainingText))
+                if(result.marker is UnknownMarker)
                 {
-                    output.Insert(new TextBlock(result.remainingText));
+                    UnknownMarkers.Add((UnknownMarker)result.marker);
+                }
+                else
+                {
+                    output.Insert(result.marker);
+
+                    if (!string.IsNullOrWhiteSpace(result.remainingText))
+                    {
+                        output.Insert(new TextBlock(result.remainingText));
+                    }
                 }
             }
 
