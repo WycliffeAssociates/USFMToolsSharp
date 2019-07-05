@@ -241,6 +241,11 @@ namespace USFMToolsSharp
                 case BMarker bMarker:
                     output.Append("<br/><br/>");
                     break;
+                case SMarker sMarker:
+                    output.AppendLine($"<div class=\"sectionhead-{sMarker.Weight}\">");
+                    output.AppendLine(sMarker.Text);
+                    output.AppendLine("</div>");
+                    break;
                 case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:

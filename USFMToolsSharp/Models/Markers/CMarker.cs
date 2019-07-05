@@ -18,6 +18,7 @@ namespace USFMToolsSharp.Models.Markers
         }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(MMarker),
+            typeof(SMarker),
             typeof(DMarker),
             typeof(VMarker),
             typeof(PMarker),

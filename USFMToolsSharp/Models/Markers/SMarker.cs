@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class SMarker : Marker
     {
+        public int Weight = 1;
         public string Text;
         public override string Identifier => "s";
         public override string PreProcess(string input)
