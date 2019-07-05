@@ -19,6 +19,7 @@ namespace USFMToolsSharp.Models.Markers
                 return new List<Type>()
                 {
                     typeof(VMarker),
+                    typeof(BMarker),
                     typeof(QSMarker),
                     typeof(TextBlock),
                 };

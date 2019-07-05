@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "p";
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(VMarker),
+            typeof(BMarker),
             typeof(SPMarker),
             typeof(TextBlock),
         };
