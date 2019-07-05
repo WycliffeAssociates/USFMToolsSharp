@@ -290,6 +290,16 @@ namespace USFMToolsSharp
                     output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
                     break;
                 case WEndMarker _:
+                case FQMarker fqMarker:
+                    output.Append("<span class=\"footnote-alternate-translation\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
+                case FQEndMarker fqEndMarker:
+                    output.Append("</span>");
+                    break;
                 case TLEndMarker _:
                 case SCEndMarker _:
                 case ADDEndMarker _:
