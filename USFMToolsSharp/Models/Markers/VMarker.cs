@@ -37,6 +37,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(VPMarker),
                     typeof(VPEndMarker),
                     typeof(BMarker),
+                    typeof(BKMarker),
+                    typeof(BKEndMarker),
                     typeof(BDMarker),
                     typeof(BDEndMarker),
                     typeof(ITMarker),

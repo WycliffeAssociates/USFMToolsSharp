@@ -145,6 +145,10 @@ namespace USFMToolsSharp
                     return new SMarker() { Weight = 2 };
                 case "s3":
                     return new SMarker() { Weight = 3 };
+                case "bk":
+                    return new BKMarker();
+                case "bk*":
+                    return new BKEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
