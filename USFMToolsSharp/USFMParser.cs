@@ -156,6 +156,10 @@ namespace USFMToolsSharp
                     return new LIMarker() { Depth = 2 };
                 case "li3":
                     return new LIMarker() { Depth = 3 };
+                case "add":
+                    return new ADDMarker();
+                case "add*":
+                    return new ADDEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

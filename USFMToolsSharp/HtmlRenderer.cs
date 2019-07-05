@@ -153,7 +153,6 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case MMarker mMarker:
-
                     output.AppendLine("<div class=\"resetmargin\">");
                     foreach(Marker marker in input.Contents)
                     {
@@ -176,7 +175,6 @@ namespace USFMToolsSharp
                     output.AppendLine("<div class=\"header\">");
                     output.Append(hMarker.HeaderText);
                     output.AppendLine("</div>");
-                    
                     break;
                 case MTMarker mTMarker:
                     output.AppendLine($"<div class=\"majortitle-{mTMarker.Weight}\">");
@@ -264,6 +262,15 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     break;
+                case ADDMarker addMarker:
+                    output.AppendLine($"<span class=\"additions\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case ADDEndMarker _:
                 case BKEndMarker _:
                 case FEndMarker _:
                 case IDEMarker _:
