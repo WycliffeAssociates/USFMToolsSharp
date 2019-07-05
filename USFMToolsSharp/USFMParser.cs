@@ -170,6 +170,10 @@ namespace USFMToolsSharp
                     return new SCMarker();
                 case "sc*":
                     return new SCEndMarker();
+                case "w":
+                    return new WMarker();
+                case "w*":
+                    return new WEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

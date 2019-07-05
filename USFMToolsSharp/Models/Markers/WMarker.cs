@@ -16,13 +16,33 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string PreProcess(string input)
         {
-            Regex pattern = new Regex("(.*)[|](.*)");
-            Match match = pattern.Match(input);
-            Term = match.Groups[1].Value;
+            attributes = new Dictionary<string, string>();
 
-            Regex wordAttr = new Regex();
+            string[] wordEntry = input.Split('|');
+            Term = wordEntry[0];
 
-            return base.PreProcess(input);
+            if (wordEntry.Length > 1)
+            {
+                Regex wordAttrPattern = new Regex("([\\w]+)=?\"?([\\w,:.]*)\"?");
+
+                string[] wordAttr = wordEntry[1].Split(' ');
+                foreach (string attr in wordAttr)
+                {
+                    Match attrMatch = wordAttrPattern.Match(attr);
+                    if (attrMatch.Groups[2].Value.Length == 0)
+                    {
+                        attributes["lemma"] = attrMatch.Groups[1].Value;
+                    }
+                    else
+                    {
+                        attributes[attrMatch.Groups[1].Value] = attrMatch.Groups[2].Value;
+                    }
+
+                }
+
+            }
+
+            return string.Empty;
         }
 
     }
