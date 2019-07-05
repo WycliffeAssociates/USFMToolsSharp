@@ -42,13 +42,6 @@ namespace USFMToolsSharp
                     output.Insert(new TextBlock(result.remainingText));
                 }
             }
-            List<UnknownMarker> findUnknown = output.GetChildMarkers<UnknownMarker>();
-            List<string> unkownMarkers = new List<string>();
-            foreach(UnknownMarker marker in findUnknown)
-            {
-                if(!unkownMarkers.Contains(marker.ParsedIdentifier))
-                    unkownMarkers.Add(marker.ParsedIdentifier);
-            }
 
             return output;
         }
