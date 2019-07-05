@@ -246,6 +246,12 @@ namespace USFMToolsSharp
                     output.AppendLine(sMarker.Text);
                     output.AppendLine("</div>");
                     break;
+                case BKMarker bkMarker:
+                    output.AppendLine($"<span class=\"quoted-book\">");
+                    output.AppendLine(bkMarker.BookTitle);
+                    output.AppendLine("</span>");
+                    break;
+                case BKEndMarker _:
                 case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:
