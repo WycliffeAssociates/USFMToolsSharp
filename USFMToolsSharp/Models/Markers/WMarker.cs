@@ -12,6 +12,7 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Term;
         public Dictionary<string, string> attributes;
+        private static Regex wordAttrPattern = new Regex("([\\w]+)=?\"?([\\w,:.]*)\"?");
         public override string Identifier => "w";
 
         public override string PreProcess(string input)
@@ -23,7 +24,6 @@ namespace USFMToolsSharp.Models.Markers
 
             if (wordEntry.Length > 1)
             {
-                Regex wordAttrPattern = new Regex("([\\w]+)=?\"?([\\w,:.]*)\"?");
 
                 string[] wordAttr = wordEntry[1].Split(' ');
                 foreach (string attr in wordAttr)
