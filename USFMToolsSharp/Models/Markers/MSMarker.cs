@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class MSMarker : Marker
     {
+        public int Weight = 1; 
         public string Heading;
         public override string Identifier => "ms";
         public override string PreProcess(string input)
@@ -16,5 +17,8 @@ namespace USFMToolsSharp.Models.Markers
             Heading = input;
             return string.Empty;
         }
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(MRMarker)
+        };
     }
 }
