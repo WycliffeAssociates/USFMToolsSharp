@@ -164,6 +164,8 @@ namespace USFMToolsSharp
                     return new TLMarker();
                 case "tl*":
                     return new TLEndMarker();
+                case "mi":
+                    return new MIMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
