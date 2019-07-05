@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class MTMarker : Marker
     {
+        public int Weight = 1;
         public string Title;
         public override string Identifier => "mt";
         public override string PreProcess(string input)

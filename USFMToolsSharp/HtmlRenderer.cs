@@ -174,7 +174,7 @@ namespace USFMToolsSharp
                     
                     break;
                 case MTMarker mTMarker:
-                    output.AppendLine("<div class=\"majortitle\">");
+                    output.AppendLine($"<div class=\"majortitle-{mTMarker.Weight}\">");
                     output.AppendLine(mTMarker.Title);
                     output.AppendLine("</div>");
                     foreach (Marker marker in input.Contents)
@@ -182,7 +182,7 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
 
-                    if (!ConfigurationHTML.separateChapters)   // No double page breaks before books
+                    if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
                     }

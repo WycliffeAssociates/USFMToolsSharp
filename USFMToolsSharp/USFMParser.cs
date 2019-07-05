@@ -69,7 +69,12 @@ namespace USFMToolsSharp
                 case "toc3":
                     return new TOC3Marker();
                 case "mt":
+                case "mt1":
                     return new MTMarker();
+                case "mt2":
+                    return new MTMarker() { Weight = 2 };
+                case "mt3":
+                    return new MTMarker() { Weight = 3 };
                 case "c":
                     return new CMarker();
                 case "p":
