@@ -11,13 +11,13 @@ namespace USFMToolsSharp.Models.Markers
     public class WMarker : Marker
     {
         public string Term;
-        public Dictionary<string, string> attributes;
+        public Dictionary<string, string> Attributes;
         private static Regex wordAttrPattern = new Regex("([\\w]+)=?\"?([\\w,:.]*)\"?");
         public override string Identifier => "w";
 
         public override string PreProcess(string input)
         {
-            attributes = new Dictionary<string, string>();
+            Attributes = new Dictionary<string, string>();
 
             string[] wordEntry = input.Split('|');
             Term = wordEntry[0];
@@ -31,11 +31,11 @@ namespace USFMToolsSharp.Models.Markers
                     Match attrMatch = wordAttrPattern.Match(attr);
                     if (attrMatch.Groups[2].Value.Length == 0)
                     {
-                        attributes["lemma"] = attrMatch.Groups[1].Value;
+                        Attributes["lemma"] = attrMatch.Groups[1].Value;
                     }
                     else
                     {
-                        attributes[attrMatch.Groups[1].Value] = attrMatch.Groups[2].Value;
+                        Attributes[attrMatch.Groups[1].Value] = attrMatch.Groups[2].Value;
                     }
 
                 }
