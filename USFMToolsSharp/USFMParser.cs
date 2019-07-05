@@ -44,9 +44,10 @@ namespace USFMToolsSharp
             }
             List<UnknownMarker> findUnknown = output.GetChildMarkers<UnknownMarker>();
             List<string> unkownMarkers = new List<string>();
-            foreach(UnknownMarker marker in findUnknown)
+            foreach (UnknownMarker marker in findUnknown)
             {
-                unkownMarkers.Add(marker.ParsedIdentifier);
+                if (!unkownMarkers.Contains(marker.ParsedIdentifier))
+                    unkownMarkers.Add(marker.ParsedIdentifier);
             }
 
             return output;
