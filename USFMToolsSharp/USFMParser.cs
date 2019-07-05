@@ -46,7 +46,8 @@ namespace USFMToolsSharp
             List<string> unkownMarkers = new List<string>();
             foreach(UnknownMarker marker in findUnknown)
             {
-                unkownMarkers.Add(marker.ParsedIdentifier);
+                if(!unkownMarkers.Contains(marker.ParsedIdentifier))
+                    unkownMarkers.Add(marker.ParsedIdentifier);
             }
 
             return output;
@@ -131,6 +132,8 @@ namespace USFMToolsSharp
                     return new ITMarker();
                 case "it*":
                     return new ITEndMarker();
+                case "rem":
+                    return new REMMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
