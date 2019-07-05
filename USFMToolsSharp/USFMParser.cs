@@ -113,6 +113,10 @@ namespace USFMToolsSharp
                     return new SPMarker();
                 case "ft":
                     return new FTMarker();
+                case "fr":
+                    return new FRMarker();
+                case "fk":
+                    return new FKMarker();
                 case "fqa*":
                     return new FQAEndMarker();
                 case "f*":
