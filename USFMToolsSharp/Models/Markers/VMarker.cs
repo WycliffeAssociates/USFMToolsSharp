@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
     {
         // This is a string because of verse bridges. In the future this should have starting and ending verse
         public string VerseNumber;
+        private static Regex verseRegex = new Regex("([0-9-]+) (.*)");
 
         public string VerseCharacter {
             get {
@@ -26,8 +27,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "v";
         public override string PreProcess(string input)
         {
-            Regex pattern = new Regex("([0-9-]+) (.*)");
-            Match match = pattern.Match(input);
+            Match match = verseRegex.Match(input);
             VerseNumber = match.Groups[1].Value;
             return match.Groups[2].Value;
         }
