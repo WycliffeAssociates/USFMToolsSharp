@@ -145,7 +145,6 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</div>");
-
                     break;
                 case MMarker mMarker:
 
@@ -250,6 +249,14 @@ namespace USFMToolsSharp
                     output.AppendLine($"<span class=\"quoted-book\">");
                     output.AppendLine(bkMarker.BookTitle);
                     output.AppendLine("</span>");
+                    break;
+                case LIMarker liMarker:
+                    output.AppendLine($"<div class=\"list-{liMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
                     break;
                 case BKEndMarker _:
                 case FEndMarker _:

@@ -149,6 +149,13 @@ namespace USFMToolsSharp
                     return new BKMarker();
                 case "bk*":
                     return new BKEndMarker();
+                case "li":
+                case "li1":
+                    return new LIMarker();
+                case "li2":
+                    return new LIMarker() { Depth = 2 };
+                case "li3":
+                    return new LIMarker() { Depth = 3 };
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }

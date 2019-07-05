@@ -47,6 +47,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(MMarker),
                     typeof(FMarker),
                     typeof(SPMarker),
+                    typeof(LIMarker),
                     typeof(TextBlock),
                     typeof(FEndMarker),
                 };
