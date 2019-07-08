@@ -53,6 +53,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(SPMarker),
                     typeof(LIMarker),
                     typeof(TextBlock),
+                    typeof(WMarker),
+                    typeof(WEndMarker),
                     typeof(FEndMarker),
                 };
     }
