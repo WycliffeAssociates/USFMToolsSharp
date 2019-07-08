@@ -184,7 +184,6 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-
                     if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
@@ -192,7 +191,6 @@ namespace USFMToolsSharp
                     break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
-
                     string footnoteId;
                     switch (fMarker.FootNoteCaller)
                     {
@@ -205,9 +203,7 @@ namespace USFMToolsSharp
                         default:
                             footnoteId = fMarker.FootNoteCaller;
                             break;
-
                     }
-
                     string footnoteCallerHTML = $"<span class=\"footnotecaller\">{footnoteId}</span>";
                     output.AppendLine(footnoteCallerHTML);
                     footnote.Append(footnoteCallerHTML);
@@ -286,6 +282,10 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</span>");
                     break;
+                case WMarker wMarker:
+                    output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
+                    break;
+                case WEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
                 case ADDEndMarker _:
