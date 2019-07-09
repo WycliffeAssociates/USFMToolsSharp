@@ -177,12 +177,20 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case MTMarker mTMarker:
+                    output.AppendLine($"<div class=\"section-{mTMarker.Title}\">");
                     output.AppendLine($"<div class=\"majortitle-{mTMarker.Weight}\">");
                     output.AppendLine(mTMarker.Title);
                     output.AppendLine("</div>");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
+                    }
+                    if (ConfigurationHTML.addBookHeaders)
+                    {
+                        output.AppendLine(addBookTitleHeader(mTMarker.Title));
+                        output.AppendLine(InsertedFooter);
+                        output.AppendLine("<br class=\"bookbreak\"></br>");
+                        output.AppendLine("</div>");
                     }
                     if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
                     {
@@ -314,6 +322,9 @@ namespace USFMToolsSharp
             }
             return output.ToString();
         }
+
+        
+
         private string RenderFootnotes()
         {
             StringBuilder footnoteHTML = new StringBuilder();
@@ -330,6 +341,23 @@ namespace USFMToolsSharp
             }
             return footnoteHTML.ToString();
         }
-        
+        private string addBookTitleHeader(string title)
+        {
+            string headerHTML = $@"
+            <div class=HeaderSection>
+            <table id='hrdftrtbl' border='0' cellspacing='0' cellpadding='0'>
+            <div class=HeaderSection>
+            <table id='hrdftrtbl' border='0' cellspacing='0' cellpadding='0'>
+            <tr><td>
+            <div style='mso-element:header' id=h1>
+            <p class=MsoHeader></p>
+            <span class='book-title-header'>{title}</span>
+            </div>
+            </td></tr>
+            </table>
+            </div> ";
+            return headerHTML;
+        }
+
     }
 }
