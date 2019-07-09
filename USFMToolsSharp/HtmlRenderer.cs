@@ -10,6 +10,7 @@ namespace USFMToolsSharp
     {
         public List<string> UnrenderableTags;
         public List<string> FootnoteTextTags;
+        public List<string> CrossReferenceTags;
         public HTMLConfig ConfigurationHTML;
         
 
@@ -204,7 +205,7 @@ namespace USFMToolsSharp
                             footnoteId = fMarker.FootNoteCaller;
                             break;
                     }
-                    string footnoteCallerHTML = $"<span class=\"footnotecaller\">{footnoteId}</span>";
+                    string footnoteCallerHTML = $"<span class=\"caller\">{footnoteId}</span>";
                     output.AppendLine(footnoteCallerHTML);
                     footnote.Append(footnoteCallerHTML);
                     foreach (Marker marker in input.Contents)
@@ -285,6 +286,48 @@ namespace USFMToolsSharp
                 case WMarker wMarker:
                     output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
                     break;
+                case XMarker xMarker:
+                    StringBuilder crossRef = new StringBuilder();
+                    string crossId;
+                    switch (xMarker.CrossRefCaller)
+                    {
+                        case "-":
+                            crossId = "";
+                            break;
+                        case "+":
+                            crossId = $"{CrossReferenceTags.Count + 1}";
+                            break;
+                        default:
+                            crossId = xMarker.CrossRefCaller;
+                            break;
+                    }
+                    string crossCallerHTML = $"<span class=\"caller\">{crossId}</span>";
+                    output.AppendLine(crossCallerHTML);
+                    crossRef.AppendLine(crossCallerHTML);
+                    foreach (Marker marker in input.Contents)
+                    {
+                        crossRef.AppendLine(RenderMarker(marker));
+                    }
+                    CrossReferenceTags.Add(crossRef.ToString());
+                    break;
+                case XOMarker xOMarker:
+                    output.AppendLine($"<b> {xOMarker.OriginRef} </b>");
+                    break;
+                case XTMarker xTMarker:
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.AppendLine(RenderMarker(marker));
+                    }
+                    break;
+                case XQMarker xQMarker:
+                    output.AppendLine("<span class=\"cross-ref-quote\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.AppendLine(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case XEndMarker _:
                 case WEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
@@ -318,6 +361,22 @@ namespace USFMToolsSharp
             }
             return footnoteHTML.ToString();
         }
-        
+        private string RenderCrossReferences()
+        {
+            StringBuilder crossRefHTML = new StringBuilder();
+            if (CrossReferenceTags.Count > 0)
+            {
+                crossRefHTML.AppendLine("<div class=\"cross-header\">Cross Reference</div>");
+                foreach (string crossRef in CrossReferenceTags)
+                {
+                    crossRefHTML.AppendLine("<div class=\"cross-ref\">");
+                    crossRefHTML.Append(crossRef);
+                    crossRefHTML.AppendLine("</div>");
+                }
+                CrossReferenceTags.Clear();
+            }
+            return crossRefHTML.ToString();
+        }
+
     }
 }

@@ -174,6 +174,16 @@ namespace USFMToolsSharp
                     return new WMarker();
                 case "w*":
                     return new WEndMarker();
+                case "x":
+                    return new XMarker();
+                case "x*":
+                    return new XEndMarker();
+                case "xo":
+                    return new XOMarker();
+                case "xt":
+                    return new XTMarker();
+                case "xq":
+                    return new XQMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
