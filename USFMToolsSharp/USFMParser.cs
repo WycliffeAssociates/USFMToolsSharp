@@ -106,6 +106,8 @@ namespace USFMToolsSharp
                     return new QSEndMarker();
                 case "f":
                     return new FMarker();
+                case "fp":
+                    return new FPMarker();
                 case "qa":
                     return new QAMarker();
                 case "nb":

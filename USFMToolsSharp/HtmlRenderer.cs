@@ -219,7 +219,6 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    
                     break;
                 case FRMarker fRMarker:
                     output.Append($"<b> {fRMarker.VerseReference} </b>");
