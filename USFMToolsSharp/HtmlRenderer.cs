@@ -213,13 +213,17 @@ namespace USFMToolsSharp
                     }
                     FootnoteTextTags.Add(footnote.ToString());
                     break;
+                case FPMarker fPMarker:
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
                 case FTMarker fTMarker:
-                    
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    
                     break;
                 case FRMarker fRMarker:
                     output.Append($"<b> {fRMarker.VerseReference} </b>");
