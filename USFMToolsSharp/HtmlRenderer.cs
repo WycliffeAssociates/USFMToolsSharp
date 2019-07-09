@@ -76,13 +76,13 @@ namespace USFMToolsSharp
             }
 
             
-            output.AppendLine(RenderFootnotes());
+            
 
             foreach (string class_name in ConfigurationHTML.divClasses)
             {
                 output.AppendLine($"</div>");
             }
-
+            output.AppendLine(InsertedFooter);
 
             output.AppendLine("</body>");
             output.AppendLine("</html>");
