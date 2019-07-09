@@ -237,8 +237,6 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    break;
-                case FQAEndMarker fQAEndMarker:
                     output.Append("</span>");
                     break;
                 case BMarker bMarker:
@@ -296,14 +294,14 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    break;
-                case FQEndMarker fqEndMarker:
                     output.Append("</span>");
                     break;
+                case FQEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
                 case ADDEndMarker _:
                 case BKEndMarker _:
+                case FQAEndMarker _:
                 case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:
