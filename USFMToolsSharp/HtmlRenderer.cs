@@ -319,10 +319,10 @@ namespace USFMToolsSharp
             StringBuilder footnoteHTML = new StringBuilder();
             if (FootnoteTextTags.Count > 0)
             {
-                footnoteHTML.AppendLine("<div class=\"header\">Footnotes</div>");
+                footnoteHTML.AppendLine("<div class=\"footnote-header\">Footnotes</div>");
                 foreach (string footnote in FootnoteTextTags)
                 {
-                    footnoteHTML.AppendLine("<div>");
+                    footnoteHTML.AppendLine("<div class=\"footnotes\">");
                     footnoteHTML.Append(footnote);
                     footnoteHTML.AppendLine("</div>");
                 }
