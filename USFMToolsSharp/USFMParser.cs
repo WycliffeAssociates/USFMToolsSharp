@@ -190,6 +190,10 @@ namespace USFMToolsSharp
                     return new XTMarker();
                 case "xq":
                     return new XQMarker();
+                case "pc":
+                    return new PCMarker();
+                case "cls":
+                    return new CLSMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
