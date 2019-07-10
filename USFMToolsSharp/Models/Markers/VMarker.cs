@@ -56,6 +56,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(WMarker),
                     typeof(WEndMarker),
                     typeof(FEndMarker),
+                    typeof(RQMarker),
+                    typeof(RQEndMarker)
                 };
     }
 }

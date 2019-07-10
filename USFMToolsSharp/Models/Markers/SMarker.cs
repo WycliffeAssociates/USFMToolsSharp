@@ -17,5 +17,8 @@ namespace USFMToolsSharp.Models.Markers
             Text = input;
             return string.Empty;
         }
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(RMarker)
+        };
     }
 }
