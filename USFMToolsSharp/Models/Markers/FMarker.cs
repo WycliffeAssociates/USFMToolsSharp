@@ -23,6 +23,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FRMarker),
             typeof(FKMarker),
             typeof(FTMarker),
+            typeof(FVMarker),
+            typeof(FVEndMarker),
             typeof(FPMarker),
             typeof(FQAMarker),
             typeof(FQAEndMarker),
