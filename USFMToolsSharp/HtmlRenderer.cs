@@ -336,6 +336,34 @@ namespace USFMToolsSharp
                 case FVMarker fVMarker:
                     output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
                     break;
+                case TRMarker tRMarker:
+                    output.AppendLine("<div>");
+                    output.AppendLine("<table style=\"width: 100 % \">");
+                    output.AppendLine("<tr>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</tr>");
+                    output.AppendLine("</table>");
+                    output.AppendLine("</div>");
+                    break;
+                case THMarker tHMarker:
+                    output.AppendLine($"<th class=\"{(tHMarker.isRightAligned ? "table-head-right":"table-head" )}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</th>");
+                    break;
+                case TCMarker tCMarker:
+                    output.AppendLine($"<tc class=\"{(tCMarker.isRightAligned ? "table-cell-right" : "table-cell")}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</tc>");
+                    break;
                 case PCMarker pCMarker:
                     output.Append("<div class=\"center-paragraph\">");
                     foreach (Marker marker in input.Contents)

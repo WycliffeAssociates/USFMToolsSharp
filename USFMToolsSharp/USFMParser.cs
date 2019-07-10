@@ -204,6 +204,35 @@ namespace USFMToolsSharp
                     return new PCMarker();
                 case "cls":
                     return new CLSMarker();
+                case "tr":
+                    return new TRMarker();
+                
+                case "th1":
+                    return new THMarker();
+                case "thr1":
+                    return new THMarker() { isRightAligned = true };
+                case "th2":
+                    return new THMarker() { ColumnPosition = 2 };
+                case "thr2":
+                    return new THMarker() { ColumnPosition = 2, isRightAligned = true };
+                case "th3":
+                    return new THMarker() { ColumnPosition = 3 };
+                case "thr3":
+                    return new THMarker() { ColumnPosition = 3, isRightAligned = true };
+
+                case "tc1":
+                    return new TCMarker();
+                case "tcr1":
+                    return new TCMarker() { ColumnPosition = 2, isRightAligned = true };
+                case "tc2":
+                    return new THMarker() { ColumnPosition = 2 };
+                case "tcr2":
+                    return new TCMarker() { isRightAligned = true };
+                case "tc3":
+                    return new THMarker() { ColumnPosition = 3 };
+                case "tcr3":
+                    return new TCMarker() { ColumnPosition = 3, isRightAligned = true };
+
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
