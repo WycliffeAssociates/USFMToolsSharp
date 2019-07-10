@@ -57,8 +57,10 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(WMarker),
                     typeof(WEndMarker),
                     typeof(XMarker),
-                    typeof(XEndMarker)
-                    typeof(CLSMarker)
+                    typeof(XEndMarker),
+                    typeof(CLSMarker),
+                    typeof(RQMarker),
+                    typeof(RQEndMarker)
                 };
     }
 }
