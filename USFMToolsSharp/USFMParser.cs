@@ -206,7 +206,7 @@ namespace USFMToolsSharp
                     return new CLSMarker();
                 case "tr":
                     return new TRMarker();
-                
+
                 case "th1":
                     return new THMarker();
                 case "thr1":
@@ -223,11 +223,11 @@ namespace USFMToolsSharp
                 case "tc1":
                     return new TCMarker();
                 case "tcr1":
-                    return new TCMarker() { ColumnPosition = 2, isRightAligned = true };
+                    return new TCMarker() { isRightAligned = true };
                 case "tc2":
                     return new THMarker() { ColumnPosition = 2 };
                 case "tcr2":
-                    return new TCMarker() { isRightAligned = true };
+                    return new TCMarker() { ColumnPosition = 2, isRightAligned = true };
                 case "tc3":
                     return new THMarker() { ColumnPosition = 3 };
                 case "tcr3":
