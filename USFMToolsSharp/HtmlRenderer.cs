@@ -296,6 +296,10 @@ namespace USFMToolsSharp
                     }
                     output.Append("</span>");
                     break;
+                case FVMarker fVMarker:
+                    output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
+                    break;
+                case FVEndMarker _:
                 case FQEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:

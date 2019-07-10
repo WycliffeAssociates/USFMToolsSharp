@@ -129,7 +129,11 @@ namespace USFMToolsSharp
                 case "fr":
                     return new FRMarker();
                 case "fk":
-                    return new FKMarker();                
+                    return new FKMarker();
+                case "fv":
+                    return new FVMarker();
+                case "fv*":
+                    return new FVEndMarker();
                 case "f*":
                     return new FEndMarker();
                 case "bd":
