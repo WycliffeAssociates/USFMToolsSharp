@@ -213,13 +213,17 @@ namespace USFMToolsSharp
                     }
                     FootnoteTextTags.Add(footnote.ToString());
                     break;
+                case FPMarker fPMarker:
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
                 case FTMarker fTMarker:
-                    
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    
                     break;
                 case FRMarker fRMarker:
                     output.Append($"<b> {fRMarker.VerseReference} </b>");
@@ -233,8 +237,6 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    break;
-                case FQAEndMarker fQAEndMarker:
                     output.Append("</span>");
                     break;
                 case BMarker bMarker:
@@ -286,10 +288,20 @@ namespace USFMToolsSharp
                     output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
                     break;
                 case WEndMarker _:
+                case FQMarker fqMarker:
+                    output.Append("<span class=\"footnote-alternate-translation\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.Append("</span>");
+                    break;
+                case FQEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
                 case ADDEndMarker _:
                 case BKEndMarker _:
+                case FQAEndMarker _:
                 case FEndMarker _:
                 case IDEMarker _:
                 case IDMarker _:
@@ -307,10 +319,10 @@ namespace USFMToolsSharp
             StringBuilder footnoteHTML = new StringBuilder();
             if (FootnoteTextTags.Count > 0)
             {
-                footnoteHTML.AppendLine("<div class=\"header\">Footnotes</div>");
+                footnoteHTML.AppendLine("<div class=\"footnote-header\">Footnotes</div>");
                 foreach (string footnote in FootnoteTextTags)
                 {
-                    footnoteHTML.AppendLine("<div>");
+                    footnoteHTML.AppendLine("<div class=\"footnotes\">");
                     footnoteHTML.Append(footnote);
                     footnoteHTML.AppendLine("</div>");
                 }
