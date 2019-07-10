@@ -4,6 +4,9 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
+    /// <summary>
+    /// Footnote verse number
+    /// </summary>
     public class FVMarker : Marker
     {
         public string VerseCharacter;
