@@ -58,7 +58,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(WEndMarker),
                     typeof(XMarker),
                     typeof(XEndMarker)
-                    
+                    typeof(CLSMarker)
                 };
     }
 }

@@ -325,8 +325,6 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</span>");
                     break;
-                case XEndMarker _:
-                case WEndMarker _:
                 case FQMarker fqMarker:
                     output.Append("<span class=\"footnote-alternate-translation\">");
                     foreach (Marker marker in input.Contents)
@@ -335,6 +333,25 @@ namespace USFMToolsSharp
                     }
                     output.Append("</span>");
                     break;
+                case PCMarker pCMarker:
+                    output.Append("<div class=\"center-paragraph\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.Append("</div>");
+                    break;
+                case CLSMarker cLSMarker:
+                    output.Append("<div class=\"closing\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.Append("</div>");
+                    break;
+                case XEndMarker _:
+                case WEndMarker _:
+                case WEndMarker _:
                 case FQEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
