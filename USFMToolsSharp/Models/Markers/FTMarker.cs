@@ -9,6 +9,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "ft";
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(FQAMarker),
+            typeof(FQMarker),
             typeof(TextBlock),
         };
     }
