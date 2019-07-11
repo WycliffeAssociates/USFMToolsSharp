@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -55,7 +49,12 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestFootnoteParse()
         {
+            // Footnote Text Marker
             Assert.AreEqual("Sample Simple Footnote.", ((TextBlock)parser.ParseFromString("\\f + \\ft Sample Simple Footnote. \\f*").Contents[0].Contents[0].Contents[0]).Text);
+
+            Assert.AreEqual("+", ((FMarker)parser.ParseFromString("\\f + \\ft Sample Simple Footnote. \\f*").Contents[0]).FootNoteCaller);
+
+            // Footnote Alternate Translation Marker
             Assert.AreEqual("... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth", ((TextBlock)parser.ParseFromString("\\v 26 God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\" \\f + \\ft Some ancient copies have: \\fqa ... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth \\fqa*  . \\f*").Contents[0].Contents[1].Contents[0].Contents[1].Contents[0]).Text);
             
         }
