@@ -347,10 +347,27 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
+                    output.AppendLine("</div>");
+                    break;
+                case RMarker rMarker:
+                    output.AppendLine($"<div class=\"section-reference\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.Append("</div>");
+                    break;
+                case RQMarker rQMarker:
+                    output.AppendLine($"<div class=\"reference\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
                     output.Append("</div>");
                     break;
                 case XEndMarker _:
                 case WEndMarker _:
+                case RQEndMarker _:
                 case WEndMarker _:
                 case FQEndMarker _:
                 case TLEndMarker _:

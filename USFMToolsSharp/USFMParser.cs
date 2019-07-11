@@ -176,6 +176,12 @@ namespace USFMToolsSharp
                     return new SCMarker();
                 case "sc*":
                     return new SCEndMarker();
+                case "r":
+                    return new RMarker();
+                case "rq":
+                    return new RQMarker();
+                case "rq*":
+                    return new RQEndMarker();
                 case "w":
                     return new WMarker();
                 case "w*":
