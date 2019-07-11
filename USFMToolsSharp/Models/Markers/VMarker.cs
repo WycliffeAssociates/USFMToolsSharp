@@ -50,12 +50,15 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(QMarker),
                     typeof(MMarker),
                     typeof(FMarker),
+                    typeof(FEndMarker),
                     typeof(SPMarker),
                     typeof(LIMarker),
                     typeof(TextBlock),
                     typeof(WMarker),
                     typeof(WEndMarker),
-                    typeof(FEndMarker),
+                    typeof(XMarker),
+                    typeof(XEndMarker)
+                    
                 };
     }
 }

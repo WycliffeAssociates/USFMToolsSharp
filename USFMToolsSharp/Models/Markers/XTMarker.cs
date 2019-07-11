@@ -5,11 +5,11 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Translator’s addition
+    /// Target reference(s)
     /// </summary>
-    public class ADDMarker : Marker
+    public class XTMarker : Marker
     {
-        public override string Identifier => "add";
+        public override string Identifier => "xt";
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(TextBlock),
         };
