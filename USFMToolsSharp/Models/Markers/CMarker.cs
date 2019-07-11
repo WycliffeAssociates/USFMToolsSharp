@@ -22,6 +22,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(DMarker),
             typeof(VMarker),
             typeof(PMarker),
+            typeof(PCMarker),
             typeof(CDMarker),
             typeof(CPMarker),
             typeof(DMarker),
