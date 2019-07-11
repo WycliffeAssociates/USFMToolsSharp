@@ -333,6 +333,9 @@ namespace USFMToolsSharp
                     }
                     output.Append("</span>");
                     break;
+                case FVMarker fVMarker:
+                    output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
+                    break;
                 case PCMarker pCMarker:
                     output.Append("<div class=\"center-paragraph\">");
                     foreach (Marker marker in input.Contents)
@@ -368,7 +371,7 @@ namespace USFMToolsSharp
                 case XEndMarker _:
                 case WEndMarker _:
                 case RQEndMarker _:
-                case WEndMarker _:
+                case FVEndMarker _:
                 case FQEndMarker _:
                 case TLEndMarker _:
                 case SCEndMarker _:
