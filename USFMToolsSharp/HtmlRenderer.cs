@@ -22,17 +22,13 @@ namespace USFMToolsSharp
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
+            CrossReferenceTags = new List<string>();
 
             ConfigurationHTML = new HTMLConfig();
         }
-        public HtmlRenderer(HTMLConfig config)
+        public HtmlRenderer(HTMLConfig config):this()
         {
-
             ConfigurationHTML = config;
-
-            UnrenderableTags = new List<string>();
-            FootnoteTextTags = new List<string>();
-
         }
 
         public string Render(USFMDocument input)
