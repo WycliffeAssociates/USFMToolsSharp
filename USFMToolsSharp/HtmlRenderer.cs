@@ -10,6 +10,7 @@ namespace USFMToolsSharp
     {
         public List<string> UnrenderableTags;
         public List<string> FootnoteTextTags;
+        public List<string> HeaderLinks;
         public HTMLConfig ConfigurationHTML;
         
 
@@ -21,6 +22,7 @@ namespace USFMToolsSharp
         {
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
+            HeaderLinks = new List<string>();
 
             ConfigurationHTML = new HTMLConfig();
         }
@@ -29,6 +31,7 @@ namespace USFMToolsSharp
 
             ConfigurationHTML = config;
 
+            HeaderLinks = new List<string>();
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
 
@@ -177,7 +180,7 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case MTMarker mTMarker:
-                    output.AppendLine($"<div class=\"section-{mTMarker.Title}\">");
+                    output.AppendLine($"<div class=\"Section-{mTMarker.Title}\">");
                     output.AppendLine($"<div class=\"majortitle-{mTMarker.Weight}\">");
                     output.AppendLine(mTMarker.Title);
                     output.AppendLine("</div>");
@@ -185,12 +188,14 @@ namespace USFMToolsSharp
                     {
                         output.Append(RenderMarker(marker));
                     }
+                    
                     if (ConfigurationHTML.addBookHeaders)
                     {
                         output.AppendLine(addBookTitleHeader(mTMarker.Title));
                         output.AppendLine(InsertedFooter);
                         output.AppendLine("<br class=\"bookbreak\"></br>");
                         output.AppendLine("</div>");
+
                     }
                     if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
                     {
@@ -343,19 +348,39 @@ namespace USFMToolsSharp
         }
         private string addBookTitleHeader(string title)
         {
+            string headerLink = $@"
+            @page Section-{title}
+	            {"{"}size:8.5in 11.0in;
+	            margin:1.0in 1.0in 1.0in 1.0in;
+	            mso-header-margin:.5in;
+	            mso-footer-margin:.5in;
+	            mso-header: h-{title};
+                mso-footer: f1;
+                mso-first-header: h-{title};
+                mso-first-footer: f1;
+                mso-paper-source:0;
+                { "}"}
+            div.Section-{title}
+	            {"{"}
+                page:Section-{title};
+                {"}"}
+            ";
+            HeaderLinks.Add(headerLink);
             string headerHTML = $@"
-            <div class=HeaderSection>
+            <div class=Section-{title}>
             <table id='hrdftrtbl' border='0' cellspacing='0' cellpadding='0'>
-            <div class=HeaderSection>
+            <div class='Section-{title}'>
             <table id='hrdftrtbl' border='0' cellspacing='0' cellpadding='0'>
             <tr><td>
-            <div style='mso-element:header' id=h1>
-            <p class=MsoHeader></p>
+            <div style='mso-element:header' id='h-{title}'>
+            <p class='MsoHeader'></p>
             <span class='book-title-header'>{title}</span>
             </div>
             </td></tr>
             </table>
-            </div> ";
+            </div>
+            </table>
+            </div>";
             return headerHTML;
         }
 
