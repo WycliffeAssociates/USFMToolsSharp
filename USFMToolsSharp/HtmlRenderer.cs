@@ -355,9 +355,11 @@ namespace USFMToolsSharp
         }
         private string RenderFootnotes()
         {
-            StringBuilder footnoteHTML = new StringBuilder();
+            
             if (FootnoteTextTags.Count > 0)
             {
+                
+                StringBuilder footnoteHTML = new StringBuilder();
                 footnoteHTML.AppendLine("<div class=\"footnote-header\">Footnotes</div>");
                 foreach (string footnote in FootnoteTextTags)
                 {
@@ -366,14 +368,17 @@ namespace USFMToolsSharp
                     footnoteHTML.AppendLine("</div>");
                 }
                 FootnoteTextTags.Clear();
+                return footnoteHTML.ToString();
             }
-            return footnoteHTML.ToString();
+            return string.Empty;
+            
         }
         private string RenderCrossReferences()
         {
-            StringBuilder crossRefHTML = new StringBuilder();
+            
             if (CrossReferenceTags.Count > 0)
             {
+                StringBuilder crossRefHTML = new StringBuilder();
                 crossRefHTML.AppendLine("<div class=\"cross-header\">Cross Reference</div>");
                 foreach (string crossRef in CrossReferenceTags)
                 {
@@ -382,8 +387,10 @@ namespace USFMToolsSharp
                     crossRefHTML.AppendLine("</div>");
                 }
                 CrossReferenceTags.Clear();
+                return crossRefHTML.ToString();
             }
-            return crossRefHTML.ToString();
+            return string.Empty;
+            
         }
 
     }
