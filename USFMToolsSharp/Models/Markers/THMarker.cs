@@ -10,7 +10,6 @@ namespace USFMToolsSharp.Models.Markers
     public class THMarker : Marker
     {
         public int ColumnPosition = 1;
-        public bool isRightAligned;
         public override string Identifier => "th";
 
         public override List<Type> AllowedContents => new List<Type>() {

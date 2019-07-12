@@ -349,7 +349,15 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case THMarker tHMarker:
-                    output.AppendLine($"<th class=\"{(tHMarker.isRightAligned ? "table-head-right":"table-head" )}\">");
+                    output.AppendLine($"<th class=\"table-head\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</th>");
+                    break;
+                case THRMarker tHRMarker:
+                    output.AppendLine($"<th class=\"table-head-right\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
@@ -357,7 +365,15 @@ namespace USFMToolsSharp
                     output.AppendLine("</th>");
                     break;
                 case TCMarker tCMarker:
-                    output.AppendLine($"<tc class=\"{(tCMarker.isRightAligned ? "table-cell-right" : "table-cell")}\">");
+                    output.AppendLine("<tc class=\"table-cell\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</tc>");
+                    break;
+                case TCRMarker tCRMarker:
+                    output.AppendLine("<tc class=\"table-cell-right\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
