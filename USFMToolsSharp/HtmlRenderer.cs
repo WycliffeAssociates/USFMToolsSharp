@@ -463,9 +463,9 @@ namespace USFMToolsSharp
                 crossRefHTML.AppendLine("<div class=\"cross-header\">Cross Reference</div>");
                 foreach (string crossRef in CrossReferenceTags)
                 {
-                    crossRefHTML.AppendLine("<div class=\"cross-ref\">");
+                    crossRefHTML.AppendLine("<span class=\"cross-ref\">");
                     crossRefHTML.Append(crossRef);
-                    crossRefHTML.AppendLine("</div>");
+                    crossRefHTML.AppendLine(" </span>");
                 }
                 CrossReferenceTags.Clear();
                 return crossRefHTML.ToString();
