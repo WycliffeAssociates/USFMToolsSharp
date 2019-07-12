@@ -32,7 +32,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(QAMarker),
             typeof(QMarker),
             typeof(NBMarker),
-            typeof(RMarker)
+            typeof(RMarker),
+            typeof(TRMarker)
         };
     }
 }
