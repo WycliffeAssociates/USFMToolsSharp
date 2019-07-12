@@ -97,7 +97,14 @@ namespace USFMToolsSharp
                 case "d":
                     return new DMarker();
                 case "ms":
+                case "ms1":
                     return new MSMarker();
+                case "ms2":
+                    return new MSMarker() { Weight = 2 };
+                case "ms3":
+                    return new MSMarker() { Weight = 3 };
+                case "mr":
+                    return new MRMarker();
                 case "cl":
                     return new CLMarker();
                 case "qs":

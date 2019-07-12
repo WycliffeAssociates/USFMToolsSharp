@@ -12,7 +12,9 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "pc";
         public override List<Type> AllowedContents => new List<Type>()
         {
-            typeof(TextBlock)
+            typeof(TextBlock),
+            typeof(SCMarker),
+            typeof(SCEndMarker)
         };
     }
 }

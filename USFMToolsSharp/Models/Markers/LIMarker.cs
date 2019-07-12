@@ -16,15 +16,9 @@ namespace USFMToolsSharp.Models.Markers
         {
             return string.Empty;
         }
-        public override List<Type> AllowedContents
-        {
-            get
-            {
-                return new List<Type>()
-                {
-                    typeof(TextBlock)
-                };
-            }
-        }
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(VMarker),
+            typeof(TextBlock)
+        };
     }
 }
