@@ -282,7 +282,7 @@ namespace USFMToolsSharp
                     output.AppendLine("</span>");
                     break;
                 case WMarker wMarker:
-                    output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
+                    output.AppendLine($"<span class=\"word-entry\"> {wMarker.Term} </span>");
                     break;
                 case XMarker xMarker:
                     StringBuilder crossRef = new StringBuilder();
