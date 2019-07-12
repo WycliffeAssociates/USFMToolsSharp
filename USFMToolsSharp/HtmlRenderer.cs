@@ -118,6 +118,7 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     output.AppendLine(RenderFootnotes());
+                    output.AppendLine(RenderCrossReferences());
 
                     // Page breaks after each chapter
                     if (ConfigurationHTML.separateChapters)
@@ -243,6 +244,10 @@ namespace USFMToolsSharp
                     output.AppendLine($"<div class=\"sectionhead-{sMarker.Weight}\">");
                     output.AppendLine(sMarker.Text);
                     output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
                     break;
                 case BKMarker bkMarker:
                     output.AppendLine($"<span class=\"quoted-book\">");
