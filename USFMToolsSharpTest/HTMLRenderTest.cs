@@ -59,11 +59,13 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestFootnoteRender()
         {
+            // Footnote Caller - Text - Alternate Translation
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>This is a footnote<span class=\"caller\">1</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 This is a footnote \\f + \\f*"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\"<span class=\"caller\">2</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\" \\f + \\ft Some ancient copies have: \\fqa ... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth \\fqa*  . \\f*"))));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">1</span>Sam Paul!<span class=\"caller\">3</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 1 Sam Paul! \\f + \\ft Sample Simple Footnote. \\f*"))));
 
-            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>This is a footnote<span class=\"footnotecaller\">1</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 This is a footnote \\f + \\f*"))));
-            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">26</span>God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\"<span class=\"footnotecaller\">2</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 26 God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\" \\f + \\ft Some ancient copies have: \\fqa ... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth \\fqa*  . \\f*"))));
-            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">1</span>Sam Paul!<span class=\"footnotecaller\">3</span></span>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\v 1 Sam Paul! \\f + \\ft Sample Simple Footnote. \\f*"))));
-
+            //Footnote Keyword - Reference - Verse Marker
+            
         }
         [TestMethod]
         public void TestVPRender()
@@ -84,8 +86,8 @@ namespace USFMToolsSharpTest
         public void TestChapterBreak()
         {
             render.ConfigurationHTML.separateChapters = true;
-            Assert.AreEqual("<div class=\"majortitle\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\c 3"))));
-            Assert.AreEqual("<div class=\"majortitle\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"majortitle\">Exodus</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\mt Exodus \\c 1"))));
+            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\c 3"))));
+            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"majortitle-1\">Exodus</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\mt Genesis \\c 1 \\c 2 \\mt Exodus \\c 1"))));
             Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>First</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span><span class=\"verse\"><span class=\"versemarker\">1</span>Second</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span><span class=\"verse\"><span class=\"versemarker\">1</span>Third</span></div><br class=\"pagebreak\"></br>", strip_WhiteSpace(render.Render(parser.ParseFromString("\\c 1 \\v 1 First \\c 2 \\v 1 Second \\c 3 \\v 1 Third"))));
 
         }
