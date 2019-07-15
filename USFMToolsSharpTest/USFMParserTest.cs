@@ -38,7 +38,10 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestMajorTitleParse()
         {
-
+            Assert.AreEqual("Keluaran", ((MTMarker)parser.ParseFromString("\\mt1 Keluaran").Contents[0]).Title);
+            Assert.AreEqual("Keluaran", ((MTMarker)parser.ParseFromString("\\mt3 Keluaran").Contents[0]).Title);
+            Assert.AreEqual(1, ((MTMarker)parser.ParseFromString("\\mt Keluaran").Contents[0]).Weight);
+            Assert.AreEqual(2, ((MTMarker)parser.ParseFromString("\\mt2 Keluaran").Contents[0]).Weight);
         }
         [TestMethod]
         public void TestHeaderParse()
@@ -84,7 +87,25 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestTableParse()
         {
+            // Table Rows - Cells
+            Assert.IsInstanceOfType(parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0],TRMarker);
+            Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).Text);
+            Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual(1, ((TCMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[1]).ColumnPosition);
 
+            // Embedded Verse
+            Assert.AreEqual("6", ((VMarker)parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[0].Contents[0]).VerseNumber);
+
+            // Table Headers
+            Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0]).Text);
+            Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual(1, ((THMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[1]).ColumnPosition);
+
+            // Transliterated
+            Assert.AreEqual("Hades", ((TextBlock)parser.ParseFromString("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*").Contents[0].Contents[2].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("TEKEL", ((TextBlock)parser.ParseFromString("\\v 27 \\tl TEKEL\\tl* :").Contents[0].Contents[0].Contents[0]).Text);
         }
         [TestMethod]
         public void TestListParse()
