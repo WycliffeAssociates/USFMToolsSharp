@@ -186,6 +186,20 @@ namespace USFMToolsSharp
                         output.AppendLine("<br class=\"pagebreak\"></br>");
                     }
                     break;
+                case MSMarker mSMarker:
+                    output.AppendLine($"<div class=\"majorsection-{mSMarker.Weight}\">");
+                    output.AppendLine(mSMarker.Heading);
+                    output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
+                case MRMarker mRMarker:
+                    output.AppendLine($"<div class=\"major-ref\">");
+                    output.AppendLine(mRMarker.SectionReference);
+                    output.AppendLine("</div>");
+                    break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
                     string footnoteId;

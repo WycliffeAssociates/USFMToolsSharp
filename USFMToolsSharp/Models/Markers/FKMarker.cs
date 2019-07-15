@@ -7,7 +7,7 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Footnote keyword Marker
     /// </summary>
-    class FKMarker : Marker
+    public class FKMarker : Marker
     {
         public override string Identifier => "fk";
         public string FootNoteKeyword;
