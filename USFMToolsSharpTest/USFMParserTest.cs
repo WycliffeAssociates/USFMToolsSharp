@@ -83,6 +83,9 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Sela", ((TextBlock)parser.ParseFromString("\\v 3 Allah datang dari negeri Teman \\q2 dan Yang Mahakudus datang dari Gunung Paran. \\qs Sela \\qs* ").Contents[0].Contents[1].Contents[1].Contents[0]).Text);
             Assert.AreEqual("Sela", ((TextBlock)parser.ParseFromString("\\q2 dan sampai batu yang penghabisan. \\qs Sela \\qs*").Contents[0].Contents[1].Contents[0]).Text);
 
+            // Transliterated
+            Assert.AreEqual("Hades", ((TextBlock)parser.ParseFromString("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*").Contents[0].Contents[2].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("TEKEL", ((TextBlock)parser.ParseFromString("\\v 27 \\tl TEKEL\\tl* :").Contents[0].Contents[0].Contents[0]).Text);
         }
         [TestMethod]
         public void TestTableParse()
@@ -103,14 +106,11 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, ((THMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0]).ColumnPosition);
             Assert.AreEqual(2, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[1]).ColumnPosition);
 
-            // Transliterated
-            Assert.AreEqual("Hades", ((TextBlock)parser.ParseFromString("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*").Contents[0].Contents[2].Contents[1].Contents[0]).Text);
-            Assert.AreEqual("TEKEL", ((TextBlock)parser.ParseFromString("\\v 27 \\tl TEKEL\\tl* :").Contents[0].Contents[0].Contents[0]).Text);
+            
         }
         [TestMethod]
         public void TestListParse()
         {
-            var obj = parser.ParseFromString("\\li Peres ayah Hezron. \\li \\v 19 Hezron ayah Ram.");
             // List Items
             Assert.AreEqual("Peres ayah Hezron.", ((TextBlock)parser.ParseFromString("\\li Peres ayah Hezron.").Contents[0].Contents[0]).Text);
             // Verse within List
@@ -174,8 +174,6 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestWordEntryParse()
         {
-            var obj = parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala \\w* di Daftar Istilah.\\f*");
-
             // Within Footnotes
             Assert.AreEqual("Berhala", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Term);
             
