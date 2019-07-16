@@ -28,7 +28,7 @@ namespace USFMToolsSharp.Models.Markers
             return input;
         }
 
-        public bool TryInsert(Marker input)
+        public bool TryInsert(Marker input, bool checkPossibility = false)
         {
             if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
             {
@@ -36,7 +36,10 @@ namespace USFMToolsSharp.Models.Markers
             }
             if (AllowedContents.Contains(input.GetType()))
             {
-                Contents.Add(input);
+                if (!checkPossibility)
+                {
+                    Contents.Add(input);
+                }
                 return true;
             }
             return false;

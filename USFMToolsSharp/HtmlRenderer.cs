@@ -355,49 +355,58 @@ namespace USFMToolsSharp
                 case FVMarker fVMarker:
                     output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
                     break;
-                case TRMarker tRMarker:
+
+                case TableBlock table:
                     output.AppendLine("<div>");
-                    output.AppendLine("<table style=\"width: 100 % \">");
+                    output.AppendLine("<table style=\"width: 100%; \">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</table>");
+                    output.AppendLine("</div>");
+                    break;
+
+
+                case TRMarker tRMarker:
                     output.AppendLine("<tr>");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</tr>");
-                    output.AppendLine("</table>");
-                    output.AppendLine("</div>");
                     break;
                 case THMarker tHMarker:
-                    output.AppendLine($"<th class=\"table-head\">");
+                    output.AppendLine($"<td class=\"table-head\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine("</th>");
+                    output.AppendLine("</td>");
                     break;
                 case THRMarker tHRMarker:
-                    output.AppendLine($"<th class=\"table-head-right\">");
+                    output.AppendLine($"<td class=\"table-head-right\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine("</th>");
+                    output.AppendLine("</td>");
                     break;
                 case TCMarker tCMarker:
-                    output.AppendLine("<tc class=\"table-cell\">");
+                    output.AppendLine("<td class=\"table-cell\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine("</tc>");
+                    output.AppendLine("</td>");
                     break;
                 case TCRMarker tCRMarker:
-                    output.AppendLine("<tc class=\"table-cell-right\">");
+                    output.AppendLine("<td class=\"table-cell-right\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
-                    output.AppendLine("</tc>");
+                    output.AppendLine("</td>");
                     break;
                 case PCMarker pCMarker:
                     output.Append("<div class=\"center-paragraph\">");

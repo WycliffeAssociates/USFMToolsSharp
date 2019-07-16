@@ -37,7 +37,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(NBMarker),
             typeof(RMarker),
             typeof(LIMarker),
-            typeof(TRMarker),
+            typeof(TableBlock),
             typeof(MIMarker),
             typeof(PIMarker)
         };
