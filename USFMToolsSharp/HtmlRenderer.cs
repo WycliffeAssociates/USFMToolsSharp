@@ -449,7 +449,7 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case DMarker dMarker:
-                    output.Append("<div class=\"selah-text\">");
+                    output.Append("<div class=\"descriptive-text\">");
                     output.AppendLine(dMarker.Description);
                     output.AppendLine("</div>");
                     foreach (Marker marker in input.Contents)
