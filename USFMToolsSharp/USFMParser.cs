@@ -48,10 +48,7 @@ namespace USFMToolsSharp
                     isInsideTable = false;
                     tempTable.Contents.Clear();
                 }
-                if (isInsideTable)
-                {
-                    var x = output.Contents[output.Contents.Count - 1];
-                }
+
                 output.Insert(result.marker);
                 
 
