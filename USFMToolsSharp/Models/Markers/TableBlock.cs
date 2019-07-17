@@ -5,16 +5,15 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// Centered paragraph
+    /// A "marker" for a table block. This exists so that we can handle table data
     /// </summary>
-    public class PCMarker : Marker
+    public class TableBlock : Marker
     {
-        public override string Identifier => "pc";
+        public override string Identifier => string.Empty;
+
         public override List<Type> AllowedContents => new List<Type>()
         {
-            typeof(TextBlock),
-            typeof(SCMarker),
-            typeof(SCEndMarker)
+            typeof(TRMarker)
         };
     }
 }

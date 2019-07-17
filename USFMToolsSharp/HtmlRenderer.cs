@@ -118,6 +118,7 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     output.AppendLine(RenderFootnotes());
+                    output.AppendLine(RenderCrossReferences());
 
                     // Page breaks after each chapter
                     if (ConfigurationHTML.separateChapters)
@@ -186,6 +187,20 @@ namespace USFMToolsSharp
                         output.AppendLine("<br class=\"pagebreak\"></br>");
                     }
                     break;
+                case MSMarker mSMarker:
+                    output.AppendLine($"<div class=\"sectionhead-{mSMarker.Weight}\">");
+                    output.AppendLine(mSMarker.Heading);
+                    output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
+                case MRMarker mRMarker:
+                    output.AppendLine($"<div class=\"major-section-reference\">");
+                    output.Append(mRMarker.SectionReference);
+                    output.Append("</div>");
+                    break;
                 case FMarker fMarker:
                     StringBuilder footnote = new StringBuilder();
                     string footnoteId;
@@ -243,6 +258,10 @@ namespace USFMToolsSharp
                     output.AppendLine($"<div class=\"sectionhead-{sMarker.Weight}\">");
                     output.AppendLine(sMarker.Text);
                     output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
                     break;
                 case BKMarker bkMarker:
                     output.AppendLine($"<span class=\"quoted-book\">");
@@ -282,7 +301,7 @@ namespace USFMToolsSharp
                     output.AppendLine("</span>");
                     break;
                 case WMarker wMarker:
-                    output.AppendLine($"<span class=\"word-entry\">{wMarker.Term}</span>");
+                    output.AppendLine($"<span class=\"word-entry\"> {wMarker.Term} </span>");
                     break;
                 case XMarker xMarker:
                     StringBuilder crossRef = new StringBuilder();
@@ -336,6 +355,59 @@ namespace USFMToolsSharp
                 case FVMarker fVMarker:
                     output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
                     break;
+
+                case TableBlock table:
+                    output.AppendLine("<div>");
+                    output.AppendLine("<table class=\"table-block\"\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</table>");
+                    output.AppendLine("</div>");
+                    break;
+
+
+                case TRMarker tRMarker:
+                    output.AppendLine("<tr>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</tr>");
+                    break;
+                case THMarker tHMarker:
+                    output.AppendLine($"<td class=\"table-head\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</td>");
+                    break;
+                case THRMarker tHRMarker:
+                    output.AppendLine($"<td class=\"table-head-right\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</td>");
+                    break;
+                case TCMarker tCMarker:
+                    output.AppendLine("<td class=\"table-cell\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</td>");
+                    break;
+                case TCRMarker tCRMarker:
+                    output.AppendLine("<td class=\"table-cell-right\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</td>");
+                    break;
                 case PCMarker pCMarker:
                     output.Append("<div class=\"center-paragraph\">");
                     foreach (Marker marker in input.Contents)
@@ -368,6 +440,24 @@ namespace USFMToolsSharp
                     }
                     output.Append("</div>");
                     break;
+                case QSMarker qSMarker:
+                    output.Append("<div class=\"selah-text\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case DMarker dMarker:
+                    output.Append("<div class=\"descriptive-text\">");
+                    output.AppendLine(dMarker.Description);
+                    output.AppendLine("</div>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    break;
+                case QSEndMarker _:
                 case XEndMarker _:
                 case WEndMarker _:
                 case RQEndMarker _:
@@ -419,9 +509,9 @@ namespace USFMToolsSharp
                 crossRefHTML.AppendLine("<div class=\"cross-header\">Cross Reference</div>");
                 foreach (string crossRef in CrossReferenceTags)
                 {
-                    crossRefHTML.AppendLine("<div class=\"cross-ref\">");
+                    crossRefHTML.AppendLine("<span class=\"cross-ref\">");
                     crossRefHTML.Append(crossRef);
-                    crossRefHTML.AppendLine("</div>");
+                    crossRefHTML.AppendLine(" </span>");
                 }
                 CrossReferenceTags.Clear();
                 return crossRefHTML.ToString();

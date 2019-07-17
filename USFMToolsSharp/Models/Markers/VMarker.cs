@@ -36,6 +36,7 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     typeof(VPMarker),
                     typeof(VPEndMarker),
+                    typeof(TRMarker),
                     typeof(TLMarker),
                     typeof(TLEndMarker),
                     typeof(ADDMarker),
@@ -52,7 +53,6 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(FMarker),
                     typeof(FEndMarker),
                     typeof(SPMarker),
-                    typeof(LIMarker),
                     typeof(TextBlock),
                     typeof(WMarker),
                     typeof(WEndMarker),
@@ -60,7 +60,12 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(XEndMarker),
                     typeof(CLSMarker),
                     typeof(RQMarker),
-                    typeof(RQEndMarker)
+                    typeof(RQEndMarker),
+                    typeof(PIMarker),
+                    typeof(MIMarker),
+                    typeof(QSMarker),
+                    typeof(QSEndMarker),
+                    typeof(SMarker),
                 };
     }
 }

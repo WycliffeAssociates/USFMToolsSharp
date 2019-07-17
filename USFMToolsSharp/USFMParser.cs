@@ -24,6 +24,8 @@ namespace USFMToolsSharp
         {
             Regex splitRegex = new Regex("\\\\([a-z0-9*]+)([^\\\\]*)");
             USFMDocument output = new USFMDocument();
+            bool isInsideTable = false;
+            Marker tempTable = new TableBlock();
 
             foreach(Match match in splitRegex.Matches(input))
             {
@@ -32,15 +34,29 @@ namespace USFMToolsSharp
                     continue;
                 }
 
+
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
 
+                if(result.marker is TRMarker && !isInsideTable)
+                {
+                    output.Insert(new TableBlock());
+                    isInsideTable = true;
+                }
+                if(isInsideTable && !tempTable.TryInsert(result.marker,dryRun:true))
+                {
+                    isInsideTable = false;
+                }
+
                 output.Insert(result.marker);
+                
 
                 if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
                     output.Insert(new TextBlock(result.remainingText));
                 }
+
+
             }
 
             return output;
@@ -97,7 +113,14 @@ namespace USFMToolsSharp
                 case "d":
                     return new DMarker();
                 case "ms":
+                case "ms1":
                     return new MSMarker();
+                case "ms2":
+                    return new MSMarker() { Weight = 2 };
+                case "ms3":
+                    return new MSMarker() { Weight = 3 };
+                case "mr":
+                    return new MRMarker();
                 case "cl":
                     return new CLMarker();
                 case "qs":
@@ -204,6 +227,35 @@ namespace USFMToolsSharp
                     return new PCMarker();
                 case "cls":
                     return new CLSMarker();
+                case "tr":
+                    return new TRMarker();
+
+                case "th1":
+                    return new THMarker();
+                case "thr1":
+                    return new THRMarker();
+                case "th2":
+                    return new THMarker() { ColumnPosition = 2 };
+                case "thr2":
+                    return new THRMarker() { ColumnPosition = 2};
+                case "th3":
+                    return new THMarker() { ColumnPosition = 3 };
+                case "thr3":
+                    return new THRMarker() { ColumnPosition = 3};
+
+                case "tc1":
+                    return new TCMarker();
+                case "tcr1":
+                    return new TCRMarker();
+                case "tc2":
+                    return new THMarker() { ColumnPosition = 2 };
+                case "tcr2":
+                    return new TCRMarker() { ColumnPosition = 2 };
+                case "tc3":
+                    return new THMarker() { ColumnPosition = 3 };
+                case "tcr3":
+                    return new TCRMarker() { ColumnPosition = 3 };
+
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
