@@ -31,25 +31,24 @@ namespace USFMToolsSharpTest
         public void TestSectionRender()
         {
             // Section Headings
-            Assert.AreEqual(1, WrapTest("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)"));
-            Assert.AreEqual(3, WrapTest("\\s3 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)"));
+            Assert.AreEqual("<div class=\"sectionhead-1\">Silsilah Yesus Kristus</div><div class=\"section-reference\">(Luk. 3:23 - 38)</div>", WrapTest("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)"));
+            Assert.AreEqual("<div class=\"sectionhead-3\">Silsilah Yesus Kristus</div><div class=\"section-reference\">(Luk. 3:23 - 38)</div>", WrapTest("\\s3 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)"));
 
             // Major Section 
-            Assert.AreEqual("jilid 1", WrapTest("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)"));
-            Assert.AreEqual(3, WrapTest("\\ms3 jilid 1 \\mr (Mazmur 1 - 41)"));
-            Assert.AreEqual(1, WrapTest("\\ms jilid 1 \\mr (Mazmur 1 - 41)"));
+            Assert.AreEqual("<div class=\"sectionhead-2\">jilid 1</div><div class=\"major-section-reference\">(Mazmur 1 - 41)</div>", WrapTest("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)"));
+            Assert.AreEqual("<div class=\"sectionhead-3\">jilid 1</div><div class=\"major-section-reference\">(Mazmur 1 - 41)</div>", WrapTest("\\ms3 jilid 1 \\mr (Mazmur 1 - 41)"));
+            Assert.AreEqual("<div class=\"sectionhead-1\">jilid 1</div><div class=\"major-section-reference\">(Mazmur 1 - 41)</div>", WrapTest("\\ms jilid 1 \\mr (Mazmur 1 - 41)"));
 
             // References
-            Assert.AreEqual("(Mazmur 1 - 41)", WrapTest("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)"));
-            Assert.AreEqual("(Mazmur)", WrapTest("\\ms2 jilid 1 \\mr (Mazmur)"));
+            Assert.AreEqual("<div class=\"sectionhead-2\">jilid 1</div><div class=\"major-section-reference\">(Mazmur)</div>", WrapTest("\\ms2 jilid 1 \\mr (Mazmur)"));
 
         }
         [TestMethod]
         public void TestMajorTitleRender()
         {
-            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br>", WrapTest("\\mt1 Keluaran"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt1 Keluaran"));
             Assert.AreEqual("<div class=\"majortitle-3\">Keluaran</div>", WrapTest("\\mt3 Keluaran"));
-            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br>", WrapTest("\\mt Keluaran"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt Keluaran"));
             Assert.AreEqual("<div class=\"majortitle-2\">Keluaran</div>", WrapTest("\\mt2 Keluaran"));
         }
         [TestMethod]
@@ -81,31 +80,29 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>asdfasdf</span></div>", WrapTest("\\c 1  \\v 1 asdfasdf"));
 
             // References - Quoted book title - Parallel passage reference
-            Assert.AreEqual("(Luk. 3:23 - 38)", WrapTest("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)"));
-            Assert.AreEqual("(Luk. 12:33 - 34; 11:34 - 36; 16:13)", WrapTest("\\s Kumpulkanlah Harta di Surga \\r (Luk. 12:33 - 34; 11:34 - 36; 16:13)"));
-            Assert.AreEqual("Kitab Peperangan TUHAN,", WrapTest("\\v 14 Itulah sebabnya kata-kata ini ditulis dalam \\bk Kitab Peperangan TUHAN,\\bk*"));
-            Assert.AreEqual("Psa 2.7", WrapTest("\\v 5 For God never said to any of his angels,\\q1 \"You are my Son;\\q2 today I have become your Father.\"\\rq Psa 2.7\\rq* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">14</span>Itulah sebabnya kata-kata ini ditulis dalam<span class=\"quoted-book\">Kitab Peperangan TUHAN,</span></span>", WrapTest("\\v 14 Itulah sebabnya kata-kata ini ditulis dalam \\bk Kitab Peperangan TUHAN,\\bk*"));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">5</span>For God never said to any of his angels,<div class=\"poetry-1\">\"You are my Son;</div><div class=\"poetry-2\">today I have become your Father.\"</div><div class=\"reference\">Psa 2.7</div></span>", WrapTest("\\v 5 For God never said to any of his angels,\\q1 \"You are my Son;\\q2 today I have become your Father.\"\\rq Psa 2.7\\rq* "));
 
             // Closing - Selah
-            Assert.AreEqual("[[ayt.co/Mat]]", WrapTest("\\cls [[ayt.co/Mat]]"));
-            Assert.AreEqual("Sela", WrapTest("\\v 3 Allah datang dari negeri Teman \\q2 dan Yang Mahakudus datang dari Gunung Paran. \\qs Sela \\qs* "));
-            Assert.AreEqual("Sela", WrapTest("\\q2 dan sampai batu yang penghabisan. \\qs Sela \\qs*"));
+            Assert.AreEqual("<div class=\"closing\">[[ayt.co/Mat]]</div>", WrapTest("\\cls [[ayt.co/Mat]]"));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">3</span>Allah datang dari negeri Teman<div class=\"poetry-2\">dan Yang Mahakudus datang dari Gunung Paran.<div class=\"selah-text\">Sela</div></div></span>", WrapTest("\\v 3 Allah datang dari negeri Teman \\q2 dan Yang Mahakudus datang dari Gunung Paran. \\qs Sela \\qs* "));
+            Assert.AreEqual("<div class=\"poetry-2\">dan sampai batu yang penghabisan.<div class=\"selah-text\">Sela</div></div>", WrapTest("\\q2 dan sampai batu yang penghabisan. \\qs Sela \\qs*"));
 
             // Transliterated
-            Assert.AreEqual("Hades", WrapTest("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*"));
-            Assert.AreEqual("TEKEL", WrapTest("\\v 27 \\tl TEKEL\\tl* :"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\"></span><span class=\"caller\">1</span></span></div><div class=\"footnote-header\">Footnotes</div><div class=\"footnotes\"><span class=\"caller\">1</span><b> 10:15 </b> DUNIA ORANG MATI: Dalam bahasa Yunani adalah<span class=\"transliterated\">Hades</span>, tempat orang setelah meninggal.</div>", WrapTest("\\c 1 \\v 1 \\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*"));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"transliterated\">TEKEL</span>:</span>", WrapTest("\\v 27 \\tl TEKEL\\tl* :"));
         }
+        [TestMethod]
         public void TestTableRender()
         {
             // Table Rows - Cells
-            Assert.AreEqual("dari suku Ruben", WrapTest("\\tr \\tc1 dari suku Ruben \\tcr2 12.000"));
+            Assert.AreEqual("<div><table class=\"table-block\"><tr><td class=\"table-cell\">dari suku Ruben</td><td class=\"table-cell-right\">12.000</td></tr></table></div>", WrapTest("\\tr \\tc1 dari suku Ruben \\tcr2 12.000"));
 
             // Embedded Verse
-            Assert.AreEqual("6", WrapTest("\\tc1 \\v 6 dari suku Asyer"));
+            Assert.AreEqual("<td class=\"table-cell\"><span class=\"verse\"><span class=\"versemarker\">6</span>dari suku Asyer</span></td>", WrapTest("\\tc1 \\v 6 dari suku Asyer"));
 
             // Table Headers
-            Assert.AreEqual("dari suku Ruben", WrapTest("\\tr \\th1 dari suku Ruben \\thr2 12.000"));
-            Assert.AreEqual(1, WrapTest("\\tr \\th1 dari suku Ruben \\thr2 12.000"));
+            Assert.AreEqual("<div><table class=\"table-block\"><tr><td class=\"table-head\">dari suku Ruben</td><td class=\"table-head-right\">12.000</td></tr></table></div>", WrapTest("\\tr \\th1 dari suku Ruben \\thr2 12.000"));
 
             
         }
@@ -113,9 +110,9 @@ namespace USFMToolsSharpTest
         public void TestListRender()
         {
             // List Items
-            Assert.AreEqual("Peres ayah Hezron.", WrapTest("\\li Peres ayah Hezron."));
+            Assert.AreEqual("<div class=\"list-1\">Peres ayah Hezron.</div>", WrapTest("\\li Peres ayah Hezron."));
             // Verse within List
-            Assert.AreEqual("19", WrapTest("\\li Peres ayah Hezron. \\li \\v 19 Hezron ayah Ram."));
+            Assert.AreEqual("<div class=\"list-1\">Peres ayah Hezron.</div><div class=\"list-1\"><span class=\"verse\"><span class=\"versemarker\">19</span>Hezron ayah Ram.</span></div>", WrapTest("\\li Peres ayah Hezron. \\li \\v 19 Hezron ayah Ram."));
         }
         [TestMethod]
         public void TestFootnoteRender()
@@ -146,13 +143,13 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("<span class=\"caller\"></span>", WrapTest("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*"));
 
             // Cross Reference Origin
-            Assert.AreEqual("", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt \\x*"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\"></span><span class=\"caller\"></span></span></div><div class=\"cross-header\">Cross Reference</div><span class=\"cross-ref\"><span class=\"caller\"></span><b> 11.21 </b><span class=\"cross-ref-quote\">Tebes</span> </span><span class=\"cross-ref\"><span class=\"caller\"></span><b> 11.21 </b><span class=\"cross-ref-quote\">Tebes</span> </span>", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt \\x*"));
 
             // Cross Reference Target
-            Assert.AreEqual("", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt Mrk 1.24; Luk 2.39; Jhn 1.45.\\x*"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\"></span><span class=\"caller\"></span></span></div><div class=\"cross-header\">Cross Reference</div><span class=\"cross-ref\"><span class=\"caller\"></span><b> 11.21 </b><span class=\"cross-ref-quote\">Tebes</span>Mrk 1.24; Luk 2.39; Jhn 1.45. </span>", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt Mrk 1.24; Luk 2.39; Jhn 1.45.\\x*"));
 
             // Cross Reference Quotation
-            Assert.AreEqual("", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt \\x*"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\"></span><span class=\"caller\"></span></span></div><div class=\"cross-header\">Cross Reference</div><span class=\"cross-ref\"><span class=\"caller\"></span><b> 11.21 </b><span class=\"cross-ref-quote\">Tebes</span> </span>", WrapTest("\\c 1 \\v 1 \\x - \\xo 11.21 \\xq Tebes \\xt \\x*"));
         }
         [TestMethod]
         public void TestVPRender()
@@ -163,17 +160,16 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestWordEntryRender()
         {
-            var obj = parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala \\w* di Daftar Istilah.\\f*");
 
             // Within Footnotes
-            Assert.AreEqual("Berhala", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala \\w* di Daftar Istilah.\\f*"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\"></span><span class=\"caller\">1</span></span></div><div class=\"footnote-header\">Footnotes</div><div class=\"footnotes\"><span class=\"caller\">1</span><b> 3:5 </b> BERHALA: Lih.<span class=\"word-entry\"> Berhala </span>di Daftar Istilah.</div>", WrapTest("\\c 1 \\v 1\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala \\w* di Daftar Istilah.\\f*"));
 
             // Word Entry Attributes
-            Assert.AreEqual("Berhala", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w Berhala|Berhala \\w* di Daftar Istilah.\\f*"));
-            Assert.AreEqual("grace", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" \\w* di Daftar Istilah.\\f*"));
-            Assert.AreEqual("G5485", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" strong=\"G5485\" \\w* di Daftar Istilah.\\f*"));
-            Assert.AreEqual("H1234,G5485", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*"));
-            Assert.AreEqual("gnt5:51.1.2.1", WrapTest("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*"));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"word-entry\"> Berhala </span>di Daftar Istilah</span>", WrapTest("\\v 1 \\w Berhala|Berhala \\w* di Daftar Istilah"));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"word-entry\"> gracious </span>di Daftar Istilah.</span>", WrapTest("\\v 1 \\w gracious|lemma=\"grace\" \\w* di Daftar Istilah."));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"word-entry\"> gracious </span>di Daftar Istilah.</span>", WrapTest("\\v 1 \\w gracious|lemma=\"grace\" strong=\"G5485\" \\w* di Daftar Istilah."));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"word-entry\"> gracious </span>di Daftar Istilah.</span>", WrapTest("\\v 1 \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah."));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\"></span><span class=\"word-entry\"> gracious </span>di Daftar Istilah.</span>", WrapTest("\\v 1 \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah."));
 
         }
         [TestMethod]
@@ -189,9 +185,9 @@ namespace USFMToolsSharpTest
         public void TestChapterBreak()
         {
             render.ConfigurationHTML.separateChapters = true;
-            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span></div><br class=\"pagebreak\"></br>", WrapTest("\\mt Genesis \\c 1 \\c 2 \\c 3"));
-            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"majortitle-1\">Exodus</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br>", WrapTest("\\mt Genesis \\c 1 \\c 2 \\mt Exodus \\c 1"));
-            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>First</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">2</span><span class=\"verse\"><span class=\"versemarker\">1</span>Second</span></div><br class=\"pagebreak\"></br><div class=\"chapter\"><span class=\"chaptermarker\">3</span><span class=\"verse\"><span class=\"versemarker\">1</span>Third</span></div><br class=\"pagebreak\"></br>", WrapTest("\\c 1 \\v 1 First \\c 2 \\v 1 Second \\c 3 \\v 1 Third"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"chapter\"><span class=\"chaptermarker\">3</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt Genesis \\c 1 \\c 2 \\c 3"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"chapter\"><span class=\"chaptermarker\">2</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"majortitle-1\">Exodus</div><div class=\"chapter\"><span class=\"chaptermarker\">1</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt Genesis \\c 1 \\c 2 \\mt Exodus \\c 1"));
+            Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1</span><span class=\"verse\"><span class=\"versemarker\">1</span>First</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"chapter\"><span class=\"chaptermarker\">2</span><span class=\"verse\"><span class=\"versemarker\">1</span>Second</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div><div class=\"chapter\"><span class=\"chaptermarker\">3</span><span class=\"verse\"><span class=\"versemarker\">1</span>Third</span></div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\c 1 \\v 1 First \\c 2 \\v 1 Second \\c 3 \\v 1 Third"));
 
         }
         [TestMethod]
