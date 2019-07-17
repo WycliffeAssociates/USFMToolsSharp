@@ -124,6 +124,7 @@ namespace USFMToolsSharp
                     if (ConfigurationHTML.separateChapters)
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
+                        output.AppendLine("<div class=\"pagebreak\"></div>");
                     }
 
                     break;
@@ -185,6 +186,7 @@ namespace USFMToolsSharp
                     if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
                     {
                         output.AppendLine("<br class=\"pagebreak\"></br>");
+                        output.AppendLine("<div class=\"pagebreak\"></div>");
                     }
                     break;
                 case MSMarker mSMarker:

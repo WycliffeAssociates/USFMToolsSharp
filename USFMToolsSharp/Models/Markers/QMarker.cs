@@ -12,18 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public int Depth = 1;
         public string Text;
         public override string Identifier => "q";
-        public override List<Type> AllowedContents
-        {
-            get
-            {
-                return new List<Type>()
-                {
-                    typeof(VMarker),
-                    typeof(BMarker),
-                    typeof(QSMarker),
-                    typeof(TextBlock),
-                };
-            }
-        }
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(BMarker),
+            typeof(QSMarker),
+            typeof(TextBlock),
+        };
     }
 }

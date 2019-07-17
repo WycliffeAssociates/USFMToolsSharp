@@ -30,6 +30,10 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FQAEndMarker),
             typeof(FQMarker),
             typeof(FQEndMarker),
+            typeof(TLMarker),
+            typeof(TLEndMarker),
+            typeof(WMarker),
+            typeof(WEndMarker),
             typeof(TextBlock),
         };
     }
