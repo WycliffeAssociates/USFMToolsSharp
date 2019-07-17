@@ -6,7 +6,7 @@
     <RepositoryUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</RepositoryUrl>
     <Copyright />
     <PackageLicenseUrl></PackageLicenseUrl>
-    <Version>0.5.2</Version>
+    <Version>0.6.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Wycliffe Associates</Company>
     <Authors>@rbnswartz</Authors>
