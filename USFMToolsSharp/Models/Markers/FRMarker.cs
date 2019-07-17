@@ -7,7 +7,7 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Footnote origin reference
     /// </summary>
-    class FRMarker : Marker
+    public class FRMarker : Marker
     {
         public override string Identifier => "fr";
         public string VerseReference;

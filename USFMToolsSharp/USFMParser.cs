@@ -248,11 +248,11 @@ namespace USFMToolsSharp
                 case "tcr1":
                     return new TCRMarker();
                 case "tc2":
-                    return new THMarker() { ColumnPosition = 2 };
+                    return new TCMarker() { ColumnPosition = 2 };
                 case "tcr2":
                     return new TCRMarker() { ColumnPosition = 2 };
                 case "tc3":
-                    return new THMarker() { ColumnPosition = 3 };
+                    return new TCMarker() { ColumnPosition = 3 };
                 case "tcr3":
                     return new TCRMarker() { ColumnPosition = 3 };
 
