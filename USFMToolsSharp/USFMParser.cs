@@ -43,10 +43,9 @@ namespace USFMToolsSharp
                     output.Insert(new TableBlock());
                     isInsideTable = true;
                 }
-                if(isInsideTable && !tempTable.TryInsert(result.marker,checkPossibility:true))
+                if(isInsideTable && !tempTable.TryInsert(result.marker,dryRun:true))
                 {
                     isInsideTable = false;
-                    tempTable.Contents.Clear();
                 }
 
                 output.Insert(result.marker);

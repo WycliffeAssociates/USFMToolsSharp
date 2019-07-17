@@ -358,7 +358,7 @@ namespace USFMToolsSharp
 
                 case TableBlock table:
                     output.AppendLine("<div>");
-                    output.AppendLine("<table style=\"width: 100%; \">");
+                    output.AppendLine("<table class=\"table-block\"\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
