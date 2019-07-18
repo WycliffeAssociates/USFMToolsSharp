@@ -38,22 +38,36 @@ namespace USFMToolsSharp
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
 
-                if(result.marker is TRMarker && !isInsideTable)
+                if(tempTable.TryInsert(result.marker))
                 {
-                    output.Insert(new TableBlock());
                     isInsideTable = true;
+
+                    if (!string.IsNullOrWhiteSpace(result.remainingText))
+                    {
+                        TextBlock tempText = new TextBlock(result.remainingText);
+
+                        if (!tempTable.TryInsert(tempText))
+                        {
+                            output.Insert(tempText);
+                        };
+                    }
                 }
-                if(isInsideTable && !tempTable.TryInsert(result.marker,dryRun:true))
+                else if(isInsideTable)
                 {
                     isInsideTable = false;
+                    output.Insert(tempTable);
+
+                    tempTable = new TableBlock();                  
                 }
 
-                output.Insert(result.marker);
-                
-
-                if (!string.IsNullOrWhiteSpace(result.remainingText))
+                if (!isInsideTable)
                 {
-                    output.Insert(new TextBlock(result.remainingText));
+                    output.Insert(result.marker);
+
+                    if (!string.IsNullOrWhiteSpace(result.remainingText))
+                    {
+                        output.Insert(new TextBlock(result.remainingText));
+                    }
                 }
 
 

@@ -28,18 +28,15 @@ namespace USFMToolsSharp.Models.Markers
             return input;
         }
 
-        public bool TryInsert(Marker input, bool dryRun = false)
+        public bool TryInsert(Marker input)
         {
-            if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input,dryRun))
+            if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
             {
                 return true;
             }
             if (AllowedContents.Contains(input.GetType()))
             {
-                if (!dryRun)
-                {
-                    Contents.Add(input);
-                }
+                Contents.Add(input);
                 return true;
             }
             return false;
