@@ -37,7 +37,6 @@ namespace USFMToolsSharp
 
                 if(result.marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
-                    var x = output.GetTypesPathToLastMarker();
                     output.Insert(new TableBlock());
                 }
 
