@@ -44,7 +44,12 @@ namespace USFMToolsSharp
 
                     if (!string.IsNullOrWhiteSpace(result.remainingText))
                     {
-                        tempTable.TryInsert(new TextBlock(result.remainingText));
+                        TextBlock tempText = new TextBlock(result.remainingText);
+
+                        if (!tempTable.TryInsert(tempText))
+                        {
+                            output.Insert(tempText);
+                        };
                     }
                 }
                 else if(isInsideTable)
