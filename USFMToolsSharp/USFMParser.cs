@@ -24,8 +24,6 @@ namespace USFMToolsSharp
         {
             Regex splitRegex = new Regex("\\\\([a-z0-9*]+)([^\\\\]*)");
             USFMDocument output = new USFMDocument();
-            bool isInsideTable = false;
-            Marker tempTable = new TableBlock();
 
             foreach(Match match in splitRegex.Matches(input))
             {
@@ -37,39 +35,19 @@ namespace USFMToolsSharp
 
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
 
-
-                if(tempTable.TryInsert(result.marker))
+                if(result.marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
-                    isInsideTable = true;
-
-                    if (!string.IsNullOrWhiteSpace(result.remainingText))
-                    {
-                        TextBlock tempText = new TextBlock(result.remainingText);
-
-                        if (!tempTable.TryInsert(tempText))
-                        {
-                            output.Insert(tempText);
-                        };
-                    }
-                }
-                else if(isInsideTable)
-                {
-                    isInsideTable = false;
-                    output.Insert(tempTable);
-
-                    tempTable = new TableBlock();                  
+                    output.Insert(new TableBlock());
                 }
 
-                if (!isInsideTable)
+                
+                output.Insert(result.marker);
+
+                if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
-                    output.Insert(result.marker);
-
-                    if (!string.IsNullOrWhiteSpace(result.remainingText))
-                    {
-                        output.Insert(new TextBlock(result.remainingText));
-                    }
+                    output.Insert(new TextBlock(result.remainingText));
                 }
-
+                
 
             }
 

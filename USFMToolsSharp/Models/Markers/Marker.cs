@@ -41,7 +41,16 @@ namespace USFMToolsSharp.Models.Markers
             }
             return false;
         }
-
+        public List<Type> GetTypesPathToLastMarker() 
+        {
+            List<Type> types = new List<Type>();
+            types.Add(GetType());
+            if (Contents.Count > 0 )
+            {
+                types.AddRange(Contents[Contents.Count - 1].GetTypesPathToLastMarker());
+            }
+            return types;
+        }
         /// <summary>
         /// A recursive search for children of a certain type
         /// </summary>
