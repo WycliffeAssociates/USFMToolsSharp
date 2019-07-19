@@ -44,17 +44,11 @@ namespace USFMToolsSharp.Models.Markers
         public List<Type> GetTypesPathToLastMarker() 
         {
             List<Type> types = new List<Type>();
-
+            types.Add(GetType());
             if (Contents.Count > 0 )
             {
-                types.Add(GetType());
                 types.AddRange(Contents[Contents.Count - 1].GetTypesPathToLastMarker());
             }
-            else
-            {
-                types.Add(GetType());
-            }
-
             return types;
         }
         /// <summary>
