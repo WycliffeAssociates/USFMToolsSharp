@@ -475,6 +475,7 @@ namespace USFMToolsSharp
                 case IDMarker _:
                 case VPMarker _:
                 case VPEndMarker _:
+                case USFMMarker _:
                     break;
                 default:
                     UnrenderableTags.Add(input.Identifier);

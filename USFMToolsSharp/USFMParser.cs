@@ -221,7 +221,6 @@ namespace USFMToolsSharp
                     return new CLSMarker();
                 case "tr":
                     return new TRMarker();
-
                 case "th1":
                     return new THMarker();
                 case "thr1":
@@ -234,7 +233,6 @@ namespace USFMToolsSharp
                     return new THMarker() { ColumnPosition = 3 };
                 case "thr3":
                     return new THRMarker() { ColumnPosition = 3};
-
                 case "tc1":
                     return new TCMarker();
                 case "tcr1":
@@ -247,7 +245,8 @@ namespace USFMToolsSharp
                     return new TCMarker() { ColumnPosition = 3 };
                 case "tcr3":
                     return new TCRMarker() { ColumnPosition = 3 };
-
+                case "usfm":
+                    return new USFMMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
