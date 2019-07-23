@@ -65,15 +65,10 @@ namespace USFMToolsSharp
                 output.AppendLine($"<div class=\"{class_name}\">");
             }
 
-            
-
             foreach (Marker marker in input.Contents)
             {
                 output.Append(RenderMarker(marker));
             }
-
-            
-            
 
             foreach (string class_name in ConfigurationHTML.divClasses)
             {
@@ -182,11 +177,6 @@ namespace USFMToolsSharp
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
-                    }
-                    if (!ConfigurationHTML.separateChapters && mTMarker.Weight==1)   // No double page breaks before books
-                    {
-                        output.AppendLine("<br class=\"pagebreak\"></br>");
-                        output.AppendLine("<div class=\"pagebreak\"></div>");
                     }
                     break;
                 case MSMarker mSMarker:
@@ -368,8 +358,6 @@ namespace USFMToolsSharp
                     output.AppendLine("</table>");
                     output.AppendLine("</div>");
                     break;
-
-
                 case TRMarker tRMarker:
                     output.AppendLine("<tr>");
                     foreach (Marker marker in input.Contents)
