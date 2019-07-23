@@ -21,10 +21,13 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(HMarker),
                     typeof(IDEMarker),
                     typeof(IDMarker),
+                    typeof(USFMMarker),
                     typeof(TOC1Marker),
                     typeof(TOC2Marker),
                     typeof(TOC3Marker),
-                    typeof(MTMarker)
+                    typeof(MTMarker),
+                    typeof(CLMarker),
+                    typeof(CMarker)
                 };
             }
         }
