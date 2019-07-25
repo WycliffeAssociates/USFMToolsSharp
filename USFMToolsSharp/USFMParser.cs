@@ -22,7 +22,7 @@ namespace USFMToolsSharp
 
         public USFMDocument ParseFromString(string input)
         {
-            Regex splitRegex = new Regex("\\\\([a-z0-9*]+)([^\\\\]*)");
+            Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)");
             USFMDocument output = new USFMDocument();
 
             foreach(Match match in splitRegex.Matches(input))
