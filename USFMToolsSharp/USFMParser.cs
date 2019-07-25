@@ -85,6 +85,13 @@ namespace USFMToolsSharp
                     return new IMTMarker() { Weight = 2 };
                 case "imt3":
                     return new IMTMarker() { Weight = 3 };
+                case "is":
+                case "is1":
+                    return new ISMarker();
+                case "is2":
+                    return new ISMarker() { Weight = 2 };
+                case "is3":
+                    return new ISMarker() { Weight = 3 };
                 case "mt":
                 case "mt1":
                     return new MTMarker();
