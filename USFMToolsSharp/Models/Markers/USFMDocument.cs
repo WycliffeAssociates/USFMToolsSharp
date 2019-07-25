@@ -21,6 +21,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(HMarker),
                     typeof(IDEMarker),
                     typeof(IDMarker),
+                    typeof(STSMarker),
                     typeof(USFMMarker),
                     typeof(TOC1Marker),
                     typeof(TOC2Marker),
