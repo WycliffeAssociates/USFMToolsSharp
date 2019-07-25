@@ -68,6 +68,8 @@ namespace USFMToolsSharp
                     return new IDMarker();
                 case "ide":
                     return new IDEMarker();
+                case "sts":
+                    return new STSMarker();
                 case "h":
                     return new HMarker();
                 case "toc1":
