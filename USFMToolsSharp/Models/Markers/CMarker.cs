@@ -10,6 +10,21 @@ namespace USFMToolsSharp.Models.Markers
     public class CMarker : Marker
     {
         public int Number;
+        public string PublishedChapterMarker
+        {
+            get
+            {
+                var firstCharacterMarker = GetChildMarkers<CPMarker>();
+                if (firstCharacterMarker.Count > 0)
+                {
+                    return firstCharacterMarker[0].PublishedChapterMarker;
+                }
+                else
+                {
+                    return Number.ToString();
+                }
+            }
+        }
         public override string Identifier => "c";
         public override string PreProcess(string input)
         {

@@ -106,7 +106,7 @@ namespace USFMToolsSharp
                     break;
                 case CMarker cMarker:
                     output.AppendLine("<div class=\"chapter\">");
-                    output.AppendLine($"<span class=\"chaptermarker\">{cMarker.Number}</span>");
+                    output.AppendLine($"<span class=\"chaptermarker\">{cMarker.PublishedChapterMarker}</span>");
                     foreach(Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
