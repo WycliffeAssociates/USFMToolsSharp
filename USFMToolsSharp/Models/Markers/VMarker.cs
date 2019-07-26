@@ -78,6 +78,11 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(MIMarker),
                     typeof(QSMarker),
                     typeof(QSEndMarker),
+                    typeof(QRMarker),
+                    typeof(QCMarker),
+                    typeof(QDMarker),
+                    typeof(QACMarker),
+                    typeof(QACEndMarker),
                     typeof(SMarker),
                     typeof(VAMarker),
                     typeof(VAEndMarker)

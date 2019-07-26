@@ -5,15 +5,13 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// A Poetry Marker
+    /// Hebrew note
     /// </summary>
-    public class QMarker : Marker
+    public class QDMarker : Marker
     {
-        public int Depth = 1;
-        public string Text;
-        public override string Identifier => "q";
-        public override List<Type> AllowedContents => new List<Type>() {
-            typeof(BMarker),
+        public override string Identifier => "qd";
+        public override List<Type> AllowedContents => new List<Type>()
+        {
             typeof(TextBlock),
             typeof(FMarker),
             typeof(FEndMarker),
