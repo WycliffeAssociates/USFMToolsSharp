@@ -109,10 +109,18 @@ namespace USFMToolsSharp
                     return new CMarker();
                 case "cp":
                     return new CPMarker();
+                case "ca":
+                    return new CAMarker();
+                case "ca*":
+                    return new CAEndMarker();
                 case "p":
                     return new PMarker();
                 case "v":
                     return new VMarker();
+                case "va":
+                    return new VAMarker();
+                case "va*":
+                    return new VAEndMarker();
                 case "vp":
                     return new VPMarker();
                 case "vp*":

@@ -129,6 +129,9 @@ namespace USFMToolsSharp
                     }
 
                     break;
+                case CAMarker cAMarker:
+                    output.AppendLine($"<span class=\"chaptermarker-alt\">({cAMarker.AltChapterCharacter})</span>");
+                    break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
                     output.AppendLine($"<span class=\"versemarker\">{vMarker.VerseCharacter}</span>");
@@ -143,6 +146,9 @@ namespace USFMToolsSharp
                     {
                         output.AppendLine("<br/>");
                     }
+                    break;
+                case VAMarker vAMarker:
+                    output.AppendLine($"<span class=\"versemarker-alt\">({vAMarker.AltVerseCharacter})</span>");
                     break;
                 case QMarker qMarker:
                     output.AppendLine($"<div class=\"poetry-{qMarker.Depth}\">");
