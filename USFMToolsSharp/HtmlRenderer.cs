@@ -447,6 +447,11 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     break;
+                case IMTMarker iMTMarker:
+                    output.Append($"<div class=\"intro-title-{iMTMarker.Weight}\">");
+                    output.AppendLine(iMTMarker.IntroTitle);
+                    output.AppendLine("</div>");
+                    break;
                 case QSEndMarker _:
                 case XEndMarker _:
                 case WEndMarker _:
