@@ -98,6 +98,35 @@ namespace USFMToolsSharp
                     return new ISMarker() { Weight = 2 };
                 case "is3":
                     return new ISMarker() { Weight = 3 };
+                case "ib":
+                    return new IBMarker();
+                case "iq":
+                case "iq1":
+                    return new IQMarker();
+                case "iq2":
+                    return new IQMarker() { Depth = 2 };
+                case "iq3":
+                    return new IQMarker() { Depth = 3 };
+                case "iot":
+                    return new IOTMarker();
+                case "io":
+                case "io1":
+                    return new IOMarker();
+                case "io2":
+                    return new IOMarker() { Depth = 2 };
+                case "io3":
+                    return new IOMarker() { Depth = 3 };
+                case "ior":
+                    return new IORMarker();
+                case "ior*":
+                    return new IOREndMarker();
+                case "ili":
+                case "ili1":
+                    return new ILIMarker();
+                case "ili2":
+                    return new ILIMarker() { Depth = 2 };
+                case "ili3":
+                    return new ILIMarker() { Depth = 3 };
                 case "mt":
                 case "mt1":
                     return new MTMarker();
