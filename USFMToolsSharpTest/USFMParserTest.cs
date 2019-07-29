@@ -199,11 +199,5 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("1", ((UnknownMarker)parser.ParseFromString("\\1  what is 1?").Contents[0]).ParsedIdentifier);
             
         }
-        static void Main(string[] args)
-        {
-            // Display the number of command line arguments:
-            USFMParserTest test = new USFMParserTest();
-            test.TestHeaderParse();
-        }
     }
 }

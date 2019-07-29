@@ -199,13 +199,13 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("", WrapTest("\\123 sdfgsgdfg"));
 
         }
-        public string Strip_WhiteSpace(string input)
+        public string stripWhiteSpace(string input)
         {
             return input.Replace("\r", "").Replace("\n", "");
         }
         public string WrapTest(string usfm)
         {
-            return Strip_WhiteSpace(render.Render(parser.ParseFromString(usfm)));
+            return stripWhiteSpace(render.Render(parser.ParseFromString(usfm)));
         }
 
     }
