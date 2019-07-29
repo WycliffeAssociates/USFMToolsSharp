@@ -9,20 +9,23 @@ namespace USFMToolsSharp.Models
         public List<string> divClasses;
         public bool separateChapters;
         public bool separateVerses;
+        public bool partialHTML;
 
 
         public HTMLConfig()
         {
-            this.divClasses = new List<string>();
+            divClasses = new List<string>();
             separateChapters = false;
             separateVerses = false;
+            partialHTML = false;
         }
-        public HTMLConfig(List<string> divClasses, bool separateChapters=false, bool separateVerses=false)
+        public HTMLConfig(List<string> divClasses, bool separateChapters = false, bool partialHTML = false, bool separateVerses=false)
         {
             this.divClasses = divClasses;
             this.separateChapters = separateChapters;
             this.separateVerses = separateVerses;
-    }
+            this.partialHTML = partialHTML;
+        }
         
         
     }
