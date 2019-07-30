@@ -14,15 +14,31 @@ namespace USFMToolsSharp.Models.Markers
         {
             get
             {
-                var firstCharacterMarker = GetChildMarkers<CPMarker>();
-                if (firstCharacterMarker.Count > 0)
+                var childCharacterMarker = GetChildMarkers<CPMarker>();
+                if (childCharacterMarker.Count > 0)
                 {
-                    return firstCharacterMarker[0].PublishedChapterMarker;
+                    return childCharacterMarker[0].PublishedChapterMarker;
                 }
                 else
                 {
                     return Number.ToString();
                 }
+            }
+        }
+        public string CustomChapterLabel
+        {
+            get
+            {
+                var childChapLabelMarker = GetChildMarkers<CLMarker>();
+                if (childChapLabelMarker.Count > 0)
+                {
+                    return childChapLabelMarker[0].Label;
+                }
+                else
+                {
+                    return PublishedChapterMarker;
+                }
+
             }
         }
         public override string Identifier => "c";

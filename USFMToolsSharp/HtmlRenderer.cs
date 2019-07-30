@@ -12,6 +12,8 @@ namespace USFMToolsSharp
         public List<string> FootnoteTextTags;
         public List<string> CrossReferenceTags;
         public HTMLConfig ConfigurationHTML;
+        public string currentChapterLabel;
+        public bool hasGlobalChapterLabel;
         
 
         public string FrontMatterHTML { get; set; }
@@ -23,6 +25,7 @@ namespace USFMToolsSharp
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
             CrossReferenceTags = new List<string>();
+            hasGlobalChapterLabel = true;
 
             ConfigurationHTML = new HTMLConfig();
         }
@@ -112,8 +115,19 @@ namespace USFMToolsSharp
                     break;
                 case CMarker cMarker:
                     output.AppendLine("<div class=\"chapter\">");
-                    output.AppendLine($"<span class=\"chaptermarker\">{cMarker.PublishedChapterMarker}</span>");
-                    foreach(Marker marker in input.Contents)
+                    string chapterLabel = cMarker.PublishedChapterMarker;
+
+                    if (cMarker.GetChildMarkers<CLMarker>().Count > 0)
+                    {
+                        chapterLabel = cMarker.CustomChapterLabel;
+                    }
+                    else if(currentChapterLabel != null)
+                    {
+                        chapterLabel = currentChapterLabel + " " + cMarker.PublishedChapterMarker;
+                    }
+                    output.AppendLine($"<span class=\"chaptermarker\">{chapterLabel}</span>");
+                    
+                    foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
@@ -131,6 +145,9 @@ namespace USFMToolsSharp
                     break;
                 case CAMarker cAMarker:
                     output.AppendLine($"<span class=\"chaptermarker-alt\">({cAMarker.AltChapterCharacter})</span>");
+                    break;
+                case CLMarker cLMarker:
+                    currentChapterLabel = cLMarker.Label;
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
@@ -231,6 +248,7 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case MTMarker mTMarker:
+                    currentChapterLabel = null;
                     output.AppendLine($"<div class=\"majortitle-{mTMarker.Weight}\">");
                     output.AppendLine(mTMarker.Title);
                     output.AppendLine("</div>");
