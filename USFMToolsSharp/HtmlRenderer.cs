@@ -112,17 +112,23 @@ namespace USFMToolsSharp
                     break;
                 case CMarker cMarker:
                     output.AppendLine("<div class=\"chapter\">");
-                    string chapterLabel = cMarker.PublishedChapterMarker;
 
                     if (cMarker.GetChildMarkers<CLMarker>().Count > 0)
                     {
-                        chapterLabel = cMarker.CustomChapterLabel;
+                        output.AppendLine($"<div class=\"chaptermarker\">{cMarker.CustomChapterLabel}</div>");
+                        output.AppendLine("<br/>");
                     }
-                    else if(currentChapterLabel != null)
+                    else if (currentChapterLabel != null)
                     {
-                        chapterLabel = currentChapterLabel + " " + cMarker.PublishedChapterMarker;
+                        output.AppendLine($"<div class=\"chaptermarker\">{currentChapterLabel + " " + cMarker.PublishedChapterMarker}</div>");
+                        output.AppendLine("<br/>");
                     }
-                    output.AppendLine($"<span class=\"chaptermarker\">{chapterLabel}</span>");
+                    else
+                    {
+                        output.AppendLine($"<span class=\"chaptermarker\">{cMarker.PublishedChapterMarker}</span>");
+                    }
+
+                    
                     
                     foreach (Marker marker in input.Contents)
                     {
