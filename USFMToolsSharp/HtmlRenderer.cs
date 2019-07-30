@@ -12,9 +12,7 @@ namespace USFMToolsSharp
         public List<string> FootnoteTextTags;
         public List<string> CrossReferenceTags;
         public HTMLConfig ConfigurationHTML;
-        public string currentChapterLabel;
-        public bool hasGlobalChapterLabel;
-        
+        public string currentChapterLabel;        
 
         public string FrontMatterHTML { get; set; }
         public string InsertedFooter { get; set;}
@@ -25,7 +23,6 @@ namespace USFMToolsSharp
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
             CrossReferenceTags = new List<string>();
-            hasGlobalChapterLabel = true;
 
             ConfigurationHTML = new HTMLConfig();
         }
