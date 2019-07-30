@@ -68,7 +68,14 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">1000</span></div>", WrapTest("\\c 1000"));
             Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">-1</span></div>", WrapTest("\\c -1"));
             Assert.AreEqual("<div class=\"chapter\"><span class=\"chaptermarker\">0</span></div>", WrapTest("\\c 0"));
-            
+
+            // Chapter Labels
+            Assert.AreEqual("<div class=\"chapter\"><div class=\"chaptermarker\">Chapter One</div><br/></div>", WrapTest("\\c 1 \\cl Chapter One"));
+            Assert.AreEqual("<div class=\"chapter\"><div class=\"chaptermarker\">Chapter One</div><br/></div><div class=\"chapter\"><div class=\"chaptermarker\">Chapter Two</div><br/></div>", WrapTest("\\c 1 \\cl Chapter One \\c 2 \\cl Chapter Two"));
+            Assert.AreEqual("<div class=\"chapter\"><div class=\"chaptermarker\">Chapter 1</div><br/></div><div class=\"chapter\"><div class=\"chaptermarker\">Chapter 2</div><br/></div>", WrapTest("\\cl Chapter \\c 1 \\c 2"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Genesis</div><div class=\"chapter\"><div class=\"chaptermarker\">Chapter 1</div><br/></div><div class=\"chapter\"><div class=\"chaptermarker\">Chapter 2</div><br/></div><div class=\"majortitle-1\">Psalms</div><div class=\"chapter\"><div class=\"chaptermarker\">Psalm 1</div><br/></div><div class=\"chapter\"><div class=\"chaptermarker\">Psalm 2</div><br/></div>", WrapTest("\\mt Genesis \\cl Chapter \\c 1 \\c 2 \\mt Psalms \\cl Psalm \\c 1 \\c 2"));
+
+
         }
 
         [TestMethod]
