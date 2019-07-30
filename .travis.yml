@@ -1,5 +1,6 @@
 language: csharp
 mono: none
+#must declare version
 dotnet: 2.2.401
 script:
  - dotnet test
