@@ -46,9 +46,9 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestMajorTitleRender()
         {
-            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt1 Keluaran"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div>", WrapTest("\\mt1 Keluaran"));
             Assert.AreEqual("<div class=\"majortitle-3\">Keluaran</div>", WrapTest("\\mt3 Keluaran"));
-            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div><br class=\"pagebreak\"></br><div class=\"pagebreak\"></div>", WrapTest("\\mt Keluaran"));
+            Assert.AreEqual("<div class=\"majortitle-1\">Keluaran</div>", WrapTest("\\mt Keluaran"));
             Assert.AreEqual("<div class=\"majortitle-2\">Keluaran</div>", WrapTest("\\mt2 Keluaran"));
         }
         [TestMethod]
