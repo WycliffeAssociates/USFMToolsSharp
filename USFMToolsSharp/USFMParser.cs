@@ -101,6 +101,8 @@ namespace USFMToolsSharp
                     return new MTMarker() { Weight = 3 };
                 case "c":
                     return new CMarker();
+                case "cp":
+                    return new CPMarker();
                 case "p":
                     return new PMarker();
                 case "v":
