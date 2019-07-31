@@ -494,7 +494,7 @@ namespace USFMToolsSharp
             {
                 
                 StringBuilder footnoteHTML = new StringBuilder();
-                footnoteHTML.AppendLine("<div class=\"footnote-header\">Footnotes</div>");
+                footnoteHTML.AppendLine("<hr/>");
                 foreach (string footnote in FootnoteTextTags)
                 {
                     footnoteHTML.AppendLine("<div class=\"footnotes\">");
@@ -513,7 +513,7 @@ namespace USFMToolsSharp
             if (CrossReferenceTags.Count > 0)
             {
                 StringBuilder crossRefHTML = new StringBuilder();
-                crossRefHTML.AppendLine("<div class=\"cross-header\">Cross Reference</div>");
+                crossRefHTML.AppendLine("<hr/>");
                 foreach (string crossRef in CrossReferenceTags)
                 {
                     crossRefHTML.AppendLine("<span class=\"cross-ref\">");
