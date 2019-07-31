@@ -120,7 +120,7 @@ namespace USFMToolsSharp
                     }
                     else if (currentChapterLabel != null)
                     {
-                        output.AppendLine($"<div class=\"chaptermarker\">{currentChapterLabel + " " + cMarker.PublishedChapterMarker}</div>");
+                        output.AppendLine($"<div class=\"chaptermarker\">{currentChapterLabel} {cMarker.PublishedChapterMarker}</div>");
                         output.AppendLine("<br/>");
                     }
                     else
