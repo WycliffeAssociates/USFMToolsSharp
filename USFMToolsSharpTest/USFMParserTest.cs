@@ -201,6 +201,19 @@ namespace USFMToolsSharpTest
 
         }
         [TestMethod]
+        public void TestCharacterStylingParse()
+        {
+            Assert.AreEqual("Emphasis", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Boldness", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Boldness and Italics", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Italics", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Superscript", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Name of Diety", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Small Caps", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Normal", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* ").Contents[0].Contents[1].Contents[0]).Text);
+
+        }
+        [TestMethod]
         public void TestUnknownMarkerParse()
         {
             Assert.AreEqual("what is yy?", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedValue);

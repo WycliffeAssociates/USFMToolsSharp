@@ -56,6 +56,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(SUPEndMarker),
                     typeof(NOMarker),
                     typeof(NOEndMarker),
+                    typeof(SCMarker),
+                    typeof(SCEndMarker),
                     typeof(NDMarker),
                     typeof(NDEndMarker),
 

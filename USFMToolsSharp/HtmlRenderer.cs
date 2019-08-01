@@ -177,6 +177,14 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</b>");
                     break;
+                case ITMarker iTMarker:
+                    output.AppendLine("<i>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</i>");
+                    break;
                 case BDITMarker bditMarker:
                     output.AppendLine("<span class=\"bold-italic\">");
                     foreach (Marker marker in input.Contents)
