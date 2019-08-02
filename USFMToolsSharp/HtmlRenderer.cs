@@ -458,6 +458,7 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     break;
+            /* Introduction */
                 case IMTMarker iMTMarker:
                     output.Append($"<div class=\"intro-title-{iMTMarker.Weight}\">");
                     output.AppendLine(iMTMarker.IntroTitle);
@@ -479,8 +480,40 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     break;
+                case IPMarker iPMarker:
+                    output.Append($"<div class=\"intro-para\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IPIMarker iPIMarker:
+                    output.Append($"<div class=\"intro-para-indent\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IMMarker iMMarker:
+                    output.Append($"<div class=\"intro-para-flush\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
                 case ILIMarker iliMarker:
                     output.AppendLine($"<div class=\"list-{iliMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IMIMarker iMIMarker:
+                    output.Append($"<div class=\"intro-para-flush-indent\">");
                     foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
@@ -498,6 +531,22 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     break;
+                case IPQMarker iPQMarker:
+                    output.Append($"<div class=\"intro-quote-indent\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IMQMarker iMQMarker:
+                    output.Append($"<div class=\"intro-quote-flush\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
                 case IORMarker iorMarker:
                     output.AppendLine($"<span class=\"outline-ref\">");
                     foreach (Marker marker in input.Contents)
@@ -505,6 +554,14 @@ namespace USFMToolsSharp
                         output.Append(RenderMarker(marker));
                     }
                     output.AppendLine("</span>");
+                    break;
+                case IPRMarker iPRMarker:
+                    output.Append($"<div class=\"intro-right-align\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
                     break;
                 case IOREndMarker _:
                 case QSEndMarker _:

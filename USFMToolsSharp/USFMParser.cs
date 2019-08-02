@@ -84,6 +84,8 @@ namespace USFMToolsSharp
                     return new TOCA2Marker();
                 case "toca3":
                     return new TOCA3Marker();
+
+            /* Introduction Markers*/
                 case "imt":
                 case "imt1":
                     return new IMTMarker();
@@ -127,6 +129,20 @@ namespace USFMToolsSharp
                     return new ILIMarker() { Depth = 2 };
                 case "ili3":
                     return new ILIMarker() { Depth = 3 };
+                case "ip":
+                    return new IPMarker();
+                case "ipi":
+                    return new IPIMarker();
+                case "im":
+                    return new IMMarker();
+                case "imi":
+                    return new IMIMarker();
+                case "ipq":
+                    return new IPQMarker();
+                case "imq":
+                    return new IMQMarker();
+                case "ipr":
+                    return new IPRMarker();
                 case "mt":
                 case "mt1":
                     return new MTMarker();
