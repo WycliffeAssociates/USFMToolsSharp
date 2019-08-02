@@ -14,6 +14,8 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "q";
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(BMarker),
+            typeof(QSMarker),
+            typeof(QSEndMarker),
             typeof(TextBlock),
             typeof(FMarker),
             typeof(FEndMarker),
