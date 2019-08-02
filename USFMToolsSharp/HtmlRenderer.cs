@@ -359,7 +359,6 @@ namespace USFMToolsSharp
                 case FVMarker fVMarker:
                     output.AppendLine($"<span class=\"versemarker\">{fVMarker.VerseCharacter}</span>");
                     break;
-
                 case TableBlock table:
                     output.AppendLine("<div>");
                     output.AppendLine("<table class=\"table-block\">");
@@ -469,6 +468,45 @@ namespace USFMToolsSharp
                     output.AppendLine(iSMarker.Heading);
                     output.AppendLine("</div>");
                     break;
+                case IBMarker iBMarker:
+                    output.Append("<br/><br/>");
+                    break;
+                case IQMarker iqMarker:
+                    output.AppendLine($"<div class=\"poetry-{iqMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case ILIMarker iliMarker:
+                    output.AppendLine($"<div class=\"list-{iliMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IOTMarker iotMarker:
+                    output.AppendLine($"<div class=\"outline-title\">{iotMarker.Title}</div>");
+                    break;
+                case IOMarker ioMarker:
+                    output.AppendLine($"<div class=\"outline-entry-{ioMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case IORMarker iorMarker:
+                    output.AppendLine($"<span class=\"outline-ref\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case IOREndMarker _:
                 case QSEndMarker _:
                 case XEndMarker _:
                 case WEndMarker _:
