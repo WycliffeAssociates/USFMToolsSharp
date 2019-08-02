@@ -78,6 +78,12 @@ namespace USFMToolsSharp
                     return new TOC2Marker();
                 case "toc3":
                     return new TOC3Marker();
+                case "toca1":
+                    return new TOCA1Marker();
+                case "toca2":
+                    return new TOCA2Marker();
+                case "toca3":
+                    return new TOCA3Marker();
                 case "imt":
                 case "imt1":
                     return new IMTMarker();

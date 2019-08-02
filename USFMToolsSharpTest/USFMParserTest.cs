@@ -36,6 +36,18 @@ namespace USFMToolsSharpTest
 
         }
         [TestMethod]
+        public void TestTableOfContentsParse()
+        {
+            // Table of Contents
+            Assert.AreEqual("Keluaran", ((TOC1Marker)parser.ParseFromString("\\toc1 Keluaran").Contents[0]).LongTableOfContentsText);
+            Assert.AreEqual("Keluaran", ((TOC2Marker)parser.ParseFromString("\\toc2 Keluaran").Contents[0]).ShortTableOfContentsText);
+            Assert.AreEqual("Kel", ((TOC3Marker)parser.ParseFromString("\\toc3 Kel").Contents[0]).BookAbbreviation);
+            // Alternate Table of Contents
+            Assert.AreEqual("Keluaran", ((TOCA1Marker)parser.ParseFromString("\\toca1 Keluaran").Contents[0]).AltLongTableOfContentsText);
+            Assert.AreEqual("Keluaran", ((TOCA2Marker)parser.ParseFromString("\\toca2 Keluaran").Contents[0]).AltShortTableOfContentsText);
+            Assert.AreEqual("Kel", ((TOCA3Marker)parser.ParseFromString("\\toca3 Kel").Contents[0]).AltBookAbbreviation);
+        }
+        [TestMethod]
         public void TestMajorTitleParse()
         {
             Assert.AreEqual("Keluaran", ((MTMarker)parser.ParseFromString("\\mt1 Keluaran").Contents[0]).Title);
