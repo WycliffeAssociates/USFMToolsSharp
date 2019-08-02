@@ -65,6 +65,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(QSMarker),
                     typeof(QSEndMarker),
                     typeof(SMarker),
+                    typeof(VAMarker),
+                    typeof(VAEndMarker)
                 };
     }
 }

@@ -54,7 +54,9 @@ namespace USFMToolsSharp.Models.Markers
             typeof(LIMarker),
             typeof(TableBlock),
             typeof(MIMarker),
-            typeof(PIMarker)
+            typeof(PIMarker),
+            typeof(CAMarker),
+            typeof(CAEndMarker),
         };
     }
 }
