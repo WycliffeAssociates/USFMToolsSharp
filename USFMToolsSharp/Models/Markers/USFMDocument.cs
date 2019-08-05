@@ -36,8 +36,6 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(TOCA3Marker),
                     typeof(ISMarker),
                     typeof(MTMarker),
-
-                    /* Introduction */
                     typeof(IMTMarker),
                     typeof(IPMarker),
                     typeof(IPIMarker),
@@ -46,7 +44,6 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(IPQMarker),
                     typeof(IMQMarker),
                     typeof(IPRMarker),
-
                     typeof(CLMarker),
                     typeof(CMarker)
                 };
