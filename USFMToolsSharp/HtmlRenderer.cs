@@ -177,6 +177,54 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</b>");
                     break;
+                case ITMarker iTMarker:
+                    output.AppendLine("<i>");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</i>");
+                    break;
+                case BDITMarker bditMarker:
+                    output.AppendLine("<span class=\"bold-italic\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case EMMarker emMarker:
+                    output.AppendLine("<span class=\"emphasis\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case NOMarker noMarker:
+                    output.AppendLine("<span class=\"normal-text\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case NDMarker ndMarker:
+                    output.AppendLine("<span class=\"deity-name\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
+                case SUPMarker supMarker:
+                    output.AppendLine("<span class=\"superscript-text\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</span>");
+                    break;
                 case HMarker hMarker:
                     output.AppendLine("<div class=\"header\">");
                     output.Append(hMarker.HeaderText);
@@ -564,6 +612,11 @@ namespace USFMToolsSharp
                     output.AppendLine("</div>");
                     break;
                 case IOREndMarker _:
+                case SUPEndMarker _:
+                case NDEndMarker _:
+                case NOEndMarker _:
+                case BDITEndMarker _:
+                case EMEndMarker _:
                 case QSEndMarker _:
                 case XEndMarker _:
                 case WEndMarker _:

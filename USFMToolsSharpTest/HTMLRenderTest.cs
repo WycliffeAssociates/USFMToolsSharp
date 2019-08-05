@@ -173,6 +173,20 @@ namespace USFMToolsSharpTest
 
         }
         [TestMethod]
+        public void TestCharacterStylingRender()
+        {
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"emphasis\">Emphasis</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<b>Boldness</b></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"bold-italic\">Boldness and Italics</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<i>Italics</i></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"superscript-text\">Superscript</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"deity-name\">Name of Diety</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"small-caps\">Small Caps</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* "));
+            Assert.AreEqual("<span class=\"verse\"><span class=\"versemarker\">21</span>Penduduk kota yang satu akan pergi<span class=\"normal-text\">Normal</span></span>", WrapTest("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* "));
+
+
+        }
+        [TestMethod]
         public void TestStyleRender()
         {
             render.ConfigurationHTML.divClasses.Add("two-columns");

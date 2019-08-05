@@ -22,13 +22,13 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Kumpulkanlah Harta di Surga", ((SMarker)parser.ParseFromString("\\s3 Kumpulkanlah Harta di Surga \\r (Luk. 12:33 - 34; 11:34 - 36; 16:13)").Contents[0]).Text);
             Assert.AreEqual(1, ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             Assert.AreEqual(3, ((SMarker)parser.ParseFromString("\\s3 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
-
+            
             // Major Section 
             Assert.AreEqual("jilid 1", ((MSMarker)parser.ParseFromString("\\ms1 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
             Assert.AreEqual("jilid 1", ((MSMarker)parser.ParseFromString("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
             Assert.AreEqual(3, ((MSMarker)parser.ParseFromString("\\ms3 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Weight);
             Assert.AreEqual(1, ((MSMarker)parser.ParseFromString("\\ms jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Weight);
-
+            
             // References
             Assert.AreEqual("(Mazmur 1 - 41)", ((MRMarker)parser.ParseFromString("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0].Contents[0]).SectionReference);
             Assert.AreEqual("(Mazmur 41)", ((MRMarker)parser.ParseFromString("\\ms2 jilid 1 \\mr (Mazmur 41)").Contents[0].Contents[0]).SectionReference);
@@ -58,24 +58,19 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestHeaderParse()
         {
-
             Assert.AreEqual("Genesis",((HMarker)parser.ParseFromString("\\h Genesis").Contents[0]).HeaderText);
             Assert.AreEqual("", ((HMarker)parser.ParseFromString("\\h").Contents[0]).HeaderText);
             Assert.AreEqual("1 John", ((HMarker)parser.ParseFromString("\\h 1 John").Contents[0]).HeaderText);
             Assert.AreEqual("", ((HMarker)parser.ParseFromString("\\h   ").Contents[0]).HeaderText);
-
         }
         [TestMethod]
         public void TestChapterParse()
         {
-
             Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Contents[0]).Number);
             Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Contents[0]).Number);
             Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Contents[0]).Number);
             Assert.AreEqual(-1, ((CMarker)parser.ParseFromString("\\c -1").Contents[0]).Number);
-
         }
-
         [TestMethod]
         public void TestVerseParse()
         {
@@ -119,13 +114,10 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((THMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
             Assert.AreEqual(2, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
-
-
         }
         [TestMethod]
         public void TestListParse()
         {
-            var obj = parser.ParseFromString("\\li Peres ayah Hezron.");
             // List Items
             Assert.AreEqual("Peres ayah Hezron.", ((TextBlock)parser.ParseFromString("\\li Peres ayah Hezron.").Contents[0].Contents[0]).Text);
             // Verse within List
@@ -170,14 +162,12 @@ namespace USFMToolsSharpTest
             // Cross Reference Quotation
             Assert.AreEqual("Tebes", ((TextBlock)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*").Contents[0].Contents[1].Contents[0]).Text);
         }
-
         [TestMethod]
         public void TestVerseCharacterParse()
         {
             Assert.AreEqual("1a", ((VPMarker)parser.ParseFromString("\\v 1 \\vp 1a \\vp* This is not Scripture").Contents[0].Contents[0]).VerseCharacter);
             Assert.AreEqual("2b", ((VPMarker)parser.ParseFromString("\\v 2 \\vp 2b \\vp* This is not Scripture").Contents[0].Contents[0]).VerseCharacter);
             Assert.AreEqual("asdf", ((VPMarker)parser.ParseFromString("\\v 1 \\vp asdf \\vp* This is not Scripture").Contents[0].Contents[0]).VerseCharacter);
-            
         }
         [TestMethod]
         public void TestTranslationNotesParse()
@@ -198,6 +188,29 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" strong=\"G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("H1234,G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("gnt5:51.1.2.1", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["srcloc"]);
+
+        }
+        [TestMethod]
+        public void TestCharacterStylingParse()
+        {
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1],typeof(EMMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* ").Contents[0].Contents[1],typeof(BDMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* ").Contents[0].Contents[1],typeof(BDITMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* ").Contents[0].Contents[1],typeof(ITMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* ").Contents[0].Contents[1],typeof(SUPMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* ").Contents[0].Contents[1],typeof(NDMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* ").Contents[0].Contents[1],typeof(SCMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* ").Contents[0].Contents[1],typeof(NOMarker));
+            
+            // Text Content
+            Assert.AreEqual("Emphasis", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Boldness", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Boldness and Italics", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Italics", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Superscript", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Name of Diety", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Small Caps", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* ").Contents[0].Contents[1].Contents[0]).Text);
+            Assert.AreEqual("Normal", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* ").Contents[0].Contents[1].Contents[0]).Text);
 
         }
         [TestMethod]

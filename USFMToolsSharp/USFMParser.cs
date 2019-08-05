@@ -324,6 +324,27 @@ namespace USFMToolsSharp
                     return new TCRMarker() { ColumnPosition = 3 };
                 case "usfm":
                     return new USFMMarker();
+                /* Character Styles */
+                case "em":
+                    return new EMMarker();
+                case "em*":
+                    return new EMEndMarker();
+                case "bdit":
+                    return new BDITMarker();
+                case "bdit*":
+                    return new BDITEndMarker();
+                case "no":
+                    return new NOMarker();
+                case "no*":
+                    return new NOEndMarker();
+                case "nd":
+                    return new NDMarker();
+                case "nd*":
+                    return new NDEndMarker();
+                case "sup":
+                    return new SUPMarker();
+                case "sup*":
+                    return new SUPEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
