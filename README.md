@@ -58,64 +58,14 @@ var contents = File.ReadAllText("01-GEN.usfm");
 USFMDocument output = parser.ParseFromString(contents);
 ```
 
-## HtmlRenderer
+# Renderers
 
-This class transforms a USFMDocument into an html string
-
-Example:
-```csharp
-var contents = File.ReadAllText("01-GEN.usfm");
-USFMDocument document = parser.ParseFromString(contents);
-string html = renderer.Render(document);
-File.WriteAllText("output.html", html);
-
-```
-# What tags are supported
-
-Eventially the goal is to support the whole USFM spec but for the moment the following common tags are implemented
-
-## By the parser
-
-- id
-- ide
-- h
-- toc1
-- toc2
-- toc3
-- mt
-- c
-- p
-- v
-- q
-- q1
-- q2
-- q3
-- m
-- d
-- ms
-- cl
-- qa
-- f
-- qa
-- nb
-- fqa
-- pi
-- sp
-- ft
-- bd
-- it
-
-## By the html renderer
-
-- p
-- c
-- v
-- q
-- q1
-- q2
-- q3
-- m
-- bd
-- h
-- mt
-- f
+## HTMLRenderer 
+For more information, please look into the [repository](https://github.com/WycliffeAssociates/USFMToolsSharp.Renderers.HTML). 
+> HTML Renderer for USFM
+## DocxRenderer
+For more information, please look into the [repository](https://github.com/WycliffeAssociates/USFMToolsSharp.Renderers.Docx). 
+> Docx Renderer for USFM
+## JSONRenderer
+For more information, please look into the [repository](https://github.com/WycliffeAssociates/USFMToolsSharp.Renderers.JSON). 
+> JSON Renderer for USFM
