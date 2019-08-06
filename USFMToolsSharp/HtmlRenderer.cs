@@ -12,7 +12,7 @@ namespace USFMToolsSharp
         public List<string> FootnoteTextTags;
         public List<string> CrossReferenceTags;
         public HTMLConfig ConfigurationHTML;
-        
+        public string currentChapterLabel;        
 
         public string FrontMatterHTML { get; set; }
         public string InsertedFooter { get; set;}
@@ -23,14 +23,12 @@ namespace USFMToolsSharp
             UnrenderableTags = new List<string>();
             FootnoteTextTags = new List<string>();
             CrossReferenceTags = new List<string>();
-
             ConfigurationHTML = new HTMLConfig();
         }
         public HtmlRenderer(HTMLConfig config):this()
         {
             ConfigurationHTML = config;
         }
-
         public string Render(USFMDocument input)
         {
             UnrenderableTags = new List<string>();
@@ -63,7 +61,6 @@ namespace USFMToolsSharp
             }
 
             // HTML tags can only have one class, when render to docx
-
             foreach(string class_name in ConfigurationHTML.divClasses)
             {
                 output.AppendLine($"<div class=\"{class_name}\">");
@@ -86,7 +83,6 @@ namespace USFMToolsSharp
             }
             return output.ToString();
         }
-
         private string GetEncoding(USFMDocument input)
         {
             var encodingSearch = input.GetChildMarkers<IDEMarker>();
@@ -96,7 +92,6 @@ namespace USFMToolsSharp
             }
             return null;
         }
-
         private string RenderMarker(Marker input)
         {
             StringBuilder output = new StringBuilder();
@@ -112,8 +107,23 @@ namespace USFMToolsSharp
                     break;
                 case CMarker cMarker:
                     output.AppendLine("<div class=\"chapter\">");
-                    output.AppendLine($"<span class=\"chaptermarker\">{cMarker.PublishedChapterMarker}</span>");
-                    foreach(Marker marker in input.Contents)
+
+                    if (cMarker.GetChildMarkers<CLMarker>().Count > 0)
+                    {
+                        output.AppendLine($"<div class=\"chapterlabel\">{cMarker.CustomChapterLabel}</div>");
+                        output.AppendLine("<br/>");
+                    }
+                    else if (currentChapterLabel != null)
+                    {
+                        output.AppendLine($"<div class=\"chapterlabel\">{currentChapterLabel} {cMarker.PublishedChapterMarker}</div>");
+                        output.AppendLine("<br/>");
+                    }
+                    else
+                    {
+                        output.AppendLine($"<span class=\"chaptermarker\">{cMarker.PublishedChapterMarker}</span>");
+                    }
+
+                    foreach (Marker marker in input.Contents)
                     {
                         output.Append(RenderMarker(marker));
                     }
@@ -131,6 +141,9 @@ namespace USFMToolsSharp
                     break;
                 case CAMarker cAMarker:
                     output.AppendLine($"<span class=\"chaptermarker-alt\">({cAMarker.AltChapterCharacter})</span>");
+                    break;
+                case CLMarker cLMarker:
+                    currentChapterLabel = cLMarker.Label;
                     break;
                 case VMarker vMarker:
                     output.AppendLine($"<span class=\"verse\">");
@@ -646,6 +659,9 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     break;
+                case IDMarker idMarker:
+                    currentChapterLabel = null;
+                    break;
                 case IOREndMarker _:
                 case SUPEndMarker _:
                 case NDEndMarker _:
@@ -666,7 +682,6 @@ namespace USFMToolsSharp
                 case FQAEndMarker _:
                 case FEndMarker _:
                 case IDEMarker _:
-                case IDMarker _:
                 case VPMarker _:
                 case VPEndMarker _:
                 case USFMMarker _:
@@ -679,7 +694,6 @@ namespace USFMToolsSharp
         }
         private string RenderFootnotes()
         {
-            
             if (FootnoteTextTags.Count > 0)
             {
                 
@@ -695,11 +709,9 @@ namespace USFMToolsSharp
                 return footnoteHTML.ToString();
             }
             return string.Empty;
-            
         }
         private string RenderCrossReferences()
         {
-            
             if (CrossReferenceTags.Count > 0)
             {
                 StringBuilder crossRefHTML = new StringBuilder();
@@ -714,8 +726,6 @@ namespace USFMToolsSharp
                 return crossRefHTML.ToString();
             }
             return string.Empty;
-            
         }
-
     }
 }
