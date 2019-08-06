@@ -5,17 +5,13 @@ using System.Text;
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
-    /// A Poetry Marker
+    /// Right-aligned poetic line
     /// </summary>
-    public class QMarker : Marker
+    public class QRMarker : Marker
     {
-        public int Depth = 1;
-        public string Text;
-        public override string Identifier => "q";
-        public override List<Type> AllowedContents => new List<Type>() {
-            typeof(BMarker),
-            typeof(QSMarker),
-            typeof(QSEndMarker),
+        public override string Identifier => "qr";
+        public override List<Type> AllowedContents => new List<Type>()
+        {
             typeof(TextBlock),
             typeof(FMarker),
             typeof(FEndMarker),
@@ -23,6 +19,9 @@ namespace USFMToolsSharp.Models.Markers
             typeof(TLEndMarker),
             typeof(WMarker),
             typeof(WEndMarker),
+
         };
+        
+            
     }
 }

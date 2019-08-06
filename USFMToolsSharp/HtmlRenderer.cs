@@ -497,6 +497,41 @@ namespace USFMToolsSharp
                     }
                     output.AppendLine("</div>");
                     break;
+                case QRMarker qRMarker:
+                    output.Append("<div class=\"poetry-right\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case QCMarker qCMarker:
+                    output.Append("<div class=\"poetry-center\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case QDMarker qDMarker:
+                    output.Append("<div class=\"hebrew-note\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
+                case QACMarker qACMarker:
+                    output.AppendLine($"<span class=\"acrostic-letter\">{qACMarker.AcrosticLetter}</span>");
+                    break;
+                case QMMarker qMMarker:
+                    output.Append($"<div class=\"embedded-poetry-{qMMarker.Depth}\">");
+                    foreach (Marker marker in input.Contents)
+                    {
+                        output.Append(RenderMarker(marker));
+                    }
+                    output.AppendLine("</div>");
+                    break;
                 case DMarker dMarker:
                     output.Append("<div class=\"descriptive-text\">");
                     output.AppendLine(dMarker.Description);
@@ -617,6 +652,7 @@ namespace USFMToolsSharp
                 case NOEndMarker _:
                 case BDITEndMarker _:
                 case EMEndMarker _:
+                case QACEndMarker _:
                 case QSEndMarker _:
                 case XEndMarker _:
                 case WEndMarker _:
