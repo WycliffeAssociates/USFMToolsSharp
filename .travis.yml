@@ -4,4 +4,7 @@ mono: none
 #must declare version
 dotnet: 2.2.401
 script:
- - dotnet test
+ - dotnet test 
+ - cd ./USFMToolsSharp/bin/Release/
+ - PKG_NAME=$(ls *.nupkg)
+ - if [ -n "$TRAVIS_TAG" ]; then dotnet nuget push $PKG_NAME -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json; fi
