@@ -12,6 +12,7 @@ namespace USFMToolsSharp.Models.Markers
         }
         public List<Marker> Contents;
         public abstract string Identifier { get; }
+        public int Position { get; set; }
         public virtual List<Type> AllowedContents {
             get {
                 return new List<Type>();
