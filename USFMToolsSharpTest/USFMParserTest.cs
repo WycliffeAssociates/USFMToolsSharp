@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -14,6 +15,20 @@ namespace USFMToolsSharpTest
         {
             parser = new USFMToolsSharp.USFMParser();
         }
+
+        [TestMethod]
+        public void TestIgnoredTags()
+        {
+            parser = new USFMToolsSharp.USFMParser(new List<string> { "bd", "bd*" });
+            USFMDocument doc = parser.ParseFromString("\\v 1 In the beginning \\bd God \\bd*");
+            Assert.AreEqual(1, doc.Contents.Count);
+            VMarker vm = (VMarker)doc.Contents[0];
+            Assert.AreEqual(1, vm.Contents.Count);
+            TextBlock tb = (TextBlock)vm.Contents[0];
+            Assert.AreEqual(0, tb.Contents.Count);
+            Assert.AreEqual("In the beginning", tb.Text);
+        }
+
         [TestMethod]
         public void TestSectionParse()
         {
