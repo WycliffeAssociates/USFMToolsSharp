@@ -101,7 +101,7 @@ namespace USFMToolsSharp.LinterModules
                 {
                     Position = loneMarkerPosition,
                     Level = LinterLevel.Error,
-                    Message = $"Missing Opening marker for {input.GetType().ToString().Split('.')[3]}"
+                    Message = $"Missing Opening marker for {input.GetType().Name}"
                 });
 
             }
