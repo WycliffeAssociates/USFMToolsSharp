@@ -13,7 +13,8 @@ namespace USFMToolsSharp
             new FindUnknownMarkers(),
             new VerseMarkerValidation(),
             new MissingEndMarkers(),
-            new UnpairedEndMarkers()
+            new UnpairedEndMarkers(),
+            new MissingTableRows()
         };
         public List<LinterResult> Lint(USFMDocument input)
         {
