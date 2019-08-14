@@ -41,10 +41,6 @@ namespace USFMToolsSharp.LinterModules
                 {typeof(WEndMarker),typeof(WMarker)},
                 {typeof(XEndMarker), typeof(XMarker)},
             };
-            /*
-             Iterate through Parent's Contents
-                - check to see if 
-             */
             foreach (Marker marker in input.Contents)
             {
                 missingEndMarkers.AddRange(CheckChildMarkers(marker, input));
