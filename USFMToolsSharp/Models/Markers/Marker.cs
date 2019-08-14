@@ -52,6 +52,31 @@ namespace USFMToolsSharp.Models.Markers
             }
             return types;
         }
+
+        public List<Marker> GetHierarchyToMarker(Marker target)
+        {
+            List<Marker> output = new List<Marker>
+            {
+                this
+            };
+
+            if (target == this)
+            {
+                return output;
+            }
+
+            List<Marker> tmp;
+            foreach(Marker marker in this.Contents)
+            {
+                tmp = marker.GetHierarchyToMarker(target);
+                if(tmp.Count != 0)
+                {
+                    output.AddRange(tmp);
+                    return output;
+                }
+            }
+            return new List<Marker>();
+        }
         /// <summary>
         /// A recursive search for children of a certain type
         /// </summary>

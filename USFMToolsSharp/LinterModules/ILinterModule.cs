@@ -6,7 +6,7 @@ using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharp.LinterModules
 {
-    interface ILinterModule
+    public interface ILinterModule
     {
         List<LinterResult> Lint(USFMDocument input);
     }

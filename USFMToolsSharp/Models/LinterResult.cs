@@ -15,5 +15,17 @@ namespace USFMToolsSharp.Models
         public LinterLevel Level;
         public string Message;
         public int Position;
+
+        public LinterResult()
+        {
+
+        }
+
+        public LinterResult(LinterLevel level, string message, int position)
+        {
+            Level = level;
+            Message = message;
+            Position = position;
+        }
     }
 }
