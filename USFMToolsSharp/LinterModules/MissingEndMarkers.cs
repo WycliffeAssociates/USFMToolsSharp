@@ -38,11 +38,8 @@ namespace USFMToolsSharp.LinterModules
                 {typeof(VPMarker),typeof(VPEndMarker)},
                 {typeof(WMarker),typeof(WEndMarker)},
                 {typeof(XMarker), typeof(XEndMarker)},
-};
-            /*
-             Iterate through Parent's Contents
-                - check to see if 
-             */
+            };
+
             foreach (Marker marker in input.Contents)
             {
                 missingEndMarkers.AddRange(CheckChildMarkers(marker, input));
@@ -102,7 +99,7 @@ namespace USFMToolsSharp.LinterModules
                 {
                     Position = loneMarkerPosition,
                     Level = LinterLevel.Error,
-                    Message = $"Missing Closing marker for {input.GetType().ToString().Split('.')[3]}"
+                    Message = $"Missing Closing marker for {input.GetType().Name}"
                 });
 
             }
