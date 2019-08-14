@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -14,6 +15,92 @@ namespace USFMToolsSharpTest
         {
             parser = new USFMToolsSharp.USFMParser();
         }
+
+        [TestMethod]
+        public void TestIgnoredTags()
+        {
+            parser = new USFMToolsSharp.USFMParser(new List<string> { "bd", "bd*" });
+            USFMDocument doc = parser.ParseFromString("\\v 1 In the beginning \\bd God \\bd*");
+            Assert.AreEqual(1, doc.Contents.Count);
+            VMarker vm = (VMarker)doc.Contents[0];
+            Assert.AreEqual(1, vm.Contents.Count);
+            TextBlock tb = (TextBlock)vm.Contents[0];
+            Assert.AreEqual(0, tb.Contents.Count);
+            Assert.AreEqual("In the beginning", tb.Text);
+        }
+
+        [TestMethod]
+        public void TestIdentificationMarkers()
+        {
+            Assert.AreEqual("Genesis", ((IDMarker)parser.ParseFromString("\\id Genesis").Contents[0]).TextIdentifier);
+            Assert.AreEqual("UTF-8",   ((IDEMarker)parser.ParseFromString("\\ide UTF-8").Contents[0]).Encoding);
+            Assert.AreEqual("2",       ((STSMarker)parser.ParseFromString("\\sts 2").Contents[0]).StatusText);
+        }
+
+        [TestMethod]
+        public void TestIntroductionMarkers()
+        {
+            Assert.AreEqual("Title", ((IMTMarker)parser.ParseFromString("\\imt Title").Contents[0]).IntroTitle);
+            Assert.AreEqual(1,       ((IMTMarker)parser.ParseFromString("\\imt").Contents[0]).Weight);
+            Assert.AreEqual(1,       ((IMTMarker)parser.ParseFromString("\\imt1").Contents[0]).Weight);
+            Assert.AreEqual(2,       ((IMTMarker)parser.ParseFromString("\\imt2").Contents[0]).Weight);
+            Assert.AreEqual(3,       ((IMTMarker)parser.ParseFromString("\\imt3").Contents[0]).Weight);
+
+            Assert.AreEqual("Heading", ((ISMarker)parser.ParseFromString("\\is Heading").Contents[0]).Heading);
+            Assert.AreEqual(1,         ((ISMarker)parser.ParseFromString("\\is").Contents[0]).Weight);
+            Assert.AreEqual(1,         ((ISMarker)parser.ParseFromString("\\is1").Contents[0]).Weight);
+            Assert.AreEqual(2,         ((ISMarker)parser.ParseFromString("\\is2").Contents[0]).Weight);
+            Assert.AreEqual(3,         ((ISMarker)parser.ParseFromString("\\is3").Contents[0]).Weight);
+
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq").Contents[0]).Depth);
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1").Contents[0]).Depth);
+            Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2").Contents[0]).Depth);
+            Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3").Contents[0]).Depth);
+
+            Assert.IsNotNull(((IBMarker)parser.ParseFromString("\\ib").Contents[0]));
+
+            Assert.AreEqual("Title", ((IOTMarker)parser.ParseFromString("\\iot Title").Contents[0]).Title);
+
+            Assert.AreEqual(1, ((IOMarker)parser.ParseFromString("\\io").Contents[0]).Depth);
+            Assert.AreEqual(1, ((IOMarker)parser.ParseFromString("\\io1").Contents[0]).Depth);
+            Assert.AreEqual(2, ((IOMarker)parser.ParseFromString("\\io2").Contents[0]).Depth);
+            Assert.AreEqual(3, ((IOMarker)parser.ParseFromString("\\io3").Contents[0]).Depth);
+
+            USFMDocument doc = parser.ParseFromString("\\ior (1.1-3)\\ior*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            Assert.AreEqual("(1.1-3)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            Assert.AreEqual("Text", ((TextBlock)parser.ParseFromString("\\ili Text").Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1,      ((ILIMarker)parser.ParseFromString("\\ili").Contents[0]).Depth);
+            Assert.AreEqual(1,      ((ILIMarker)parser.ParseFromString("\\ili1").Contents[0]).Depth);
+            Assert.AreEqual(2,      ((ILIMarker)parser.ParseFromString("\\ili2").Contents[0]).Depth);
+            Assert.AreEqual(3,      ((ILIMarker)parser.ParseFromString("\\ili3").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\ip Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\ipi Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPIMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\im Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\is Heading");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(ISMarker));
+            Assert.AreEqual("Heading", ((ISMarker)doc.Contents[0]).Heading);
+
+            doc = parser.ParseFromString("\\iq Quote");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IQMarker));
+            Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq Quote").Contents[0]).Depth);
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Depth);
+            Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2 Quote").Contents[0]).Depth);
+            Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3 Quote").Contents[0]).Depth);
+        }
+
         [TestMethod]
         public void TestSectionParse()
         {
