@@ -12,6 +12,7 @@ namespace USFMToolsSharp
         public List<ILinterModule> linters = new List<ILinterModule>() {
             new FindUnknownMarkers(),
             new VerseMarkerValidation(),
+            new MissingEndMarkers()
         };
         public List<LinterResult> Lint(USFMDocument input)
         {
