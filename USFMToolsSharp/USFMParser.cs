@@ -6,9 +6,9 @@ using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharp
 {
-    ///<summary>
-    /// Identifies what marker is used and 
-    ///</summary>
+    /// <summary>
+    /// Parses a USFM file into a Abstract Syntax Tree
+    /// </summary>
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
