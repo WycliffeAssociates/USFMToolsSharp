@@ -9,7 +9,10 @@ namespace USFMToolsSharp
 {
     public class USFMLinter
     {
-        public List<ILinterModule> linters = new List<ILinterModule>() { };
+        public List<ILinterModule> linters = new List<ILinterModule>() {
+            new FindUnknownMarkers(),
+            new VerseMarkerValidation(),
+        };
         public List<LinterResult> Lint(USFMDocument input)
         {
             List<LinterResult> output = new List<LinterResult>();
