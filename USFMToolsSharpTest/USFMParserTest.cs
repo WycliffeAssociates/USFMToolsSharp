@@ -30,6 +30,37 @@ namespace USFMToolsSharpTest
         }
 
         [TestMethod]
+        public void TestIdentificationMarkers()
+        {
+            Assert.AreEqual("Genesis", ((IDMarker)parser.ParseFromString("\\id Genesis").Contents[0]).TextIdentifier);
+            Assert.AreEqual("UTF-8",   ((IDEMarker)parser.ParseFromString("\\ide UTF-8").Contents[0]).Encoding);
+            Assert.AreEqual("2",       ((STSMarker)parser.ParseFromString("\\sts 2").Contents[0]).StatusText);
+        }
+
+        [TestMethod]
+        public void TestIntroductionMarkers()
+        {
+            Assert.AreEqual("Title", ((IMTMarker)parser.ParseFromString("\\imt Title").Contents[0]).IntroTitle);
+            Assert.AreEqual(1,       ((IMTMarker)parser.ParseFromString("\\imt").Contents[0]).Weight);
+            Assert.AreEqual(1,       ((IMTMarker)parser.ParseFromString("\\imt1").Contents[0]).Weight);
+            Assert.AreEqual(2,       ((IMTMarker)parser.ParseFromString("\\imt2").Contents[0]).Weight);
+            Assert.AreEqual(3,       ((IMTMarker)parser.ParseFromString("\\imt3").Contents[0]).Weight);
+
+            Assert.AreEqual("Heading", ((ISMarker)parser.ParseFromString("\\is Heading").Contents[0]).Heading);
+            Assert.AreEqual(1,         ((ISMarker)parser.ParseFromString("\\is").Contents[0]).Weight);
+            Assert.AreEqual(1,         ((ISMarker)parser.ParseFromString("\\is1").Contents[0]).Weight);
+            Assert.AreEqual(2,         ((ISMarker)parser.ParseFromString("\\is2").Contents[0]).Weight);
+            Assert.AreEqual(3,         ((ISMarker)parser.ParseFromString("\\is3").Contents[0]).Weight);
+
+            Assert.AreEqual("Quote", ((IQMarker)parser.ParseFromString("\\iq Quote").Contents[0]).Text);
+            Assert.AreEqual(1,       ((IQMarker)parser.ParseFromString("\\iq").Contents[0]).Depth);
+            Assert.AreEqual("Quote", ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Text);
+            Assert.AreEqual(1,       ((IQMarker)parser.ParseFromString("\\iq1").Contents[0]).Depth);
+            Assert.AreEqual(2,       ((IQMarker)parser.ParseFromString("\\iq2").Contents[0]).Depth);
+            Assert.AreEqual(3,       ((IQMarker)parser.ParseFromString("\\iq3").Contents[0]).Depth);
+        }
+
+        [TestMethod]
         public void TestSectionParse()
         {
             // Section Headings
