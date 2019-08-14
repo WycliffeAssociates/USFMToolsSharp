@@ -68,22 +68,37 @@ namespace USFMToolsSharpTest
 
             USFMDocument doc = parser.ParseFromString("\\ior (1.1-3)\\ior*");
             Assert.AreEqual(2, doc.Contents.Count);
-            //FIXME IORMarker is missing a Reference attribute Assert.AreEqual("(1.1-3)", ((IORMarker)doc.Contents[0]).Reference);
+            Assert.AreEqual("(1.1-3)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
-            //FIXME ILIMarker is missing a Text attribute Assert.AreEqual("Text", ((ILIMarker)parser.ParseFromString("\\ili Text").Contents[0]).Text);
+            Assert.AreEqual("Text", ((TextBlock)parser.ParseFromString("\\ili Text").Contents[0].Contents[0]).Text);
             Assert.AreEqual(1,         ((ILIMarker)parser.ParseFromString("\\ili").Contents[0]).Depth);
             Assert.AreEqual(1,         ((ILIMarker)parser.ParseFromString("\\ili1").Contents[0]).Depth);
             Assert.AreEqual(2,         ((ILIMarker)parser.ParseFromString("\\ili2").Contents[0]).Depth);
             Assert.AreEqual(3,         ((ILIMarker)parser.ParseFromString("\\ili3").Contents[0]).Depth);
 
-        }
+            doc = parser.ParseFromString("\\ip Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
-        [TestMethod]
-        public void TestFailingTests()
-        {
-            //FIXME marker missing title Assert.AreEqual("Title", ((IOMarker)parser.ParseFromString("\\is Heading").Contents[0]).Title);
-            Assert.AreEqual("Quote", ((IQMarker)parser.ParseFromString("\\iq Quote").Contents[0]).Text);
-            Assert.AreEqual("Quote", ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Text);
+            doc = parser.ParseFromString("\\ipi Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPIMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\im Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\is Heading");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(ISMarker));
+            Assert.AreEqual("Heading", ((ISMarker)doc.Contents[0]).Heading);
+
+            doc = parser.ParseFromString("\\iq Quote");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IQMarker));
+            Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq Quote").Contents[0]).Depth);
+            Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Depth);
+            Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2 Quote").Contents[0]).Depth);
+            Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3 Quote").Contents[0]).Depth);
         }
 
         [TestMethod]
