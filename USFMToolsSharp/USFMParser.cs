@@ -6,6 +6,9 @@ using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharp
 {
+    /// <summary>
+    /// Parses a USFM file into a Abstract Syntax Tree
+    /// </summary>
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
@@ -32,8 +35,8 @@ namespace USFMToolsSharp
                     continue;
                 }
 
-
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
+                result.marker.Position = match.Index;
 
                 if(result.marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {

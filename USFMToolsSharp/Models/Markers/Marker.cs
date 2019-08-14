@@ -12,6 +12,7 @@ namespace USFMToolsSharp.Models.Markers
         }
         public List<Marker> Contents;
         public abstract string Identifier { get; }
+        public int Position { get; set; }
         public virtual List<Type> AllowedContents {
             get {
                 return new List<Type>();
@@ -50,6 +51,31 @@ namespace USFMToolsSharp.Models.Markers
                 types.AddRange(Contents[Contents.Count - 1].GetTypesPathToLastMarker());
             }
             return types;
+        }
+
+        public List<Marker> GetHierarchyToMarker(Marker target)
+        {
+            List<Marker> output = new List<Marker>
+            {
+                this
+            };
+
+            if (target == this)
+            {
+                return output;
+            }
+
+            List<Marker> tmp;
+            foreach(Marker marker in this.Contents)
+            {
+                tmp = marker.GetHierarchyToMarker(target);
+                if(tmp.Count != 0)
+                {
+                    output.AddRange(tmp);
+                    return output;
+                }
+            }
+            return new List<Marker>();
         }
         /// <summary>
         /// A recursive search for children of a certain type
