@@ -11,6 +11,7 @@ namespace USFMToolsSharp.LinterModules
         public Dictionary<Type, Type> markerPairs;
         public List<LinterResult> Lint(USFMDocument input)
         {
+            List<LinterResult> missingEndMarkers = new List<LinterResult>();
             markerPairs = new Dictionary<Type, Type>
             {
                 {typeof(ADDMarker),typeof(ADDEndMarker)},
@@ -44,11 +45,17 @@ namespace USFMToolsSharp.LinterModules
              */
             foreach (Marker marker in input.Contents)
             {
-                CheckChildMarkers(marker, input);
+                missingEndMarkers.AddRange(CheckChildMarkers(marker, input));
             }
-            return new List<LinterResult>();
+            return missingEndMarkers;
 
         }
+        /// <summary>
+        /// Iterates through all children markers
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
         public List<LinterResult> CheckChildMarkers(Marker input,USFMDocument root)
         {
             List<LinterResult> results = new List<LinterResult>();
@@ -57,12 +64,18 @@ namespace USFMToolsSharp.LinterModules
             {
                 if (markerPairs.ContainsKey(marker.GetType()))
                 {
-                    CheckEndMarker(marker, root);
+                    results.AddRange(CheckEndMarker(marker, root));
                 }
-                CheckChildMarkers(marker, root);
+                results.AddRange(CheckChildMarkers(marker, root));
             }
             return results;
         }
+        /// <summary>
+        /// Checks Closing Marker for Unique Marker 
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="root"></param>
+        /// <returns></returns>
         public List<LinterResult> CheckEndMarker(Marker input,USFMDocument root)
         {
             List<int> markerPositions = new List<int>();
@@ -89,7 +102,7 @@ namespace USFMToolsSharp.LinterModules
                 {
                     Position = loneMarkerPosition,
                     Level = LinterLevel.Error,
-                    Message = $"Missing Closing marker for {input.GetType()}"
+                    Message = $"Missing Closing marker for {input.GetType().ToString().Split('.')[3]}"
                 });
 
             }
