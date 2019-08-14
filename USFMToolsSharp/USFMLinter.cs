@@ -9,7 +9,7 @@ namespace USFMToolsSharp
 {
     public class USFMLinter
     {
-        private ILinterModule[] linters = { };
+        public List<ILinterModule> linters = new List<ILinterModule>() { };
         public List<LinterResult> Lint(USFMDocument input)
         {
             List<LinterResult> output = new List<LinterResult>();
