@@ -58,7 +58,7 @@ namespace USFMToolsSharp.LinterModules
             List<Marker> hierarchy = root.GetHierarchyToMarker(input);
             Marker parentMarker = hierarchy[hierarchy.Count - 2];
 
-            if(parentMarker.GetType() != typeof(TRMarker))
+            if(parentMarker is TRMarker)
             {
                 return new LinterResult
                 {
