@@ -36,6 +36,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("UTF-8",   ((IDEMarker)parser.ParseFromString("\\ide UTF-8").Contents[0]).Encoding);
             Assert.AreEqual("2",       ((STSMarker)parser.ParseFromString("\\sts 2").Contents[0]).StatusText);
 
+            Assert.AreEqual("3.0", ((USFMMarker)parser.ParseFromString("\\usfm 3.0").Contents[0]).Version);
+
             USFMDocument doc = parser.ParseFromString("\\rem Remark");
             Assert.IsInstanceOfType(doc.Contents[0], typeof(REMMarker));
             REMMarker rem = (REMMarker)doc.Contents[0];
@@ -288,7 +290,11 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((TCMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((TCMarker)parser.ParseFromString("\\tr \\tc2 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(3, ((TCMarker)parser.ParseFromString("\\tr \\tc3 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(1, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr1 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
             Assert.AreEqual(2, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
+            Assert.AreEqual(3, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
 
             // Embedded Verse
             Assert.AreEqual("6", ((VMarker)parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[0].Contents[0]).VerseNumber);
@@ -297,7 +303,12 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((THMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((THMarker)parser.ParseFromString("\\tr \\th2 dari suku Ruben \\thr 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(3, ((THMarker)parser.ParseFromString("\\tr \\th3 dari suku Ruben \\thr 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+
+            Assert.AreEqual(1, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr1 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
             Assert.AreEqual(2, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
+            Assert.AreEqual(3, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
         }
         [TestMethod]
         public void TestListParse()
