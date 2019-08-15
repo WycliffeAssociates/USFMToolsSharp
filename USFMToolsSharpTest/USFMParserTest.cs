@@ -179,6 +179,16 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\cl Chapter One \\c 1").Contents[0]).Label);
             Assert.AreEqual("Chapter Two", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One \\c 2 \\cl Chapter Two").Contents[1].Contents[0]).Label);
+
+            USFMDocument doc = parser.ParseFromString("\\cp Q");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(CPMarker));
+            Assert.AreEqual("Q", ((CPMarker)doc.Contents[0]).PublishedChapterMarker);
+
+            doc = parser.ParseFromString("\\ca 53 \\ca*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            CAMarker caBegin = (CAMarker)doc.Contents[0];
+            CAEndMarker caEnd = (CAEndMarker)doc.Contents[1];
+            Assert.AreEqual("53", caBegin.AltChapterNumber);
         }
         [TestMethod]
         public void TestVerseParse()
