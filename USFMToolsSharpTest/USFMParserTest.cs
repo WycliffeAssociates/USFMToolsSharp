@@ -99,6 +99,23 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Depth);
             Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2 Quote").Contents[0]).Depth);
             Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3 Quote").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\imi Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMIMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\ipq Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPQMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\imq Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMQMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\ipr Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPRMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
         }
 
         [TestMethod]
