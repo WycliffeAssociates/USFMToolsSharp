@@ -227,12 +227,8 @@ namespace USFMToolsSharp
                     return new NBMarker();
                 case "fqa":
                     return new FQAMarker();
-                case "fqa*":
-                    return new FQAEndMarker();
                 case "fq":
                     return new FQMarker();
-                case "fq*":
-                    return new FQEndMarker();
                 case "pi":
                     return new PIMarker();
                 case "sp":
