@@ -35,7 +35,7 @@ namespace USFMToolsSharp.Models.Markers
             {
                 var verseBridgeChars = VerseNumber.Split('-');
                 StartingVerse = int.Parse(verseBridgeChars[0]);
-                EndingVerse = verseBridgeChars.Length > 1 ? int.Parse(verseBridgeChars[1]) : StartingVerse;
+                EndingVerse = verseBridgeChars.Length > 1 && !string.IsNullOrWhiteSpace(verseBridgeChars[1]) ? int.Parse(verseBridgeChars[1]) : StartingVerse;
             }
             return match.Groups[2].Value;
         }
