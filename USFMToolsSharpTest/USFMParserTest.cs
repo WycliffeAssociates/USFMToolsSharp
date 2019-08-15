@@ -206,6 +206,16 @@ namespace USFMToolsSharpTest
             VMarker vm = (VMarker)pm.Contents[0];
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
 
+            doc = parser.ParseFromString("\\d A Psalm of David");
+            Assert.AreEqual("A Psalm of David", ((DMarker)doc.Contents[0]).Description);
+
+            doc = parser.ParseFromString("\\m \\v 37 David himself called him 'Lord';");
+            Assert.AreEqual(1, doc.Contents.Count);
+            MMarker mm = (MMarker)doc.Contents[0];
+            Assert.AreEqual(1, mm.Contents.Count);
+            vm = (VMarker)mm.Contents[0];
+            Assert.AreEqual("David himself called him 'Lord';", ((TextBlock)vm.Contents[0]).Text);
+
         }
         [TestMethod]
         public void TestVerseParse()
@@ -325,6 +335,44 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("H1234,G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("gnt5:51.1.2.1", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["srcloc"]);
 
+        }
+        [TestMethod]
+        public void TestPoetryParse()
+        {
+            USFMDocument doc = parser.ParseFromString("\\q Quote");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMarker));
+            Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q Quote").Contents[0]).Depth);
+            Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q1 Quote").Contents[0]).Depth);
+            Assert.AreEqual(2, ((QMarker)parser.ParseFromString("\\q2 Quote").Contents[0]).Depth);
+            Assert.AreEqual(3, ((QMarker)parser.ParseFromString("\\q3 Quote").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\qr God's love never fails.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QRMarker));
+            Assert.AreEqual("God's love never fails.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qc Amen! Amen!");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QCMarker));
+            Assert.AreEqual("Amen! Amen!", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qd For the director of music.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QDMarker));
+            Assert.AreEqual("For the director of music.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qac P\\qac*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            QACMarker qac = (QACMarker)doc.Contents[0];
+            QACEndMarker qacEnd = (QACEndMarker)doc.Contents[1];
+            Assert.AreEqual("P", qac.AcrosticLetter);
+
+            doc = parser.ParseFromString("\\qm God is on your side.");
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMMarker));
+            Assert.AreEqual("God is on your side.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm1 God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(2, ((QMMarker)parser.ParseFromString("\\qm2 God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(3, ((QMMarker)parser.ParseFromString("\\qm3 God is on your side.").Contents[0]).Depth);
         }
         [TestMethod]
         public void TestCharacterStylingParse()
