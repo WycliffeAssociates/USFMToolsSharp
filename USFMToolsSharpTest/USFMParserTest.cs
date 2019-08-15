@@ -189,6 +189,23 @@ namespace USFMToolsSharpTest
             CAMarker caBegin = (CAMarker)doc.Contents[0];
             CAEndMarker caEnd = (CAEndMarker)doc.Contents[1];
             Assert.AreEqual("53", caBegin.AltChapterNumber);
+
+            doc = parser.ParseFromString("\\va 22 \\va*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            VAMarker vaBegin = (VAMarker)doc.Contents[0];
+            VAEndMarker vaEnd = (VAEndMarker)doc.Contents[1];
+            Assert.AreEqual("22", vaBegin.AltVerseNumber);
+
+            doc = parser.ParseFromString("\\p In the beginning God created the heavens and the earth.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\p \\v 1 In the beginning God created the heavens and the earth.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            PMarker pm = (PMarker)doc.Contents[0];
+            VMarker vm = (VMarker)pm.Contents[0];
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
+
         }
         [TestMethod]
         public void TestVerseParse()
