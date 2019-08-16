@@ -69,6 +69,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(RMarker),
             typeof(LIMarker),
             typeof(TableBlock),
+            typeof(MMarker),
             typeof(MIMarker),
             typeof(PIMarker),
             typeof(CAMarker),

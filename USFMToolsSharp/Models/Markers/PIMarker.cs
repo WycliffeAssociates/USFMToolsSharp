@@ -9,6 +9,17 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class PIMarker : Marker
     {
+        public int Depth = 1;
         public override string Identifier => "pi";
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(VMarker),
+            typeof(BMarker),
+            typeof(SPMarker),
+            typeof(TextBlock),
+            typeof(FMarker),
+            typeof(FEndMarker),
+            typeof(LIMarker),
+            typeof(QMarker)
+        };
     }
 }
