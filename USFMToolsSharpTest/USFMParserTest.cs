@@ -35,6 +35,13 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Genesis", ((IDMarker)parser.ParseFromString("\\id Genesis").Contents[0]).TextIdentifier);
             Assert.AreEqual("UTF-8",   ((IDEMarker)parser.ParseFromString("\\ide UTF-8").Contents[0]).Encoding);
             Assert.AreEqual("2",       ((STSMarker)parser.ParseFromString("\\sts 2").Contents[0]).StatusText);
+
+            Assert.AreEqual("3.0", ((USFMMarker)parser.ParseFromString("\\usfm 3.0").Contents[0]).Version);
+
+            USFMDocument doc = parser.ParseFromString("\\rem Remark");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(REMMarker));
+            REMMarker rem = (REMMarker)doc.Contents[0];
+            Assert.AreEqual("Remark", rem.Comment);
         }
 
         [TestMethod]
@@ -99,6 +106,23 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Depth);
             Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2 Quote").Contents[0]).Depth);
             Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3 Quote").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\imi Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMIMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\ipq Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPQMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\imq Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMQMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\ipr Text");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPRMarker));
+            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
         }
 
         [TestMethod]
@@ -108,6 +132,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Silsilah Yesus Kristus", ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Text);
             Assert.AreEqual("Kumpulkanlah Harta di Surga", ((SMarker)parser.ParseFromString("\\s3 Kumpulkanlah Harta di Surga \\r (Luk. 12:33 - 34; 11:34 - 36; 16:13)").Contents[0]).Text);
             Assert.AreEqual(1, ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
+            Assert.AreEqual(2, ((SMarker)parser.ParseFromString("\\s2 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             Assert.AreEqual(3, ((SMarker)parser.ParseFromString("\\s3 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             
             // Major Section 
@@ -149,6 +174,10 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("", ((HMarker)parser.ParseFromString("\\h").Contents[0]).HeaderText);
             Assert.AreEqual("1 John", ((HMarker)parser.ParseFromString("\\h 1 John").Contents[0]).HeaderText);
             Assert.AreEqual("", ((HMarker)parser.ParseFromString("\\h   ").Contents[0]).HeaderText);
+
+            USFMDocument doc = parser.ParseFromString("\\sp Job");
+            SPMarker sp = (SPMarker)doc.Contents[0];
+            Assert.AreEqual("Job", sp.Speaker);
         }
         [TestMethod]
         public void TestChapterParse()
@@ -162,6 +191,70 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\cl Chapter One \\c 1").Contents[0]).Label);
             Assert.AreEqual("Chapter Two", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One \\c 2 \\cl Chapter Two").Contents[1].Contents[0]).Label);
+
+            USFMDocument doc = parser.ParseFromString("\\cp Q");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(CPMarker));
+            Assert.AreEqual("Q", ((CPMarker)doc.Contents[0]).PublishedChapterMarker);
+
+            doc = parser.ParseFromString("\\ca 53 \\ca*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            CAMarker caBegin = (CAMarker)doc.Contents[0];
+            CAEndMarker caEnd = (CAEndMarker)doc.Contents[1];
+            Assert.AreEqual("53", caBegin.AltChapterNumber);
+
+            doc = parser.ParseFromString("\\va 22 \\va*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            VAMarker vaBegin = (VAMarker)doc.Contents[0];
+            VAEndMarker vaEnd = (VAEndMarker)doc.Contents[1];
+            Assert.AreEqual("22", vaBegin.AltVerseNumber);
+
+            doc = parser.ParseFromString("\\p In the beginning God created the heavens and the earth.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\pc In the beginning God created the heavens and the earth.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PCMarker));
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\p \\v 1 In the beginning God created the heavens and the earth.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            PMarker pm = (PMarker)doc.Contents[0];
+            VMarker vm = (VMarker)pm.Contents[0];
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\mi");
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(MIMarker));
+
+            doc = parser.ParseFromString("\\d A Psalm of David");
+            Assert.AreEqual("A Psalm of David", ((DMarker)doc.Contents[0]).Description);
+
+            doc = parser.ParseFromString("\\nb");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(NBMarker));
+
+            doc = parser.ParseFromString("\\fq the Son of God");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(FQMarker));
+            Assert.AreEqual("the Son of God", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\pi The one who scattered");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(PIMarker));
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.AreEqual("The one who scattered", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi").Contents[0]).Depth);
+            Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi1").Contents[0]).Depth);
+            Assert.AreEqual(2, ((PIMarker)parser.ParseFromString("\\pi2").Contents[0]).Depth);
+            Assert.AreEqual(3, ((PIMarker)parser.ParseFromString("\\pi3").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\m \\v 37 David himself called him 'Lord';");
+            Assert.AreEqual(1, doc.Contents.Count);
+            MMarker mm = (MMarker)doc.Contents[0];
+            Assert.AreEqual(1, mm.Contents.Count);
+            vm = (VMarker)mm.Contents[0];
+            Assert.AreEqual("David himself called him 'Lord';", ((TextBlock)vm.Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\b");
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(BMarker));
         }
         [TestMethod]
         public void TestVerseParse()
@@ -196,7 +289,11 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((TCMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((TCMarker)parser.ParseFromString("\\tr \\tc2 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(3, ((TCMarker)parser.ParseFromString("\\tr \\tc3 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(1, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr1 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
             Assert.AreEqual(2, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
+            Assert.AreEqual(3, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
 
             // Embedded Verse
             Assert.AreEqual("6", ((VMarker)parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[0].Contents[0]).VerseNumber);
@@ -205,13 +302,22 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((THMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(2, ((THMarker)parser.ParseFromString("\\tr \\th2 dari suku Ruben \\thr 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+            Assert.AreEqual(3, ((THMarker)parser.ParseFromString("\\tr \\th3 dari suku Ruben \\thr 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
+
+            Assert.AreEqual(1, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr1 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
             Assert.AreEqual(2, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
+            Assert.AreEqual(3, ((THRMarker)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
         }
         [TestMethod]
         public void TestListParse()
         {
             // List Items
             Assert.AreEqual("Peres ayah Hezron.", ((TextBlock)parser.ParseFromString("\\li Peres ayah Hezron.").Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((LIMarker)parser.ParseFromString("\\li Peres ayah Hezron.").Contents[0]).Depth);
+            Assert.AreEqual(1, ((LIMarker)parser.ParseFromString("\\li1 Peres ayah Hezron.").Contents[0]).Depth);
+            Assert.AreEqual(2, ((LIMarker)parser.ParseFromString("\\li2 Peres ayah Hezron.").Contents[0]).Depth);
+            Assert.AreEqual(3, ((LIMarker)parser.ParseFromString("\\li3 Peres ayah Hezron.").Contents[0]).Depth);
             // Verse within List
             Assert.AreEqual("19", ((VMarker)parser.ParseFromString("\\li Peres ayah Hezron. \\li \\v 19 Hezron ayah Ram.").Contents[1].Contents[0]).VerseNumber);
         }
@@ -236,7 +342,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("1.3", ((FRMarker)parser.ParseFromString("\\f + \\fr 1.3 \\fk Tamar \\ft Menantu Yehuda yang akhirnya menjadi istrinya (bc. Kej. 38:1-30).\\f*").Contents[0].Contents[0]).VerseReference);
 
             // Footnote Verse Marker - Paragraph
-            Assert.AreEqual("56", ((FVMarker)parser.ParseFromString("\\f + \\fr 9:55 \\ft Beberapa salinan Bahasa Yunani menambahkan: Dan ia berkata, Kamu tidak tahu roh apa yang memilikimu. \\fv 56 \\ft Anak Manusia tidak datang untuk menghancurkan hidup manusia, tetapi untuk menyelamatkan mereka.\\f*").Contents[0].Contents[2]).VerseCharacter);
+            Assert.AreEqual("56", ((FVMarker)parser.ParseFromString("\\f + \\fr 9:55 \\ft Beberapa salinan Bahasa Yunani menambahkan: Dan ia berkata, Kamu tidak tahu roh apa yang memilikimu. \\fv 56 \\fv* \\ft Anak Manusia tidak datang untuk menghancurkan hidup manusia, tetapi untuk menyelamatkan mereka.\\f*").Contents[0].Contents[2]).VerseCharacter);
             Assert.IsInstanceOfType(parser.ParseFromString("\\f + \\fr 17.25 \\ft Kemungkinan maksudnya adalah bebas dari kewajiban pajak seumur hidup. (bdk. NIV. NET) \\fp \\f*").Contents[0].Contents[2],typeof(FPMarker));
         }
         [TestMethod]
@@ -280,6 +386,50 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" strong=\"G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("H1234,G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("gnt5:51.1.2.1", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["srcloc"]);
+
+        }
+        [TestMethod]
+        public void TestPoetryParse()
+        {
+            USFMDocument doc = parser.ParseFromString("\\q Quote");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMarker));
+            Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q Quote").Contents[0]).Depth);
+            Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q1 Quote").Contents[0]).Depth);
+            Assert.AreEqual(2, ((QMarker)parser.ParseFromString("\\q2 Quote").Contents[0]).Depth);
+            Assert.AreEqual(3, ((QMarker)parser.ParseFromString("\\q3 Quote").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\qr God's love never fails.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QRMarker));
+            Assert.AreEqual("God's love never fails.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qc Amen! Amen!");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QCMarker));
+            Assert.AreEqual("Amen! Amen!", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qd For the director of music.");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QDMarker));
+            Assert.AreEqual("For the director of music.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            doc = parser.ParseFromString("\\qac P\\qac*");
+            Assert.AreEqual(2, doc.Contents.Count);
+            QACMarker qac = (QACMarker)doc.Contents[0];
+            QACEndMarker qacEnd = (QACEndMarker)doc.Contents[1];
+            Assert.AreEqual("P", qac.AcrosticLetter);
+
+            doc = parser.ParseFromString("\\qm God is on your side.");
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMMarker));
+            Assert.AreEqual("God is on your side.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm1 God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(2, ((QMMarker)parser.ParseFromString("\\qm2 God is on your side.").Contents[0]).Depth);
+            Assert.AreEqual(3, ((QMMarker)parser.ParseFromString("\\qm3 God is on your side.").Contents[0]).Depth);
+
+            doc = parser.ParseFromString("\\qa Aleph");
+            Assert.IsInstanceOfType(doc.Contents[0], typeof(QAMarker));
+            QAMarker qa = (QAMarker)doc.Contents[0];
+            Assert.AreEqual("Aleph", qa.Heading);
 
         }
         [TestMethod]
