@@ -230,7 +230,12 @@ namespace USFMToolsSharp
                 case "fq":
                     return new FQMarker();
                 case "pi":
+                case "pi1":
                     return new PIMarker();
+                case "pi2":
+                    return new PIMarker() { Depth = 2 };
+                case "pi3":
+                    return new PIMarker() { Depth = 3 };
                 case "sp":
                     return new SPMarker();
                 case "ft":
