@@ -238,21 +238,19 @@ namespace USFMToolsSharpTest
 
             doc = parser.ParseFromString("\\pi The one who scattered");
             Assert.IsInstanceOfType(doc.Contents[0], typeof(PIMarker));
-            // FIXME: These tests will fail until PIMarker is fixed.
-            // Assert.AreEqual(1, doc.Contents.Count);
-            // Assert.AreEqual("The one who scattered", ((TextBlock)doc.Contents[0].Contents[0]).Text);
-            // Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi").Contents[0]).Depth);
-            // Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi1").Contents[0]).Depth);
-            // Assert.AreEqual(2, ((PIMarker)parser.ParseFromString("\\pi2").Contents[0]).Depth);
-            // Assert.AreEqual(3, ((PIMarker)parser.ParseFromString("\\pi3").Contents[0]).Depth);
+            Assert.AreEqual(1, doc.Contents.Count);
+            Assert.AreEqual("The one who scattered", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi").Contents[0]).Depth);
+            Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi1").Contents[0]).Depth);
+            Assert.AreEqual(2, ((PIMarker)parser.ParseFromString("\\pi2").Contents[0]).Depth);
+            Assert.AreEqual(3, ((PIMarker)parser.ParseFromString("\\pi3").Contents[0]).Depth);
 
             doc = parser.ParseFromString("\\m \\v 37 David himself called him 'Lord';");
-            // FIXME: These tests will fail until MMarker is fixed.
-            // Assert.AreEqual(1, doc.Contents.Count);
-            // MMarker mm = (MMarker)doc.Contents[0];
-            // Assert.AreEqual(1, mm.Contents.Count);
-            // vm = (VMarker)mm.Contents[0];
-            // Assert.AreEqual("David himself called him 'Lord';", ((TextBlock)vm.Contents[0]).Text);
+            Assert.AreEqual(1, doc.Contents.Count);
+            MMarker mm = (MMarker)doc.Contents[0];
+            Assert.AreEqual(1, mm.Contents.Count);
+            vm = (VMarker)mm.Contents[0];
+            Assert.AreEqual("David himself called him 'Lord';", ((TextBlock)vm.Contents[0]).Text);
 
             doc = parser.ParseFromString("\\b");
             Assert.AreEqual(1, doc.Contents.Count);
