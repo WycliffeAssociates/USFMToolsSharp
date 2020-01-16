@@ -367,6 +367,10 @@ namespace USFMToolsSharp
                     return new SUPMarker();
                 case "sup*":
                     return new SUPEndMarker();
+                case "pn":
+                    return new PNMarker();
+                case "pn*":
+                    return new PNEndMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
