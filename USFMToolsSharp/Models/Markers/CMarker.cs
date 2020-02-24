@@ -74,6 +74,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(PIMarker),
             typeof(CAMarker),
             typeof(CAEndMarker),
+            typeof(SPMarker)
         };
     }
 }
