@@ -6,11 +6,12 @@
     <RepositoryUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</RepositoryUrl>
     <Copyright />
     <PackageLicenseUrl></PackageLicenseUrl>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Wycliffe Associates</Company>
     <Authors>@rbnswartz</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Description>A parsing library for USFM</Description>
   </PropertyGroup>
 
   <ItemGroup>
