@@ -345,7 +345,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("56", ((FVMarker)parser.ParseFromString("\\f + \\fr 9:55 \\ft Beberapa salinan Bahasa Yunani menambahkan: Dan ia berkata, Kamu tidak tahu roh apa yang memilikimu. \\fv 56 \\fv* \\ft Anak Manusia tidak datang untuk menghancurkan hidup manusia, tetapi untuk menyelamatkan mereka.\\f*").Contents[0].Contents[2]).VerseCharacter);
             Assert.IsInstanceOfType(parser.ParseFromString("\\f + \\fr 17.25 \\ft Kemungkinan maksudnya adalah bebas dari kewajiban pajak seumur hidup. (bdk. NIV. NET) \\fp \\f*").Contents[0].Contents[2],typeof(FPMarker));
 
-            // Make sure that a fqa end marker doesn't end up outside of the a footnote
+            // Make sure that a fqa end marker doesn't end up outside of the footnote
             Assert.AreEqual(1, parser.ParseFromString("\\v 1 Words \\f + \\fqa Thing \\fqa* \\f*").Contents.Count);
         }
         [TestMethod]
