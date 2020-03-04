@@ -27,6 +27,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FVEndMarker),
             typeof(FPMarker),
             typeof(FQAMarker),
+            typeof(FQAEndMarker),
             typeof(FQMarker),
             typeof(TLMarker),
             typeof(TLEndMarker),
