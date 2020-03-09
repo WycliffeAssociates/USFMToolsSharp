@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "xo";
         public override string PreProcess(string input)
         {
-            OriginRef = input;
+            OriginRef = input.Trim();
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {

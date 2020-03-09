@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "s";
         public override string PreProcess(string input)
         {
-            Text = input;
+            Text = input.TrimStart();
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {

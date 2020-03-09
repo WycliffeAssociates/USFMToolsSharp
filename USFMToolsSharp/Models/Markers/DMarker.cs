@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "d";
         public override string PreProcess(string input)
         {
-            Description = input;
+            Description = input.Trim();
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {

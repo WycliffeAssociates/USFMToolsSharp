@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "cp";
         public override string PreProcess(string input)
         {
-            PublishedChapterMarker = input;
+            PublishedChapterMarker = input.Trim();
             return string.Empty;
         }
     }

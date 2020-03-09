@@ -26,7 +26,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, vm.Contents.Count);
             TextBlock tb = (TextBlock)vm.Contents[0];
             Assert.AreEqual(0, tb.Contents.Count);
-            Assert.AreEqual("In the beginning", tb.Text);
+            Assert.AreEqual("In the beginning ", tb.Text);
         }
 
         [TestMethod]
@@ -129,15 +129,15 @@ namespace USFMToolsSharpTest
         public void TestSectionParse()
         {
             // Section Headings
-            Assert.AreEqual("Silsilah Yesus Kristus", ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Text);
-            Assert.AreEqual("Kumpulkanlah Harta di Surga", ((SMarker)parser.ParseFromString("\\s3 Kumpulkanlah Harta di Surga \\r (Luk. 12:33 - 34; 11:34 - 36; 16:13)").Contents[0]).Text);
+            Assert.AreEqual("Silsilah Yesus Kristus ", ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Text);
+            Assert.AreEqual("Kumpulkanlah Harta di Surga ", ((SMarker)parser.ParseFromString("\\s3 Kumpulkanlah Harta di Surga \\r (Luk. 12:33 - 34; 11:34 - 36; 16:13)").Contents[0]).Text);
             Assert.AreEqual(1, ((SMarker)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             Assert.AreEqual(2, ((SMarker)parser.ParseFromString("\\s2 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             Assert.AreEqual(3, ((SMarker)parser.ParseFromString("\\s3 Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0]).Weight);
             
             // Major Section 
-            Assert.AreEqual("jilid 1", ((MSMarker)parser.ParseFromString("\\ms1 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
-            Assert.AreEqual("jilid 1", ((MSMarker)parser.ParseFromString("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
+            Assert.AreEqual("jilid 1 ", ((MSMarker)parser.ParseFromString("\\ms1 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
+            Assert.AreEqual("jilid 1 ", ((MSMarker)parser.ParseFromString("\\ms2 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Heading);
             Assert.AreEqual(3, ((MSMarker)parser.ParseFromString("\\ms3 jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Weight);
             Assert.AreEqual(1, ((MSMarker)parser.ParseFromString("\\ms jilid 1 \\mr (Mazmur 1 - 41)").Contents[0]).Weight);
             
@@ -325,7 +325,7 @@ namespace USFMToolsSharpTest
         public void TestFootnoteParse()
         {
             // Footnote Text Marker
-            Assert.AreEqual("Sample Simple Footnote.", ((TextBlock)parser.ParseFromString("\\f + \\ft Sample Simple Footnote. \\f*").Contents[0].Contents[0].Contents[0]).Text);
+            Assert.AreEqual("Sample Simple Footnote. ", ((TextBlock)parser.ParseFromString("\\f + \\ft Sample Simple Footnote. \\f*").Contents[0].Contents[0].Contents[0]).Text);
 
             // Footnote Caller
             Assert.AreEqual("+", ((FMarker)parser.ParseFromString("\\f + \\ft Sample Simple Footnote. \\f*").Contents[0]).FootNoteCaller);
@@ -461,13 +461,22 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestUnknownMarkerParse()
         {
-            Assert.AreEqual("what is yy?", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedValue);
+            Assert.AreEqual(" what is yy?", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedValue);
             Assert.AreEqual("yy", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedIdentifier);
-            Assert.AreEqual("what is z?", ((UnknownMarker)parser.ParseFromString("\\z what is z?").Contents[0]).ParsedValue);
+            Assert.AreEqual(" what is z?", ((UnknownMarker)parser.ParseFromString("\\z what is z?").Contents[0]).ParsedValue);
             Assert.AreEqual("z", ((UnknownMarker)parser.ParseFromString("\\z what is z?").Contents[0]).ParsedIdentifier);
-            Assert.AreEqual("what is 1?", ((UnknownMarker)parser.ParseFromString("\\1  what is 1?").Contents[0]).ParsedValue);
+            Assert.AreEqual(" what is 1?", ((UnknownMarker)parser.ParseFromString("\\1 what is 1?").Contents[0]).ParsedValue);
             Assert.AreEqual("1", ((UnknownMarker)parser.ParseFromString("\\1  what is 1?").Contents[0]).ParsedIdentifier);
-            
+        }
+
+        [TestMethod]
+        public void TestWhitespacePreserve()
+        {
+            string verseText = "This is verse text ";
+            string otherVerseText = " after the word";
+            var output = parser.ParseFromString($"\\v 1 {verseText}\\bd Bold \\bd*{otherVerseText}");
+            Assert.AreEqual(verseText, ((TextBlock)output.Contents[0].Contents[0]).Text);
+            Assert.AreEqual(otherVerseText, ((TextBlock)output.Contents[0].Contents[3]).Text);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "va";
         public override string PreProcess(string input)
         {
-            AltVerseNumber = input;
+            AltVerseNumber = input.Trim();
             return string.Empty;
         }
     }

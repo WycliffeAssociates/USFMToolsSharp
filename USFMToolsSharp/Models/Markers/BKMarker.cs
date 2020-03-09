@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "bk";
         public override string PreProcess(string input)
         {
-            BookTitle = input;
+            BookTitle = input.Trim();
             return string.Empty;
         }
     }

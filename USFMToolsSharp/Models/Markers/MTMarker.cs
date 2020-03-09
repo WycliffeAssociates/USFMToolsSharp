@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "mt";
         public override string PreProcess(string input)
         {
-            Title = input;
+            Title = input.Trim();
             return string.Empty;
         }
     }

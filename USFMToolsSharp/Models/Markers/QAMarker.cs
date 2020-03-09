@@ -16,7 +16,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "qa";
         public override string PreProcess(string input)
         {
-            Heading = input;
+            Heading = input.Trim();
             return string.Empty;
         }
     }

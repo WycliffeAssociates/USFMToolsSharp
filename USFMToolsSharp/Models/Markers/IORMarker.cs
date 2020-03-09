@@ -10,6 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class IORMarker : Marker
     {
         public override string Identifier => "ior";
+        public override string PreProcess(string input)
+        {
+            return input.Trim();
+        }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(TextBlock),
         };

@@ -14,6 +14,10 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         public string Text;
         public override string Identifier => "bd";
+        public override string PreProcess(string input)
+        {
+            return input.Trim();
+        }
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(TextBlock),

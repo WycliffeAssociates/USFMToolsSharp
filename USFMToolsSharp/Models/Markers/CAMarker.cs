@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "ca";
         public override string PreProcess(string input)
         {
-            AltChapterNumber = input;
+            AltChapterNumber = input.Trim();
             return string.Empty;
         }
     }

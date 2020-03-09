@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "cl";
         public override string PreProcess(string input)
         {
-            Label = input;
+            Label = input.Trim();
             return string.Empty;
         }
     }

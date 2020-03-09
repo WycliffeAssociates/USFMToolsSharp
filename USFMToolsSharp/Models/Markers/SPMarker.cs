@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "sp";
         public override string PreProcess(string input)
         {
-            Speaker = input;
+            Speaker = input.Trim();
             return string.Empty;
         }
     }

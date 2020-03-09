@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "qac";
         public override string PreProcess(string input)
         {
-            AcrosticLetter = input;
+            AcrosticLetter = input.Trim();
             return string.Empty;
         }
     }

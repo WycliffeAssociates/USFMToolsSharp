@@ -7,6 +7,10 @@ namespace USFMToolsSharp.Models.Markers
     public class PMarker : Marker
     {
         public override string Identifier => "p";
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(VMarker),
             typeof(BMarker),

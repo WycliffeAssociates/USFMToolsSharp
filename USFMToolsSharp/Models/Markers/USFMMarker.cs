@@ -18,7 +18,7 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string PreProcess(string input)
         {
-            Version = input;
+            Version = input.Trim();
             return string.Empty;
         }
     }

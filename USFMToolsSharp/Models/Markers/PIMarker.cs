@@ -11,6 +11,11 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int Depth = 1;
         public override string Identifier => "pi";
+
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(VMarker),
             typeof(BMarker),

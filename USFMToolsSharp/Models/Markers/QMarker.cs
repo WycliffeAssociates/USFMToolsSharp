@@ -12,6 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public int Depth = 1;
         public string Text;
         public override string Identifier => "q";
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(BMarker),
             typeof(QSMarker),
