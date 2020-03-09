@@ -15,7 +15,7 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string PreProcess(string input)
         {
-            VerseReference = input;
+            VerseReference = input.Trim();
             return string.Empty;
         }
     }
