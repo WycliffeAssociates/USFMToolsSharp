@@ -10,6 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class IMIMarker : Marker
     {
         public override string Identifier => "imi";
+        public override string PreProcess(string input)
+        {
+            return input.Trim();
+        }
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(TextBlock),

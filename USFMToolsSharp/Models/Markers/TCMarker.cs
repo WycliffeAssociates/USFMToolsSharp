@@ -11,6 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int ColumnPosition = 1;
         public override string Identifier => "tc";
+        public override string PreProcess(string input)
+        {
+            return input.Trim();
+        }
 
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(TextBlock),

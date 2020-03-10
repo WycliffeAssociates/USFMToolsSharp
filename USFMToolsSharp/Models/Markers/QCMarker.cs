@@ -10,6 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class QCMarker : Marker
     {
         public override string Identifier => "qc";
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(TextBlock),

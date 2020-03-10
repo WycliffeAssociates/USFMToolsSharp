@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "sts";
         public override string PreProcess(string input)
         {
-            StatusText = input;
+            StatusText = input.Trim();
             return string.Empty;
         }
     }

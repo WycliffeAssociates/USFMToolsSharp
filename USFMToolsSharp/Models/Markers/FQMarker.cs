@@ -11,6 +11,11 @@ namespace USFMToolsSharp.Models.Markers
     {
         public override string Identifier => "fq";
 
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
+
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(TextBlock),

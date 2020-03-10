@@ -10,6 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class QRMarker : Marker
     {
         public override string Identifier => "qr";
+        public override string PreProcess(string input)
+        {
+            return input.TrimStart();
+        }
         public override List<Type> AllowedContents => new List<Type>()
         {
             typeof(TextBlock),

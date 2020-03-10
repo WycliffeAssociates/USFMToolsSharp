@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "id";
         public override string PreProcess(string input)
         {
-            TextIdentifier = input;
+            TextIdentifier = input.Trim();
             return string.Empty;
         }
     }

@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "vp";
         public override string PreProcess(string input)
         {
-            VerseCharacter = input;
+            VerseCharacter = input.Trim();
             return string.Empty;
         }
     }

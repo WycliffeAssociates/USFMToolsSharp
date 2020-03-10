@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "mr";
         public override string PreProcess(string input)
         {
-            SectionReference= input;
+            SectionReference= input.TrimStart();
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {

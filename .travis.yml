@@ -7,4 +7,4 @@ script:
  - dotnet test -c Release
  - cd ./USFMToolsSharp/bin/Release/
  - PKG_NAME=$(ls *.nupkg)
- - if [ -n "$TRAVIS_TAG" ]; then dotnet nuget push $PKG_NAME -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json; fi
+ - if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_PULL_REQUEST" = "false" ]; then dotnet nuget push $PKG_NAME -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json; fi

@@ -15,7 +15,7 @@ namespace USFMToolsSharp.Models.Markers
         
         public override string PreProcess(string input)
         {
-            FootNoteCaller = input;
+            FootNoteCaller = input.Trim();
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>()

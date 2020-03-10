@@ -17,6 +17,7 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string PreProcess(string input)
         {
+            input = input.Trim();
             Attributes = new Dictionary<string, string>();
 
             string[] wordEntry = input.Split('|');

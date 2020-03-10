@@ -10,6 +10,10 @@ namespace USFMToolsSharp.Models.Markers
     public class NDMarker : Marker
     {
         public override string Identifier => "nd";
+        public override string PreProcess(string input)
+        {
+            return input.Trim();
+        }
         public override List<Type> AllowedContents => new List<Type>() {
             typeof(TextBlock)
         };

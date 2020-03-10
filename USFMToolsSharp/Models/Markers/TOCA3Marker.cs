@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "toca3";
         public override string PreProcess(string input)
         {
-            AltBookAbbreviation = input;
+            AltBookAbbreviation = input.Trim();
             return string.Empty;
         }
     }
