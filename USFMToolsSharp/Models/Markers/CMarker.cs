@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace USFMToolsSharp.Models.Markers
 {
@@ -9,6 +10,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class CMarker : Marker
     {
+        private static Regex regex = new Regex(" *(\\d*) *(.*)");
         public int Number;
         public string PublishedChapterMarker
         {
@@ -44,7 +46,23 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "c";
         public override string PreProcess(string input)
         {
-            Number = int.Parse(input);
+            var match = regex.Match(input);
+            if (match.Success)
+            {
+                if (string.IsNullOrWhiteSpace(match.Groups[1].Value))
+                {
+                    Number = 0;
+                }
+                else
+                {
+                    Number = int.Parse(match.Groups[1].Value);
+                }
+                if (string.IsNullOrWhiteSpace(match.Groups[2].Value))
+                {
+                    return string.Empty;
+                }
+                return match.Groups[2].Value.TrimEnd();
+            }
             return string.Empty;
         }
         public override List<Type> AllowedContents => new List<Type>() {
@@ -74,7 +92,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(PIMarker),
             typeof(CAMarker),
             typeof(CAEndMarker),
-            typeof(SPMarker)
+            typeof(SPMarker),
+            typeof(TextBlock)
         };
     }
 }

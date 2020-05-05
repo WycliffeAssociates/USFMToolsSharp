@@ -51,7 +51,6 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(BMarker),
                     typeof(BKMarker),
                     typeof(BKEndMarker),
-
                     typeof(BDMarker),
                     typeof(BDEndMarker),
                     typeof(ITMarker),
@@ -68,7 +67,6 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(SCEndMarker),
                     typeof(NDMarker),
                     typeof(NDEndMarker),
-
                     typeof(QMarker),
                     typeof(MMarker),
                     typeof(FMarker),
