@@ -37,16 +37,8 @@ namespace USFMToolsSharp.Models.Markers
             {
                 return false;
             }
-            if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
-            {
-                return true;
-            }
-            if (AllowedContents.Contains(input.GetType()))
-            {
-                Contents.Add(input);
-                return true;
-            }
-            return false;
+
+            return base.TryInsert(input);
         }
     }
 }

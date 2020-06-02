@@ -98,14 +98,14 @@ namespace USFMToolsSharp.Models.Markers
             return output;
         }
 
-        public Marker GetLastChild()
+        public Marker GetLastDescendent()
         {
             if (Contents.Count == 0)
             {
                 return this;
             }
 
-            return Contents[Contents.Count - 1].GetLastChild();
+            return Contents[Contents.Count - 1].GetLastDescendent();
         }
     }
 }
