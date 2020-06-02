@@ -29,7 +29,7 @@ namespace USFMToolsSharp.Models.Markers
             return input;
         }
 
-        public bool TryInsert(Marker input)
+        public virtual bool TryInsert(Marker input)
         {
             if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
             {
@@ -96,6 +96,16 @@ namespace USFMToolsSharp.Models.Markers
             }
 
             return output;
+        }
+
+        public Marker GetLastDescendent()
+        {
+            if (Contents.Count == 0)
+            {
+                return this;
+            }
+
+            return Contents[Contents.Count - 1].GetLastDescendent();
         }
     }
 }

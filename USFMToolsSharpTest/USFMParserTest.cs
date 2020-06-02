@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -185,7 +186,6 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Contents[0]).Number);
             Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Contents[0]).Number);
             Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Contents[0]).Number);
-            Assert.AreEqual(-1, ((CMarker)parser.ParseFromString("\\c -1").Contents[0]).Number);
 
             // Chapter Labels
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
@@ -478,5 +478,51 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(verseText, ((TextBlock)output.Contents[0].Contents[0]).Text);
             Assert.AreEqual(otherVerseText, ((TextBlock)output.Contents[0].Contents[3]).Text);
         }
+
+        [TestMethod]
+        public void TestVersePoetryNesting()
+        {
+            string verseText = "\\q \\v 1 This is verse one \\q another poetry \\v 2 second verse";
+            var output = parser.ParseFromString(verseText);
+            Assert.AreEqual(2, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0] is QMarker);
+            Assert.IsTrue(output.Contents[0].Contents[0] is VMarker);
+            Assert.IsTrue(output.Contents[0].Contents[0].Contents[1] is QMarker);
+            Assert.IsTrue(output.Contents[1] is VMarker);
+        }
+        [TestMethod]
+        public void TestBadChapterHandling()
+        {
+            string verseText = "\\c 1 Bad text here";
+            var output = parser.ParseFromString(verseText);
+            Assert.AreEqual(1, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual(1, ((CMarker)output.Contents[0]).Number);
+            Assert.AreEqual("Bad text here", ((TextBlock)output.Contents[0].Contents[0]).Text);
+        }
+
+        [TestMethod]
+        public void TestNoChapterNumberingHandling()
+        {
+            string verseText = "\\c \\v 1 Bad text here";
+            var output = parser.ParseFromString(verseText);
+            Assert.AreEqual(1, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0] is CMarker);
+            Assert.AreEqual(0, ((CMarker)output.Contents[0]).Number);
+        }
+
+        [TestMethod]
+        public void TestNoChapterNumberingAndTextHandling()
+        {
+            string verseText = "\\c Text Block \\v 1 Bad text here";
+            var output = parser.ParseFromString(verseText);
+            Assert.AreEqual(1, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0] is CMarker);
+            Assert.AreEqual(0, ((CMarker)output.Contents[0]).Number);
+            Assert.AreEqual(2, output.Contents[0].Contents.Count);
+            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("Text Block", ((TextBlock)output.Contents[0].Contents[0]).Text);
+        }
+
     }
 }
