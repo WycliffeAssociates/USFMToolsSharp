@@ -524,5 +524,14 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Text Block", ((TextBlock)output.Contents[0].Contents[0]).Text);
         }
 
+        [TestMethod]
+        public void TestCorrectFQAEndMarkerNesting()
+        {
+            string verseText = "\\f + \\ft Text \\fqa Other \\fqa* More";
+            var output = parser.ParseFromString(verseText);
+            // Make sure the FMarker has only one child
+            Assert.AreEqual(1, output.Contents[0].Contents.Count);
+        }
+
     }
 }
