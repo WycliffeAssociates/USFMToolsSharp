@@ -24,6 +24,11 @@ namespace USFMToolsSharp
             IgnoredTags = tagsToIgnore;
         }
 
+        /// <summary>
+        /// Parses a string into a USFMDocument
+        /// </summary>
+        /// <param name="input">A USFM string</param>
+        /// <returns>A USFMDocument representing the input</returns>
         public USFMDocument ParseFromString(string input)
         {
             USFMDocument output = new USFMDocument();
@@ -46,6 +51,12 @@ namespace USFMToolsSharp
 
             return output;
         }
+
+        /// <summary>
+        /// Generate a list of Markers from a string
+        /// </summary>
+        /// <param name="input">USFM String to tokenize</param>
+        /// <returns>A List of Markers based upon the string</returns>
         private List<Marker> TokenizeFromString(string input)
         {
             List<Marker> output = new List<Marker>();
