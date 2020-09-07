@@ -93,5 +93,13 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(VAMarker),
                     typeof(VAEndMarker)
                 };
+        public override bool TryInsert(Marker input)
+        {
+            if (input is VMarker)
+            {
+                return false;
+            }
+            return base.TryInsert(input);
+        }
     }
 }
