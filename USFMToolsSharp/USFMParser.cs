@@ -12,6 +12,7 @@ namespace USFMToolsSharp
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
+        private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)");
 
         public USFMParser()
         {
@@ -25,33 +26,44 @@ namespace USFMToolsSharp
 
         public USFMDocument ParseFromString(string input)
         {
-            Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)");
             USFMDocument output = new USFMDocument();
+            var markers = TokenizeFromString(input);
 
-            foreach(Match match in splitRegex.Matches(input))
+            foreach(Marker marker in markers)
             {
-                if(IgnoredTags.Contains(match.Groups[1].Value))
-                {
-                    continue;
-                }
-
-                ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
-                result.marker.Position = match.Index;
-
-                if(result.marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
+                if(marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
                     output.Insert(new TableBlock());
                 }
 
+                if(marker is QMarker && markers[markers.IndexOf(marker) + 1] is VMarker)
+                {
+                    ((QMarker)marker).IsPoetryBlock = true;
+                }
                 
-                output.Insert(result.marker);
+                output.Insert(marker);
+            }
+
+            return output;
+        }
+        private List<Marker> TokenizeFromString(string input)
+        {
+            List<Marker> output = new List<Marker>();
+
+            foreach(Match match in splitRegex.Matches(input))
+            {
+                if (IgnoredTags.Contains(match.Groups[1].Value))
+                {
+                    continue;
+                }
+                ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
+                result.marker.Position = match.Index;
+                output.Add(result.marker);
 
                 if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
-                    output.Insert(new TextBlock(result.remainingText));
+                    output.Add(new TextBlock(result.remainingText));
                 }
-                
-
             }
 
             return output;

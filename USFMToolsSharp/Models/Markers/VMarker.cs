@@ -99,6 +99,12 @@ namespace USFMToolsSharp.Models.Markers
             {
                 return false;
             }
+
+            if (input is QMarker poetryMarker && poetryMarker.IsPoetryBlock)
+            {
+                return false;
+            }
+
             return base.TryInsert(input);
         }
     }

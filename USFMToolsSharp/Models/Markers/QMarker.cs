@@ -12,6 +12,7 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int Depth = 1;
         public string Text;
+        public bool IsPoetryBlock;
         public override string Identifier => "q";
         public override string PreProcess(string input)
         {

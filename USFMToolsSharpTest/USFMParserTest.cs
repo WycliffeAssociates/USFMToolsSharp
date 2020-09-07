@@ -512,7 +512,7 @@ namespace USFMToolsSharpTest
             var output = parser.ParseFromString(verseText);
             Assert.AreEqual(2, output.Contents.Count);
             Assert.IsTrue(output.Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[1] is QMarker);
+            Assert.IsTrue(output.Contents[1] is QMarker qMarker && qMarker.IsPoetryBlock);
             Assert.IsTrue(output.Contents[1].Contents[0] is VMarker);
         }
 
