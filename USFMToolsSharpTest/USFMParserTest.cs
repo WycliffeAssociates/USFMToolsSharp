@@ -479,6 +479,9 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(otherVerseText, ((TextBlock)output.Contents[0].Contents[3]).Text);
         }
 
+        /// <summary>
+        /// Verify that QMarker and VMarker nesting is handeld correctly
+        /// </summary>
         [TestMethod]
         public void TestVersePoetryNesting()
         {
@@ -489,7 +492,30 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[0].Contents[0] is VMarker);
             Assert.IsTrue(output.Contents[0].Contents[0].Contents[1] is QMarker);
             Assert.IsTrue(output.Contents[1] is VMarker);
+
+            string secondVerseText = "\\v 1 This is verse one \\q another poetry \\v 2 second verse";
+
+            output = parser.ParseFromString(secondVerseText);
+            Assert.AreEqual(2, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0] is VMarker);
+            Assert.IsTrue(output.Contents[0].Contents[1] is QMarker);
+            Assert.IsTrue(output.Contents[1] is VMarker);
         }
+
+        /// <summary>
+        /// Verify that an empty QMarker gets pushed back out to being a block QMarker
+        /// </summary>
+        [TestMethod]
+        public void TestEmptyQMarkerInVerse()
+        {
+            string verseText = "\\v 1 This is verse one \\q \\v 2 second verse";
+            var output = parser.ParseFromString(verseText);
+            Assert.AreEqual(2, output.Contents.Count);
+            Assert.IsTrue(output.Contents[0] is VMarker);
+            Assert.IsTrue(output.Contents[1] is QMarker qMarker && qMarker.IsPoetryBlock);
+            Assert.IsTrue(output.Contents[1].Contents[0] is VMarker);
+        }
+
         [TestMethod]
         public void TestBadChapterHandling()
         {
