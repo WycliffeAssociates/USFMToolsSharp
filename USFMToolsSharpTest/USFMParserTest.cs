@@ -559,5 +559,16 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(1, output.Contents[0].Contents.Count);
         }
 
+        /// <summary>
+        /// Verify that if a \q marker is at the end of a string it doesn't throw an exception
+        /// </summary>
+        [TestMethod]
+        public void TestTrailingEmptyQMarker()
+        {
+            string verseText = "\\q";
+            var output = parser.ParseFromString(verseText);
+            Assert.IsTrue(output.Contents[0] is QMarker);
+        }
+
     }
 }
