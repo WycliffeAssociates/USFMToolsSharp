@@ -41,7 +41,9 @@ namespace USFMToolsSharp
                     output.Insert(new TableBlock());
                 }
 
-                if(marker is QMarker && markers[markers.IndexOf(marker) + 1] is VMarker)
+                var markerIndex = markers.IndexOf(marker);
+
+                if(marker is QMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
                 {
                     ((QMarker)marker).IsPoetryBlock = true;
                 }
