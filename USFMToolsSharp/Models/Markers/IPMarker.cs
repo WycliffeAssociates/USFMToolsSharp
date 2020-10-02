@@ -32,8 +32,10 @@ namespace USFMToolsSharp.Models.Markers
             typeof(NOMarker),
             typeof(NOEndMarker),
             typeof(SUPMarker),
-            typeof(SUPEndMarker)
-
+            typeof(SUPEndMarker),
+            typeof(IEMarker),
+            typeof(RQMarker),
+            typeof(RQEndMarker),
         };
 
     }
