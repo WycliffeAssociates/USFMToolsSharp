@@ -570,5 +570,16 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[0] is QMarker);
         }
 
+        [TestMethod]
+        public void TestIntroParagraphs()
+        {
+            string text = "\\ip \\rq \\rq* \\ie";
+            var output = parser.ParseFromString(text);
+            Assert.IsTrue(output.Contents[0] is IPMarker);
+            Assert.IsTrue(output.Contents[0].Contents[0] is RQMarker);
+            Assert.IsTrue(output.Contents[0].Contents[1] is RQEndMarker);
+            Assert.IsTrue(output.Contents[0].Contents[2] is IEMarker);
+        }
+
     }
 }

@@ -394,6 +394,8 @@ namespace USFMToolsSharp
                     return new SUPMarker();
                 case "sup*":
                     return new SUPEndMarker();
+                case "ie":
+                    return new IEMarker();
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
