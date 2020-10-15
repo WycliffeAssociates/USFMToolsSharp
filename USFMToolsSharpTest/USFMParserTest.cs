@@ -581,5 +581,17 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[0].Contents[2] is IEMarker);
         }
 
+        [TestMethod]
+        public void TestNewlineInTextBlock()
+        {
+            string verseText = @"This is text 
+with a newline";
+            string usfm = $"\\v 1 {verseText}";
+            var output = parser.ParseFromString(usfm);
+            Assert.IsTrue(output.Contents[0] is VMarker);
+            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual(verseText, ((TextBlock)output.Contents[0].Contents[0]).Text);
+        }
+
     }
 }
