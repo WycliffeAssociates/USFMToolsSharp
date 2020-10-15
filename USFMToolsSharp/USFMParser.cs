@@ -12,7 +12,7 @@ namespace USFMToolsSharp
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
-        private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)");
+        private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)", RegexOptions.Singleline);
 
         public USFMParser()
         {
