@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class CMarker : Marker
     {
-        private static Regex regex = new Regex(" *(\\d*) *(.*)");
+        private static Regex regex = new Regex(" *(\\d*) *(.*)", RegexOptions.Singleline);
         public int Number;
         public string PublishedChapterMarker
         {
