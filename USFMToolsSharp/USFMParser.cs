@@ -34,14 +34,13 @@ namespace USFMToolsSharp
             USFMDocument output = new USFMDocument();
             var markers = TokenizeFromString(input);
 
-            foreach(Marker marker in markers)
+            for(var markerIndex = 0; markerIndex<markers.Count; markerIndex++)
             {
+                Marker marker = markers[markerIndex];
                 if(marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
                     output.Insert(new TableBlock());
                 }
-
-                var markerIndex = markers.IndexOf(marker);
 
                 if(marker is QMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
                 {
