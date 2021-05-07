@@ -71,6 +71,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(MMarker),
                     typeof(FMarker),
                     typeof(FEndMarker),
+                    typeof(FRMarker),
+                    typeof(FREndMarker),
                     typeof(SPMarker),
                     typeof(TextBlock),
                     typeof(WMarker),
