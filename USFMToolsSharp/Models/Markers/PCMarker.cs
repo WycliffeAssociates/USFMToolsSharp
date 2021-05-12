@@ -24,7 +24,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FEndMarker),
             typeof(LIMarker),
             typeof(QMarker)
-
         };
     }
 }
