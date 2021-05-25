@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
@@ -72,6 +73,11 @@ namespace USFMToolsSharp
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
                 result.marker.Position = match.Index;
                 output.Add(result.marker);
+
+                if (result.marker is UnknownMarker)
+                {
+                    Debug.WriteLine("UNK");
+                }
 
                 if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
@@ -256,6 +262,8 @@ namespace USFMToolsSharp
                     return new FQAEndMarker();
                 case "fq":
                     return new FQMarker();
+                case "fq*":
+                    return new FQEndMarker();
                 case "pi":
                 case "pi1":
                     return new PIMarker();
@@ -398,6 +406,13 @@ namespace USFMToolsSharp
                     return new SUPEndMarker();
                 case "ie":
                     return new IEMarker();
+
+                /* Special Features */
+                case "fig":
+                    return new FIGMarker();
+                case "fig*":
+                    return new FIGEndMarker();
+
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier };
             }
