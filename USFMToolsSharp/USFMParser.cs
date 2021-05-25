@@ -74,11 +74,6 @@ namespace USFMToolsSharp
                 result.marker.Position = match.Index;
                 output.Add(result.marker);
 
-                if (result.marker is UnknownMarker)
-                {
-                    Debug.WriteLine("UNK");
-                }
-
                 if (!string.IsNullOrWhiteSpace(result.remainingText))
                 {
                     output.Add(new TextBlock(result.remainingText));
