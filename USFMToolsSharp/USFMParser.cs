@@ -401,6 +401,15 @@ namespace USFMToolsSharp
                     return new SUPEndMarker();
                 case "ie":
                     return new IEMarker();
+                case "pn":
+                    return new PNMarker();
+                case "pn*":
+                    return new PNEndMarker();
+                case "pro":
+                    return new PROMarker();
+                case "pro*":
+                    return new PROEndMarker();
+
 
                 /* Special Features */
                 case "fig":
