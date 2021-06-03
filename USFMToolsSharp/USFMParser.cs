@@ -388,6 +388,28 @@ namespace USFMToolsSharp
                     return new NOMarker();
                 case "no*":
                     return new NOEndMarker();
+                case "k":
+                    return new KMarker();
+                case "k*":
+                    return new KEndMarker();
+                case "lf":
+                    return new LFMarker();
+                case "lik":
+                    return new LIKMarker();
+                case "lik*":
+                    return new LIKEndMarker();
+                case "litl":
+                    return new LITLMarker();
+                case "litl*":
+                    return new LITLEndMarker();
+                case "liv":
+                    return new LIVMarker();
+                case "liv*":
+                    return new LIVEndMarker();
+                case "ord":
+                    return new ORDMarker();
+                case "ord*":
+                    return new ORDEndMarker();
                 case "nd":
                     return new NDMarker();
                 case "nd*":

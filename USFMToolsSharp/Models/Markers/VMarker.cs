@@ -71,6 +71,8 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(MMarker),
                     typeof(FMarker),
                     typeof(FEndMarker),
+                    typeof(FRMarker),
+                    typeof(FREndMarker),
                     typeof(SPMarker),
                     typeof(TextBlock),
                     typeof(WMarker),
@@ -91,7 +93,18 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(QACEndMarker),
                     typeof(SMarker),
                     typeof(VAMarker),
-                    typeof(VAEndMarker)
+                    typeof(VAEndMarker),
+                    typeof(KMarker),
+                    typeof(KEndMarker),
+                    typeof(LFMarker),
+                    typeof(LIKMarker),
+                    typeof(LIKEndMarker),
+                    typeof(LITLMarker),
+                    typeof(LITLEndMarker),
+                    typeof(LIVMarker),
+                    typeof(LIVEndMarker),
+                    typeof(ORDMarker),
+                    typeof(ORDEndMarker)
                 };
         public override bool TryInsert(Marker input)
         {
