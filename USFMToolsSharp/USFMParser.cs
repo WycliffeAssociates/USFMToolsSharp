@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;

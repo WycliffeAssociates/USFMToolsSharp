@@ -23,7 +23,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(TLEndMarker),
             typeof(WMarker),
             typeof(WEndMarker),
-            typeof(FQEndMarker),
         };
     }
 }
