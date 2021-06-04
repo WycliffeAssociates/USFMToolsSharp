@@ -410,6 +410,54 @@ namespace USFMToolsSharp
                     return new ORDMarker();
                 case "ord*":
                     return new ORDEndMarker();
+                case "pmc":
+                    return new PMCMarker();
+                case "pmo":
+                    return new PMOMarker();
+                case "pmr":
+                    return new PMRMarker();
+                case "pn":
+                    return new PNMarker();
+                case "pn*":
+                    return new PNEndMarker();
+                case "png":
+                    return new PNGMarker();
+                case "png*":
+                    return new PNGEndMarker();
+                case "pr":
+                    return new PRMarker();
+                case "qt":
+                    return new QTMarker();
+                case "qt*":
+                    return new QTEndMarker();
+                case "rb":
+                    return new RBMarker();
+                case "rb*":
+                    return new RBEndMarker();
+                case "sig":
+                    return new SIGMarker();
+                case "sig*":
+                    return new SIGEndMarker();
+                case "sls":
+                    return new SLSMarker();
+                case "sls*":
+                    return new SLSEndMarker();
+                case "wa":
+                    return new WAMarker();
+                case "wa*":
+                    return new WAEndMarker();
+                case "wg":
+                    return new WGMarker();
+                case "wg*":
+                    return new WGEndMarker();
+                case "wh":
+                    return new WHMarker();
+                case "wh*":
+                    return new WHEndMarker();
+                case "wj":
+                    return new WJMarker();
+                case "wj*":
+                    return new WJEndMarker();
                 case "nd":
                     return new NDMarker();
                 case "nd*":
