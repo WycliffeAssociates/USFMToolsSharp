@@ -417,10 +417,6 @@ namespace USFMToolsSharp
                     return new PMOMarker();
                 case "pmr":
                     return new PMRMarker();
-                case "pn":
-                    return new PNMarker();
-                case "pn*":
-                    return new PNEndMarker();
                 case "png":
                     return new PNGMarker();
                 case "png*":
