@@ -593,5 +593,76 @@ with a newline";
             Assert.AreEqual(verseText, ((TextBlock)output.Contents[0].Contents[0]).Text);
         }
 
+        [TestMethod]
+        public void TestFigureParse()
+        {
+            //PRE 3.0 TESTS
+            //Description;
+            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Description);
+            //FilePath;
+            Assert.AreEqual("filepath", ((FIGMarker)parser.ParseFromString
+            ("\\fig description| filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).FilePath);
+            //Width;
+            Assert.AreEqual("width", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath |width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Width);
+            //Location;
+            Assert.AreEqual("location", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath|width | location|copyright|caption caption caption|reference\\fig*").Contents[0]).Location);
+            //Copyright;
+            Assert.AreEqual("copyright", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath|width|location|copyright |caption caption caption|reference\\fig*").Contents[0]).Copyright);
+            //Caption;
+            Assert.AreEqual("caption caption caption", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Caption);
+            //Reference;
+            Assert.AreEqual("reference", ((FIGMarker)parser.ParseFromString
+            ("\\fig description|filepath|width|location|copyright|caption caption caption | reference\\fig*").Contents[0]).Reference);
+
+            //3.0 TESTS
+            //Caption;
+            Assert.AreEqual("caption caption caption", ((FIGMarker)parser.ParseFromString
+                ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+                 "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Caption);
+            //Description;
+            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Description);
+            //FilePath;
+            Assert.AreEqual("filepath", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).FilePath);
+            //Width;
+            Assert.AreEqual("width", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Width);
+            //Location;
+            Assert.AreEqual("location", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Location);
+            //Copyright;
+            Assert.AreEqual("copyright", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Copyright);
+            //Reference;
+            Assert.AreEqual("reference", ((FIGMarker)parser.ParseFromString
+            ("\\fig caption caption caption | alt=\"description\" src=\"filepath\" size=\"width\" loc =\"location\" " +
+             "copy= \"copyright\"  ref = \"reference\"\\fig*").Contents[0]).Reference);
+            
+
+
+            // Cross Reference Caller
+            Assert.AreEqual("-", ((XMarker)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*").Contents[0]).CrossRefCaller);
+
+            // Cross Reference Origin
+            Assert.AreEqual("11.21", ((XOMarker)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*").Contents[0].Contents[0]).OriginRef);
+
+            // Cross Reference Target
+            Assert.AreEqual("Mrk 1.24; Luk 2.39; Jhn 1.45.", ((TextBlock)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt Mrk 1.24; Luk 2.39; Jhn 1.45.\\x*").Contents[0].Contents[2].Contents[0]).Text);
+
+            // Cross Reference Quotation
+            Assert.AreEqual("Tebes", ((TextBlock)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*").Contents[0].Contents[1].Contents[0]).Text);
+        }
+
     }
 }

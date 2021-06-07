@@ -7,10 +7,9 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Name of God (name of Deity)
     /// </summary>
-
-    public class PNMarker : Marker
+    public class PROMarker : Marker
     {
-        public override string Identifier => "pn";
+        public override string Identifier => "pro";
         public override string PreProcess(string input)
         {
             return input.Trim();
