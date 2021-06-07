@@ -73,7 +73,7 @@ namespace USFMToolsSharp
                 result.marker.Position = match.Index;
                 output.Add(result.marker);
 
-                if (!string.IsNullOrWhiteSpace(result.remainingText))
+                if (!string.IsNullOrEmpty(result.remainingText))
                 {
                     output.Add(new TextBlock(result.remainingText));
                 }
