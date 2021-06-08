@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
@@ -61,8 +62,9 @@ namespace USFMToolsSharp
         private List<Marker> TokenizeFromString(string input)
         {
             List<Marker> output = new List<Marker>();
+            bool isInVMarkerNow=false;
 
-            foreach(Match match in splitRegex.Matches(input))
+            foreach (Match match in splitRegex.Matches(input))
             {
                 if (IgnoredTags.Contains(match.Groups[1].Value))
                 {
@@ -72,7 +74,24 @@ namespace USFMToolsSharp
                 result.marker.Position = match.Index;
                 output.Add(result.marker);
 
-                if (!string.IsNullOrEmpty(result.remainingText))
+                //Conditions for the spaces between tags to be included as whitespace in a verse
+                var vMarker = new VMarker();
+                bool isAllowedByVMarker = vMarker.AllowedContents.Contains(result.marker.GetType());
+                bool doesNotAllowVMarker = !result.marker.AllowedContents.Contains(typeof(VMarker));
+                if (result.marker is VMarker)
+                {
+                    isInVMarkerNow = true;
+                }
+                if (!isAllowedByVMarker && !(result.marker is VMarker))
+                {
+                    isInVMarkerNow = false;
+                }
+
+                //deciding when to include textblocks
+                //whitespace textblocks is added to the list when the tag is a Allowed by VMarker, does not allow VMarker, and is current in a VMarker
+                //this solves the problem of \v 1 \tl hello \tl* \tl hello \tl* appearing as hellohello instead of hello hello
+                if (!string.IsNullOrWhiteSpace(result.remainingText) ||
+                    (!string.IsNullOrEmpty(result.remainingText)&&isAllowedByVMarker&&doesNotAllowVMarker&&isInVMarkerNow))
                 {
                     output.Add(new TextBlock(result.remainingText));
                 }
