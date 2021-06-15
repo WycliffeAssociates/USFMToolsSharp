@@ -12,6 +12,7 @@
     <Authors>@rbnswartz</Authors>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>A parsing library for USFM</Description>
+    <Configurations>Debug;Release</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
