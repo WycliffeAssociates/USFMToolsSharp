@@ -131,7 +131,7 @@ namespace USFMToolsSharp
                 case "toca3":
                     return new TOCA3Marker();
 
-            /* Introduction Markers*/
+                /* Introduction Markers*/
                 case "imt":
                 case "imt1":
                     return new IMTMarker();
@@ -501,7 +501,14 @@ namespace USFMToolsSharp
                     return new FIGEndMarker();
 
                 default:
-                    return new UnknownMarker() { ParsedIdentifier = identifier };
+                    if (identifier.EndsWith("*"))
+                    {
+                        return new UnknownEndMarker() { ParsedIdentifier = identifier };
+                    }
+                    else
+                    {
+                        return new UnknownMarker() { ParsedIdentifier = identifier };
+                    }
             }
         }
     }
