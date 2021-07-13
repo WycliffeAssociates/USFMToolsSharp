@@ -12,16 +12,14 @@ namespace USFMToolsSharp
     public class USFMParser
     {
         private readonly List<string> IgnoredTags;
+        private readonly bool IgnoreUnknownMarkers;
         private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)", RegexOptions.Singleline);
 
-        public USFMParser()
-        {
-            IgnoredTags = new List<string>();
-        }
 
-        public USFMParser(List<string> tagsToIgnore)
+        public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
         {
-            IgnoredTags = tagsToIgnore;
+            IgnoredTags = tagsToIgnore == null ? new List<string>() : tagsToIgnore;
+            IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
         /// <summary>
@@ -72,7 +70,12 @@ namespace USFMToolsSharp
                 }
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
                 result.marker.Position = match.Index;
-                output.Add(result.marker);
+
+                // If this is an unkown marker and we're in Ignore Unkown Marker mode then don't add the marker. We still keep any remaining text though
+                if (!(result.marker is UnknownMarker) || !IgnoreUnknownMarkers)
+                {
+                    output.Add(result.marker);
+                }
 
                 //Conditions for the spaces between tags to be included as whitespace in a verse
                 var vMarker = new VMarker();
@@ -501,14 +504,7 @@ namespace USFMToolsSharp
                     return new FIGEndMarker();
 
                 default:
-                    if (identifier.EndsWith("*"))
-                    {
-                        return new UnknownEndMarker() { ParsedIdentifier = identifier };
-                    }
-                    else
-                    {
-                        return new UnknownMarker() { ParsedIdentifier = identifier };
-                    }
+                    return new UnknownMarker() { ParsedIdentifier = identifier };
             }
         }
     }
