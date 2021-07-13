@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
@@ -61,8 +62,9 @@ namespace USFMToolsSharp
         private List<Marker> TokenizeFromString(string input)
         {
             List<Marker> output = new List<Marker>();
+            bool isInVMarkerNow=false;
 
-            foreach(Match match in splitRegex.Matches(input))
+            foreach (Match match in splitRegex.Matches(input))
             {
                 if (IgnoredTags.Contains(match.Groups[1].Value))
                 {
@@ -72,7 +74,24 @@ namespace USFMToolsSharp
                 result.marker.Position = match.Index;
                 output.Add(result.marker);
 
-                if (!string.IsNullOrWhiteSpace(result.remainingText))
+                //Conditions for the spaces between tags to be included as whitespace in a verse
+                var vMarker = new VMarker();
+                bool isAllowedByVMarker = vMarker.AllowedContents.Contains(result.marker.GetType());
+                bool doesNotAllowVMarker = !result.marker.AllowedContents.Contains(typeof(VMarker));
+                if (result.marker is VMarker)
+                {
+                    isInVMarkerNow = true;
+                }
+                if (!isAllowedByVMarker && !(result.marker is VMarker))
+                {
+                    isInVMarkerNow = false;
+                }
+
+                //deciding when to include textblocks
+                //whitespace textblocks is added to the list when the tag is a Allowed by VMarker, does not allow VMarker, and is current in a VMarker
+                //this solves the problem of \v 1 \tl hello \tl* \tl hello \tl* appearing as hellohello instead of hello hello
+                if (!string.IsNullOrWhiteSpace(result.remainingText) ||
+                    (!string.IsNullOrEmpty(result.remainingText)&&isAllowedByVMarker&&doesNotAllowVMarker&&isInVMarkerNow))
                 {
                     output.Add(new TextBlock(result.remainingText));
                 }
@@ -112,7 +131,7 @@ namespace USFMToolsSharp
                 case "toca3":
                     return new TOCA3Marker();
 
-            /* Introduction Markers*/
+                /* Introduction Markers*/
                 case "imt":
                 case "imt1":
                     return new IMTMarker();
@@ -389,6 +408,72 @@ namespace USFMToolsSharp
                     return new NOMarker();
                 case "no*":
                     return new NOEndMarker();
+                case "k":
+                    return new KMarker();
+                case "k*":
+                    return new KEndMarker();
+                case "lf":
+                    return new LFMarker();
+                case "lik":
+                    return new LIKMarker();
+                case "lik*":
+                    return new LIKEndMarker();
+                case "litl":
+                    return new LITLMarker();
+                case "litl*":
+                    return new LITLEndMarker();
+                case "liv":
+                    return new LIVMarker();
+                case "liv*":
+                    return new LIVEndMarker();
+                case "ord":
+                    return new ORDMarker();
+                case "ord*":
+                    return new ORDEndMarker();
+                case "pmc":
+                    return new PMCMarker();
+                case "pmo":
+                    return new PMOMarker();
+                case "pmr":
+                    return new PMRMarker();
+                case "png":
+                    return new PNGMarker();
+                case "png*":
+                    return new PNGEndMarker();
+                case "pr":
+                    return new PRMarker();
+                case "qt":
+                    return new QTMarker();
+                case "qt*":
+                    return new QTEndMarker();
+                case "rb":
+                    return new RBMarker();
+                case "rb*":
+                    return new RBEndMarker();
+                case "sig":
+                    return new SIGMarker();
+                case "sig*":
+                    return new SIGEndMarker();
+                case "sls":
+                    return new SLSMarker();
+                case "sls*":
+                    return new SLSEndMarker();
+                case "wa":
+                    return new WAMarker();
+                case "wa*":
+                    return new WAEndMarker();
+                case "wg":
+                    return new WGMarker();
+                case "wg*":
+                    return new WGEndMarker();
+                case "wh":
+                    return new WHMarker();
+                case "wh*":
+                    return new WHEndMarker();
+                case "wj":
+                    return new WJMarker();
+                case "wj*":
+                    return new WJEndMarker();
                 case "nd":
                     return new NDMarker();
                 case "nd*":
@@ -416,7 +501,14 @@ namespace USFMToolsSharp
                     return new FIGEndMarker();
 
                 default:
-                    return new UnknownMarker() { ParsedIdentifier = identifier };
+                    if (identifier.EndsWith("*"))
+                    {
+                        return new UnknownEndMarker() { ParsedIdentifier = identifier };
+                    }
+                    else
+                    {
+                        return new UnknownMarker() { ParsedIdentifier = identifier };
+                    }
             }
         }
     }

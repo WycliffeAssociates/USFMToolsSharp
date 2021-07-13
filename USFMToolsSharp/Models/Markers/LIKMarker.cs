@@ -4,13 +4,9 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
-    /// <summary>
-    /// Name of God (name of Deity)
-    /// </summary>
-    
-    public class PNMarker : Marker
+    public class LIKMarker : Marker
     {
-        public override string Identifier => "pn";
+        public override string Identifier => "lik";
         public override string PreProcess(string input)
         {
             return input.Trim();
