@@ -82,9 +82,16 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> GetChildMarkers<T>() where T : Marker
+        public List<T> GetChildMarkers<T>(List<Type> ignoredParents = null) where T : Marker
         {
             List<T> output = new List<T>();
+            if (ignoredParents != null)
+            {
+                if (ignoredParents.Contains(this.GetType()))
+                {
+                    return output;
+                }
+            }
 
             foreach(Marker i in Contents)
             {
@@ -92,7 +99,7 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     output.Add((T)i);
                 }
-                output.AddRange(i.GetChildMarkers<T>());
+                output.AddRange(i.GetChildMarkers<T>(ignoredParents));
             }
 
             return output;

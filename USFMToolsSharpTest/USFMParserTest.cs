@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using USFMToolsSharp;
@@ -677,6 +678,14 @@ with a newline";
             var parsed = parser.ParseFromString("\\v 1 Text \\unkown more text \\bd Text \\bd*");
             Assert.AreEqual(1, parsed.Contents.Count);
             Assert.AreEqual(3, parsed.Contents[0].Contents.Count);
+        }
+
+        [TestMethod]
+        public void TestIgnoreParentsWhenGettingChildMarkers()
+        {
+            var result = parser.ParseFromString("\\v 1 Text blocks \\f \\ft Text \\f*");
+            Assert.AreEqual(2, result.GetChildMarkers<TextBlock>().Count);
+            Assert.AreEqual(1, result.GetChildMarkers<TextBlock>(new List<Type> { typeof(FMarker) }).Count);
         }
 
     }
