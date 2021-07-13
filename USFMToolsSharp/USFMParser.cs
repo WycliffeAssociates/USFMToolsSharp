@@ -32,6 +32,10 @@ namespace USFMToolsSharp
             USFMDocument output = new USFMDocument();
             var markers = TokenizeFromString(input);
 
+            CleanWhitespace(markers);
+
+
+
             foreach(Marker marker in markers)
             {
                 if(marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
@@ -53,6 +57,38 @@ namespace USFMToolsSharp
         }
 
         /// <summary>
+        /// Removes all the unessecary whitespace while preserving space between closing markers and opening markers
+        /// </summary>
+        /// <param name="input"></param>
+        private void CleanWhitespace(List<Marker> input)
+        {
+            var markersToProcess = input.Where(i => i is TextBlock block && string.IsNullOrWhiteSpace(block.Text)).ToList();
+            foreach(var marker in markersToProcess)
+            {
+                var index = input.IndexOf(marker);
+
+                // If this is an empty text block at the beginning remove it
+                if(index == 0)
+                {
+                    input.RemoveAt(index);
+                    continue;
+                }
+                
+                // If this is an empty text block at the end then remove it
+                if(index == input.Count - 1)
+                {
+                    input.RemoveAt(index);
+                    continue;
+                }
+
+                if(!(input[index - 1].Identifier.EndsWith("*") && !input[index + 1].Identifier.EndsWith("*")))
+                {
+                    input.RemoveAt(index);
+                }
+            }
+        }
+
+        /// <summary>
         /// Generate a list of Markers from a string
         /// </summary>
         /// <param name="input">USFM String to tokenize</param>
@@ -60,7 +96,6 @@ namespace USFMToolsSharp
         private List<Marker> TokenizeFromString(string input)
         {
             List<Marker> output = new List<Marker>();
-            bool isInVMarkerNow=false;
 
             foreach (Match match in splitRegex.Matches(input))
             {
@@ -77,26 +112,10 @@ namespace USFMToolsSharp
                     output.Add(result.marker);
                 }
 
-                // This verse marker stuff is a temporary hackish workaround until we can handle whitespace a lot better
-
-                //Conditions for the spaces between tags to be included as whitespace in a verse
-                var vMarker = new VMarker();
-                bool isAllowedByVMarker = vMarker.AllowedContents.Contains(result.marker.GetType());
-                bool doesNotAllowVMarker = !result.marker.AllowedContents.Contains(typeof(VMarker));
-                if (result.marker is VMarker)
-                {
-                    isInVMarkerNow = true;
-                }
-                if (!isAllowedByVMarker && !(result.marker is VMarker))
-                {
-                    isInVMarkerNow = false;
-                }
-
                 //deciding when to include textblocks
                 //whitespace textblocks is added to the list when the tag is a Allowed by VMarker, does not allow VMarker, and is current in a VMarker
                 //this solves the problem of \v 1 \tl hello \tl* \tl hello \tl* appearing as hellohello instead of hello hello
-                if (!string.IsNullOrWhiteSpace(result.remainingText) ||
-                    (!string.IsNullOrEmpty(result.remainingText)&&isAllowedByVMarker&&doesNotAllowVMarker&&isInVMarkerNow))
+                if (!string.IsNullOrEmpty(result.remainingText))
                 {
                     output.Add(new TextBlock(result.remainingText));
                 }

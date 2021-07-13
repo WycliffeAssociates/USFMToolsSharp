@@ -663,6 +663,12 @@ with a newline";
             // Cross Reference Quotation
             Assert.AreEqual("Tebes", ((TextBlock)parser.ParseFromString("\\x - \\xo 11.21 \\xq Tebes \\xt \\x*").Contents[0].Contents[1].Contents[0]).Text);
         }
+        [TestMethod]
+        public void TestSpacingBetweenWords()
+        {
+            var parsed = parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* \\em Second \\em*");
+            Assert.AreEqual(" ", ((TextBlock)parsed.Contents[0].Contents[3]).Text);
+        }
 
     }
 }
