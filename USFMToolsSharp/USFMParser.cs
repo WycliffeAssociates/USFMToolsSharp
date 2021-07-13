@@ -77,6 +77,8 @@ namespace USFMToolsSharp
                     output.Add(result.marker);
                 }
 
+                // This verse marker stuff is a temporary hackish workaround until we can handle whitespace a lot better
+
                 //Conditions for the spaces between tags to be included as whitespace in a verse
                 var vMarker = new VMarker();
                 bool isAllowedByVMarker = vMarker.AllowedContents.Contains(result.marker.GetType());
