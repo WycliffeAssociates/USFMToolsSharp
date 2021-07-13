@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
+using USFMToolsSharp;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -578,7 +579,7 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[0] is IPMarker);
             Assert.IsTrue(output.Contents[0].Contents[0] is RQMarker);
             Assert.IsTrue(output.Contents[0].Contents[1] is RQEndMarker);
-            Assert.IsTrue(output.Contents[0].Contents[2] is IEMarker);
+            Assert.IsTrue(output.Contents[0].Contents[3] is IEMarker);
         }
 
         [TestMethod]
@@ -668,6 +669,14 @@ with a newline";
         {
             var parsed = parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* \\em Second \\em*");
             Assert.AreEqual(" ", ((TextBlock)parsed.Contents[0].Contents[3]).Text);
+        }
+        [TestMethod]
+        public void TestIgnoreUnkownMarkers()
+        {
+            parser = new USFMParser(ignoreUnknownMarkers: true);
+            var parsed = parser.ParseFromString("\\v 1 Text \\unkown more text \\bd Text \\bd*");
+            Assert.AreEqual(1, parsed.Contents.Count);
+            Assert.AreEqual(3, parsed.Contents[0].Contents.Count);
         }
 
     }
