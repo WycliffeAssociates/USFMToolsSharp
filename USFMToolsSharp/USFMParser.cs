@@ -18,7 +18,7 @@ namespace USFMToolsSharp
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
         {
-            IgnoredTags = tagsToIgnore == null ? new List<string>() : tagsToIgnore;
+            IgnoredTags = tagsToIgnore ?? new List<string>();
             IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
@@ -32,6 +32,7 @@ namespace USFMToolsSharp
             USFMDocument output = new USFMDocument();
             var markers = TokenizeFromString(input);
 
+            // Clean out extra whitespace where it isn't needed
             CleanWhitespace(markers);
 
 
@@ -81,6 +82,7 @@ namespace USFMToolsSharp
                     continue;
                 }
 
+                // If this isn't between and end marker and another marker then delete it
                 if(!(input[index - 1].Identifier.EndsWith("*") && !input[index + 1].Identifier.EndsWith("*")))
                 {
                     input.RemoveAt(index);
@@ -112,9 +114,6 @@ namespace USFMToolsSharp
                     output.Add(result.marker);
                 }
 
-                //deciding when to include textblocks
-                //whitespace textblocks is added to the list when the tag is a Allowed by VMarker, does not allow VMarker, and is current in a VMarker
-                //this solves the problem of \v 1 \tl hello \tl* \tl hello \tl* appearing as hellohello instead of hello hello
                 if (!string.IsNullOrEmpty(result.remainingText))
                 {
                     output.Add(new TextBlock(result.remainingText));
