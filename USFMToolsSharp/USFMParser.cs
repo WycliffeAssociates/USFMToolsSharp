@@ -37,14 +37,13 @@ namespace USFMToolsSharp
 
 
 
-            foreach(Marker marker in markers)
+            for (int markerIndex = 0; markerIndex < markers.Count; markerIndex++)
             {
-                if(marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
+                Marker marker = markers[markerIndex];
+                if (marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
                     output.Insert(new TableBlock());
                 }
-
-                var markerIndex = markers.IndexOf(marker);
 
                 if(marker is QMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
                 {
