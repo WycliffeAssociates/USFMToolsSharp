@@ -688,5 +688,26 @@ with a newline";
             Assert.AreEqual(1, result.GetChildMarkers<TextBlock>(new List<Type> { typeof(FMarker) }).Count);
         }
 
+        [TestMethod]
+        public void TestGetChildMarkers()
+        {
+            var result = parser.ParseFromString("\\c 1 \\v 1 Text blocks \\f \\ft Text \\f* \\v 2 Third block \\c 2 \\v 1 Fourth block");
+            Assert.AreEqual(3, result.GetChildMarkers<VMarker>().Count);
+        }
+
+        [TestMethod]
+        public void TestGetHierarchyToMarker()
+        {
+            var document = new USFMDocument();
+            var chapter = new CMarker() { Number = 1 };
+            var verse = new VMarker() { VerseNumber = "1" };
+            var textblock = new TextBlock("Hello world");
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock });
+            var result = document.GetHierarchyToMarker(textblock);
+            Assert.AreEqual(document, result[0]);
+            Assert.AreEqual(chapter, result[1]);
+            Assert.AreEqual(verse, result[2]);
+            Assert.AreEqual(textblock, result[3]);
+        }
     }
 }
