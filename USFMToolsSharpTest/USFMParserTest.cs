@@ -709,5 +709,40 @@ with a newline";
             Assert.AreEqual(verse, result[2]);
             Assert.AreEqual(textblock, result[3]);
         }
+
+        [TestMethod]
+        public void TestGetHierarchyToMarkerWithNonExistantMarker()
+        {
+            var document = new USFMDocument();
+            var chapter = new CMarker() { Number = 1 };
+            var verse = new VMarker() { VerseNumber = "1" };
+            var textblock = new TextBlock("Hello world");
+            var secondBlock = new TextBlock("Hello again");
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock });
+            var result = document.GetHierarchyToMarker(secondBlock);
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [TestMethod]
+        public void TestGetHierarchyToMultipleMarkers()
+        {
+            var document = new USFMDocument();
+            var chapter = new CMarker() { Number = 1 };
+            var verse = new VMarker() { VerseNumber = "1" };
+            var textblock = new TextBlock("Hello world");
+            var secondBlock = new TextBlock("Hello again");
+            var nonExistant = new VMarker();
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock, secondBlock });
+            var result = document.GetHierachyToMultipleMarkers(new List<Marker>() { textblock, secondBlock, nonExistant });
+            Assert.AreEqual(document, result[textblock][0]);
+            Assert.AreEqual(chapter, result[textblock][1]);
+            Assert.AreEqual(verse, result[textblock][2]);
+            Assert.AreEqual(textblock, result[textblock][3]);
+            Assert.AreEqual(document, result[secondBlock][0]);
+            Assert.AreEqual(chapter, result[secondBlock][1]);
+            Assert.AreEqual(verse, result[secondBlock][2]);
+            Assert.AreEqual(secondBlock, result[secondBlock][3]);
+            Assert.AreEqual(0, result[nonExistant].Count);
+        }
     }
 }

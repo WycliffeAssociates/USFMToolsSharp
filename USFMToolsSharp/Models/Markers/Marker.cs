@@ -55,27 +55,110 @@ namespace USFMToolsSharp.Models.Markers
 
         public List<Marker> GetHierarchyToMarker(Marker target)
         {
-            List<Marker> output = new List<Marker>
-            {
-                this
-            };
+            var parents = new Stack<Marker>();
+            int childMarkerContentsCount;
 
-            if (target == this)
+            bool found = false;
+            var stack = new Stack<(Marker marker, bool isLastInParent)>();
+            stack.Push((this, true));
+            while (stack.Count > 0)
+            {
+                var (marker, isLastInParent) = stack.Pop();
+                if (marker == target)
+                {
+                    found = true;
+                    break;
+                }
+
+                if (marker.Contents.Count != 0)
+                {
+                    // We're descending
+                    parents.Push(marker);
+
+                    childMarkerContentsCount = marker.Contents.Count;
+                    for (int i = 0; i < childMarkerContentsCount; i++)
+                    {
+                        stack.Push((marker.Contents[i], i == childMarkerContentsCount - 1));
+                    }
+                }
+                else if (stack.Count == 0 || isLastInParent)
+                {
+                    // We're ascending
+                    parents.Pop();
+                }
+            }
+            var output = new List<Marker>();
+
+            if (!found)
             {
                 return output;
             }
 
-            List<Marker> tmp;
-            foreach(Marker marker in this.Contents)
+            output.Add(target);
+            output.AddRange(parents);
+            output.Reverse();
+            return output;
+        }
+
+        /// <summary>
+        /// Get the paths to multiple markers
+        /// </summary>
+        /// <param name="targets">A list of markers to find</param>
+        /// <returns>A dictionary of markers and paths</returns>
+        /// <remarks>In the case that the marker doesn't exist in the tree the dictionary will contain an empty list for that marker</remarks>
+        public Dictionary<Marker, List<Marker>> GetHierachyToMultipleMarkers(List<Marker> targets)
+        {
+            Dictionary<Marker, List<Marker>> output = new Dictionary<Marker, List<Marker>>(targets.Count);
+            var parents = new Stack<Marker>();
+            int childMarkerContentsCount;
+
+            var stack = new Stack<(Marker marker, bool isLastInParent)>();
+            stack.Push((this, true));
+            while (stack.Count > 0)
             {
-                tmp = marker.GetHierarchyToMarker(target);
-                if(tmp.Count != 0)
+                var (marker, isLastInParent) = stack.Pop();
+                if (targets.Contains(marker))
                 {
-                    output.AddRange(tmp);
-                    return output;
+                    var tmp = new List<Marker>(parents.Count + 1)
+                    {
+                        marker
+                    };
+                    tmp.AddRange(parents);
+                    tmp.Reverse();
+                    output.Add(marker, tmp);
+                    if (output.Count == targets.Count)
+                    {
+                        break;
+                    }
+                }
+
+                if (marker.Contents.Count != 0)
+                {
+                    // We're descending
+                    parents.Push(marker);
+
+                    childMarkerContentsCount = marker.Contents.Count;
+                    for (int i = 0; i < childMarkerContentsCount; i++)
+                    {
+                        stack.Push((marker.Contents[i], i == 0));
+                    }
+                }
+                else if (stack.Count == 0 || isLastInParent)
+                {
+                    // We're ascending
+                    parents.Pop();
                 }
             }
-            return new List<Marker>();
+
+            foreach (var i in targets)
+            {
+                if (!output.ContainsKey(i))
+                {
+                    output.Add(i, new List<Marker>());
+                }
+            }
+
+            return output;
         }
         /// <summary>
         /// A recursive search for children of a certain type
@@ -85,21 +168,27 @@ namespace USFMToolsSharp.Models.Markers
         public List<T> GetChildMarkers<T>(List<Type> ignoredParents = null) where T : Marker
         {
             List<T> output = new List<T>();
-            if (ignoredParents != null)
+            var stack = new Stack<Marker>(Contents);
+
+            if (ignoredParents != null && ignoredParents.Contains(this.GetType()))
             {
-                if (ignoredParents.Contains(this.GetType()))
-                {
-                    return output;
-                }
+                return output;
             }
 
-            foreach(Marker i in Contents)
+            while (stack.Count > 0)
             {
-                if(i is T)
+                var marker = stack.Pop();
+                if (marker is T)
                 {
-                    output.Add((T)i);
+                    output.Add((T)marker);
                 }
-                output.AddRange(i.GetChildMarkers<T>(ignoredParents));
+                foreach (var child in marker.Contents)
+                {
+                    if (ignoredParents == null || !ignoredParents.Contains(child.GetType()))
+                    {
+                        stack.Push(child);
+                    }
+                }
             }
 
             return output;
