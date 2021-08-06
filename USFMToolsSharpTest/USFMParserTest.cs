@@ -692,7 +692,11 @@ with a newline";
         public void TestGetChildMarkers()
         {
             var result = parser.ParseFromString("\\c 1 \\v 1 Text blocks \\f \\ft Text \\f* \\v 2 Third block \\c 2 \\v 1 Fourth block");
-            Assert.AreEqual(3, result.GetChildMarkers<VMarker>().Count);
+            var markers = result.GetChildMarkers<VMarker>();
+            Assert.AreEqual(3, markers.Count);
+            Assert.AreEqual("1", markers[0].VerseNumber);
+            Assert.AreEqual("2", markers[1].VerseNumber);
+            Assert.AreEqual("1", markers[2].VerseNumber);
         }
 
         [TestMethod]

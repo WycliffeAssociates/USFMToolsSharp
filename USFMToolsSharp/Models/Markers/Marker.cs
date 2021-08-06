@@ -191,6 +191,7 @@ namespace USFMToolsSharp.Models.Markers
                 }
             }
 
+            output.Reverse();
             return output;
         }
 
