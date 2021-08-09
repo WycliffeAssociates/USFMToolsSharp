@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using USFMToolsSharp;
 using USFMToolsSharp.Models.Markers;
@@ -17,6 +18,13 @@ namespace USFMToolsSharpTest
         public void SetupTest()
         {
             parser = new USFMToolsSharp.USFMParser();
+        }
+        private void CheckTypeList(List<Type> types, List<Marker> markers)
+        {
+            for (var i = 0; i < types.Count; i++)
+            {
+                Assert.IsTrue(markers[i].GetType() == types[i], $"Expected type {types[i].Name} but got {markers[i].GetType().Name} at index {i}");
+            }
         }
 
         [TestMethod]
@@ -712,6 +720,18 @@ with a newline";
             Assert.AreEqual(chapter, result[1]);
             Assert.AreEqual(verse, result[2]);
             Assert.AreEqual(textblock, result[3]);
+
+            document = parser.ParseFromString(@"\c 1\p \v 1 Before \f + \ft In footnote \f* After footnore");
+
+            var markers = document.GetChildMarkers<TextBlock>().ToArray();
+            var baseMarker = document.Contents[0].Contents[0].Contents[0];
+            var hierarchy = baseMarker.GetHierarchyToMarker(markers[0]).ToList();
+            CheckTypeList(new List<Type> { typeof(VMarker), typeof(TextBlock) }, hierarchy);
+            hierarchy = baseMarker.GetHierarchyToMarker(markers[1]).ToList();
+            CheckTypeList(new List<Type> { typeof(VMarker), typeof(FMarker), typeof(FTMarker), typeof(TextBlock) }, hierarchy);
+            hierarchy = baseMarker.GetHierarchyToMarker(markers[2]).ToList();
+            CheckTypeList(new List<Type> { typeof(VMarker), typeof(TextBlock) }, hierarchy);
+
         }
 
         [TestMethod]
@@ -734,10 +754,14 @@ with a newline";
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
+            var footnote = new FMarker();
+            var footnoteText = new FTMarker();
+            var footnoteEndMarker = new FEndMarker();
+            var textInFootnote = new TextBlock("Text in footnote");
             var secondBlock = new TextBlock("Hello again");
             var nonExistant = new VMarker();
-            document.InsertMultiple(new Marker[] { chapter, verse, textblock, secondBlock });
-            var result = document.GetHierachyToMultipleMarkers(new List<Marker>() { textblock, secondBlock, nonExistant });
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock, footnote, footnoteText, textInFootnote, footnoteEndMarker, secondBlock });
+            var result = document.GetHierachyToMultipleMarkers(new List<Marker>() { textblock, secondBlock, nonExistant, textInFootnote });
             Assert.AreEqual(document, result[textblock][0]);
             Assert.AreEqual(chapter, result[textblock][1]);
             Assert.AreEqual(verse, result[textblock][2]);
@@ -747,6 +771,11 @@ with a newline";
             Assert.AreEqual(verse, result[secondBlock][2]);
             Assert.AreEqual(secondBlock, result[secondBlock][3]);
             Assert.AreEqual(0, result[nonExistant].Count);
+            Assert.AreEqual(document, result[textInFootnote][0]);
+            Assert.AreEqual(chapter, result[textInFootnote][1]);
+            Assert.AreEqual(verse, result[textInFootnote][2]);
+            Assert.AreEqual(footnote, result[textInFootnote][3]);
+            Assert.AreEqual(footnoteText, result[textInFootnote][4]);
         }
     }
 }

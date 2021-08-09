@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
@@ -55,12 +56,12 @@ namespace USFMToolsSharp.Models.Markers
 
         public List<Marker> GetHierarchyToMarker(Marker target)
         {
-            var parents = new Stack<Marker>();
+            var parents = new Stack<(Marker marker, bool isLastInParent)>();
             int childMarkerContentsCount;
 
             bool found = false;
             var stack = new Stack<(Marker marker, bool isLastInParent)>();
-            stack.Push((this, true));
+            stack.Push((this, false));
             while (stack.Count > 0)
             {
                 var (marker, isLastInParent) = stack.Pop();
@@ -73,18 +74,23 @@ namespace USFMToolsSharp.Models.Markers
                 if (marker.Contents.Count != 0)
                 {
                     // We're descending
-                    parents.Push(marker);
+                    parents.Push((marker, isLastInParent));
 
                     childMarkerContentsCount = marker.Contents.Count;
                     for (int i = 0; i < childMarkerContentsCount; i++)
                     {
-                        stack.Push((marker.Contents[i], i == childMarkerContentsCount - 1));
+                        stack.Push((marker.Contents[i], i == 0));
                     }
                 }
                 else if (stack.Count == 0 || isLastInParent)
                 {
                     // We're ascending
-                    parents.Pop();
+                    var tmp = parents.Pop();
+                    // keep moving up the parent stack until we aren't the last in a parent
+                    while(tmp.isLastInParent == true)
+                    {
+                        tmp = parents.Pop();
+                    }
                 }
             }
             var output = new List<Marker>();
@@ -95,7 +101,7 @@ namespace USFMToolsSharp.Models.Markers
             }
 
             output.Add(target);
-            output.AddRange(parents);
+            output.AddRange(parents.Select(i => i.marker));
             output.Reverse();
             return output;
         }
@@ -109,11 +115,11 @@ namespace USFMToolsSharp.Models.Markers
         public Dictionary<Marker, List<Marker>> GetHierachyToMultipleMarkers(List<Marker> targets)
         {
             Dictionary<Marker, List<Marker>> output = new Dictionary<Marker, List<Marker>>(targets.Count);
-            var parents = new Stack<Marker>();
+            var parents = new Stack<(Marker marker, bool isLastInParent)>();
             int childMarkerContentsCount;
 
             var stack = new Stack<(Marker marker, bool isLastInParent)>();
-            stack.Push((this, true));
+            stack.Push((this, false));
             while (stack.Count > 0)
             {
                 var (marker, isLastInParent) = stack.Pop();
@@ -123,7 +129,7 @@ namespace USFMToolsSharp.Models.Markers
                     {
                         marker
                     };
-                    tmp.AddRange(parents);
+                    tmp.AddRange(parents.Select(i=> i.marker));
                     tmp.Reverse();
                     output.Add(marker, tmp);
                     if (output.Count == targets.Count)
@@ -135,7 +141,7 @@ namespace USFMToolsSharp.Models.Markers
                 if (marker.Contents.Count != 0)
                 {
                     // We're descending
-                    parents.Push(marker);
+                    parents.Push((marker, isLastInParent));
 
                     childMarkerContentsCount = marker.Contents.Count;
                     for (int i = 0; i < childMarkerContentsCount; i++)
@@ -146,7 +152,12 @@ namespace USFMToolsSharp.Models.Markers
                 else if (stack.Count == 0 || isLastInParent)
                 {
                     // We're ascending
-                    parents.Pop();
+                    var tmp = parents.Pop();
+                    // keep moving up the parent stack until we aren't the last in a parent
+                    while(tmp.isLastInParent == true)
+                    {
+                        tmp = parents.Pop();
+                    }
                 }
             }
 
