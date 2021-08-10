@@ -23,6 +23,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FEndMarker),
             typeof(SCMarker),
             typeof(SCEndMarker),
+            typeof(TextBlock),
         };
     }
 }
