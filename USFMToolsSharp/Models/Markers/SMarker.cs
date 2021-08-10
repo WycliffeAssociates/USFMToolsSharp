@@ -21,6 +21,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(RMarker),
             typeof(FMarker),
             typeof(FEndMarker),
+            typeof(SCMarker),
+            typeof(SCEndMarker),
         };
     }
 }

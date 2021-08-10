@@ -42,6 +42,10 @@ namespace USFMToolsSharp.Models.Markers
             typeof(SCEndMarker),
             typeof(SUPMarker),
             typeof(SUPEndMarker),
+            typeof(BKMarker),
+            typeof(BKEndMarker),
+            typeof(BDMarker),
+            typeof(BDEndMarker),
         };
     }
 }
