@@ -13,6 +13,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <Description>A parsing library for USFM</Description>
     <Configurations>Debug;Release</Configurations>
+    <LangVersion>8</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
