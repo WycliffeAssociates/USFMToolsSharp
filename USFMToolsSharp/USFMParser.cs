@@ -33,7 +33,7 @@ namespace USFMToolsSharp
             var markers = TokenizeFromString(input);
 
             // Clean out extra whitespace where it isn't needed
-            CleanWhitespace(markers);
+            markers = CleanWhitespace(markers);
 
 
 
@@ -60,33 +60,38 @@ namespace USFMToolsSharp
         /// Removes all the unessecary whitespace while preserving space between closing markers and opening markers
         /// </summary>
         /// <param name="input"></param>
-        private void CleanWhitespace(List<Marker> input)
+        private List<Marker> CleanWhitespace(List<Marker> input)
         {
-            var markersToProcess = input.Where(i => i is TextBlock block && string.IsNullOrWhiteSpace(block.Text)).ToList();
-            foreach(var marker in markersToProcess)
+            var output = new List<Marker>();
+            for(var index = 0; index < input.Count; index++)
             {
-                var index = input.IndexOf(marker);
+                if (! (input[index] is TextBlock block && string.IsNullOrWhiteSpace(block.Text)))
+                {
+                    output.Add(input[index]);
+                    continue;
+                }
 
                 // If this is an empty text block at the beginning remove it
                 if(index == 0)
                 {
-                    input.RemoveAt(index);
                     continue;
                 }
                 
                 // If this is an empty text block at the end then remove it
                 if(index == input.Count - 1)
                 {
-                    input.RemoveAt(index);
                     continue;
                 }
 
                 // If this isn't between and end marker and another marker then delete it
                 if(!(input[index - 1].Identifier.EndsWith("*") && !input[index + 1].Identifier.EndsWith("*")))
                 {
-                    input.RemoveAt(index);
+                    continue;
                 }
+
+                output.Add(input[index]);
             }
+            return output;
         }
 
         /// <summary>
@@ -340,6 +345,10 @@ namespace USFMToolsSharp
                     return new SMarker() { Weight = 2 };
                 case "s3":
                     return new SMarker() { Weight = 3 };
+                case "s4":
+                    return new SMarker() { Weight = 4 };
+                case "s5":
+                    return new SMarker() { Weight = 5 };
                 case "bk":
                     return new BKMarker();
                 case "bk*":
