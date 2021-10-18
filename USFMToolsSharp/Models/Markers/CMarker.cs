@@ -96,6 +96,10 @@ namespace USFMToolsSharp.Models.Markers
             typeof(TextBlock),
             typeof(REMMarker),
             typeof(DMarker),
+            typeof(VAMarker),
+            typeof(VAEndMarker),
+            typeof(FMarker),
+            typeof(FEndMarker),
         };
     }
 }

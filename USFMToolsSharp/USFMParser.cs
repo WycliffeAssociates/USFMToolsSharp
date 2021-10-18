@@ -250,6 +250,8 @@ namespace USFMToolsSharp
                     return new QMarker() { Depth = 2 };
                 case "q3":
                     return new QMarker() { Depth = 3 };
+                case "q4":
+                    return new QMarker() { Depth = 4 };
                 case "qr":
                     return new QRMarker();
                 case "qc":

@@ -19,5 +19,9 @@ namespace USFMToolsSharp.Models.Markers
             Heading = input.Trim();
             return string.Empty;
         }
+        public override List<Type> AllowedContents => new List<Type>() {
+            typeof(QACMarker),
+            typeof(QACEndMarker),
+        };
     }
 }
