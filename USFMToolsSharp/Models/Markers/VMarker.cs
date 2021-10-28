@@ -102,6 +102,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(LITLMarker),
                     typeof(LITLEndMarker),
                     typeof(LIVMarker),
+                    typeof(LIMarker),
                     typeof(LIVEndMarker),
                     typeof(ORDMarker),
                     typeof(ORDEndMarker),
@@ -135,7 +136,9 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(PNEndMarker),
                     typeof(PROMarker),
                     typeof(PROEndMarker),
+                    typeof(REMMarker),
                     typeof(PMarker),
+                    typeof(LIMarker),
                 };
         public override bool TryInsert(Marker input)
         {

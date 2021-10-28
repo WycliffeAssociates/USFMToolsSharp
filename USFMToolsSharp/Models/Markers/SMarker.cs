@@ -21,6 +21,21 @@ namespace USFMToolsSharp.Models.Markers
             typeof(RMarker),
             typeof(FMarker),
             typeof(FEndMarker),
+            typeof(SCMarker),
+            typeof(SCEndMarker),
+            typeof(EMMarker),
+            typeof(EMEndMarker),
+            typeof(BDMarker),
+            typeof(BDEndMarker),
+            typeof(ITMarker),
+            typeof(ITEndMarker),
+            typeof(BDITMarker),
+            typeof(BDITEndMarker),
+            typeof(NOMarker),
+            typeof(NOEndMarker),
+            typeof(SUPMarker),
+            typeof(SUPEndMarker),
+            typeof(TextBlock),
         };
     }
 }

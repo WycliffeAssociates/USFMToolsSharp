@@ -36,14 +36,16 @@ namespace USFMToolsSharp.Models.Markers
             typeof(WMarker),
             typeof(WEndMarker),
             typeof(TextBlock),
-            typeof(UnknownMarker),
-            typeof(UnknownEndMarker),
             typeof(ITMarker),
             typeof(ITEndMarker),
             typeof(SCMarker),
             typeof(SCEndMarker),
             typeof(SUPMarker),
             typeof(SUPEndMarker),
+            typeof(BKMarker),
+            typeof(BKEndMarker),
+            typeof(BDMarker),
+            typeof(BDEndMarker),
         };
     }
 }
