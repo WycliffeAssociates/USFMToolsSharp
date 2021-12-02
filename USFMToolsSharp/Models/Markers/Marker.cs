@@ -179,12 +179,14 @@ namespace USFMToolsSharp.Models.Markers
         public List<T> GetChildMarkers<T>(List<Type> ignoredParents = null) where T : Marker
         {
             List<T> output = new List<T>();
-            var stack = new Stack<Marker>(Contents);
+            var stack = new Stack<Marker>(Contents.Count);
 
             if (ignoredParents != null && ignoredParents.Contains(this.GetType()))
             {
                 return output;
             }
+
+            stack.Push(this);
 
             while (stack.Count > 0)
             {
