@@ -691,9 +691,14 @@ with a newline";
         [TestMethod]
         public void TestIgnoreParentsWhenGettingChildMarkers()
         {
+            var ignoredParents = new List<Type> { typeof(FMarker) };
             var result = parser.ParseFromString("\\v 1 Text blocks \\f \\ft Text \\f*");
             Assert.AreEqual(2, result.GetChildMarkers<TextBlock>().Count);
-            Assert.AreEqual(1, result.GetChildMarkers<TextBlock>(new List<Type> { typeof(FMarker) }).Count);
+            Assert.AreEqual(1, result.GetChildMarkers<TextBlock>(ignoredParents).Count);
+            var verse = result.GetChildMarkers<VMarker>()[0];
+            Assert.AreEqual(2, verse.GetChildMarkers<TextBlock>().Count);
+            Assert.AreEqual(1, verse.GetChildMarkers<TextBlock>(ignoredParents).Count);
+            Assert.AreEqual(0, verse.GetChildMarkers<TextBlock>(new List<Type>() { typeof(VMarker)}).Count);
         }
 
         [TestMethod]
