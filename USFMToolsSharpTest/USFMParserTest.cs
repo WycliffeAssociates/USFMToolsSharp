@@ -565,7 +565,6 @@ namespace USFMToolsSharpTest
         {
             string verseText = "\\f + \\ft Text \\fqa Other \\fqa* More";
             var output = parser.ParseFromString(verseText);
-            // Make sure the FMarker has only one child
             Assert.AreEqual(4, output.Contents[0].Contents.Count);
         }
 
