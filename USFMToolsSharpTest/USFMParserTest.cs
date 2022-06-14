@@ -305,8 +305,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(2, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
             Assert.AreEqual(3, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
 
-            // Embedded Verse
-            Assert.AreEqual("6", ((VMarker)parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[0].Contents[0]).VerseNumber);
+            // Test verses
+            Assert.IsTrue(parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[1] is VMarker);
 
             // Table Headers
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
