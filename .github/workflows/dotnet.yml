@@ -1,0 +1,33 @@
+name: .NET build, test, nuget push
+
+on:
+  push:
+    branches: [ master ]
+    tags: 
+      - "*"
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 3.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore -c Release
+    - name: Test
+      run: dotnet test -c Release
+    - name: Push to Nuget if tagged
+      if: contains( github.ref, 'refs/tags/v' )
+      run:  |
+        cd ./USFMToolsSharp/bin/Release/ && \
+        PKG_NAME=$(ls *.nupkg) && \
+        dotnet nuget push $PKG_NAME -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
+      env:
+        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
