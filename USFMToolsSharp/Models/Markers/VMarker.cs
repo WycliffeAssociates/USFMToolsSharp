@@ -139,6 +139,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(REMMarker),
                     typeof(PMarker),
                     typeof(LIMarker),
+                    typeof(XTMarker)
                 };
         public override bool TryInsert(Marker input)
         {

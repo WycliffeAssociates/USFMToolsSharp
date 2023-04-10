@@ -4,6 +4,10 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
+    /// <summary>
+    /// List total
+    /// </summary>
+    /// <remarks>See https://ubsicap.github.io/usfm/lists/index.html#litl-litl</remarks>
     public class LITLMarker : Marker
     {
         public override string Identifier => "litl";

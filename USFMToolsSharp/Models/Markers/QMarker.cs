@@ -31,15 +31,5 @@ namespace USFMToolsSharp.Models.Markers
             typeof(WEndMarker),
             typeof(VMarker),
         };
-
-        public override bool TryInsert(Marker input)
-        {
-            if (input is VMarker && Contents.Any(m => m is VMarker))
-            {
-                return false;
-            }
-
-            return base.TryInsert(input);
-        }
     }
 }

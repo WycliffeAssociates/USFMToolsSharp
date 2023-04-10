@@ -7,6 +7,7 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Centered paragraph
     /// </summary>
+    /// <remarks>See https://ubsicap.github.io/usfm/paragraphs/index.html#pc</remarks>
     public class PCMarker : Marker
     {
         public override string Identifier => "pc";

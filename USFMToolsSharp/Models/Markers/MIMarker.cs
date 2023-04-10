@@ -7,6 +7,7 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Indented flush left paragraph
     /// </summary>
+    /// <remarks>See documentation at https://ubsicap.github.io/usfm/paragraphs/index.html#mi</remarks>
     public class MIMarker : Marker
     {
         public override string Identifier => "mi";

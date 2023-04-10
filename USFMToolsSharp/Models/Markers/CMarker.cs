@@ -100,6 +100,11 @@ namespace USFMToolsSharp.Models.Markers
             typeof(VAEndMarker),
             typeof(FMarker),
             typeof(FEndMarker),
+            typeof(PMMarker),
+            typeof(LHMarker),
+            typeof(XMarker),
+            typeof(XEndMarker),
+            typeof(XTMarker),
         };
     }
 }

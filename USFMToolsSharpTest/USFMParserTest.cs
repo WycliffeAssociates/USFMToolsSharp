@@ -500,8 +500,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(2, output.Contents.Count);
             Assert.IsTrue(output.Contents[0] is QMarker);
             Assert.IsTrue(output.Contents[0].Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[0].Contents[0].Contents[1] is QMarker);
-            Assert.IsTrue(output.Contents[1] is VMarker);
+            Assert.IsTrue(output.Contents[1] is QMarker);
+            Assert.IsTrue(output.Contents[1].Contents[0] is VMarker);
 
             string secondVerseText = "\\v 1 This is verse one \\q another poetry \\v 2 second verse";
 

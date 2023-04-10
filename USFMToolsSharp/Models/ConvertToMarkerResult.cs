@@ -8,7 +8,7 @@ namespace USFMToolsSharp.Models
     /// <summary>
     /// A holder class to take the place of a tuple
     /// </summary>
-    class ConvertToMarkerResult
+    public class ConvertToMarkerResult
     {
         public ConvertToMarkerResult(Marker marker, string remainingText)
         {

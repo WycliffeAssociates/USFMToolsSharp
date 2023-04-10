@@ -7,6 +7,7 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// A flush left margin marker
     /// </summary>
+    /// <remarks>See https://ubsicap.github.io/usfm/paragraphs/index.html#m</remarks>
     public class MMarker : Marker
     {
         public override string Identifier => "m";

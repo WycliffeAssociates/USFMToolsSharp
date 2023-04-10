@@ -27,6 +27,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(BKEndMarker),
             typeof(BDMarker),
             typeof(BDEndMarker),
+            typeof(XMarker),
+            typeof(XEndMarker)
         };
     }
 }
