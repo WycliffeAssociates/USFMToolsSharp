@@ -113,7 +113,11 @@ namespace USFMToolsSharp
                     });
                     break;
                 case "ref":
-                    var xMarker = new XMarker();
+                    // Callers aren't in the spec for USX but they are in the spec for USFM so we're going to hardcode
+                    var xMarker = new XMarker()
+                    {
+                        CrossRefCaller = "+"
+                    };
                     if (node.Attributes["loc"] != null)
                     {
                         xMarker.Contents.Add(new XOMarker() { OriginRef = node.Attributes["loc"].Value });
