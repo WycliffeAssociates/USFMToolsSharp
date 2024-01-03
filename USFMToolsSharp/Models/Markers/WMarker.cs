@@ -12,7 +12,7 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Term;
         public Dictionary<string, string> Attributes;
-        private static Regex wordAttrPattern = new Regex("([\\w]+)=?\"?([\\w,:.]*)\"?", RegexOptions.Singleline);
+        private static Regex wordAttrPattern = new Regex("([\\w-]+)=?\"?([\\w,:.]*)\"?", RegexOptions.Singleline);
         public override string Identifier => "w";
 
         public override string PreProcess(string input)
