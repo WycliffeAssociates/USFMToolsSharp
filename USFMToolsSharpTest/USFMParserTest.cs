@@ -399,6 +399,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" strong=\"G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("H1234,G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("gnt5:51.1.2.1", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["srcloc"]);
+            Assert.AreEqual("metadata", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" x-myattr="metadata" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["x-myattr"]);
 
         }
         [TestMethod]
