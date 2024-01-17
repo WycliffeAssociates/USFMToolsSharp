@@ -400,8 +400,20 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("H1234,G5485", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|strong=\"H1234,G5485\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["strong"]);
             Assert.AreEqual("gnt5:51.1.2.1", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["srcloc"]);
             Assert.AreEqual("metadata", ((WMarker)parser.ParseFromString("\\f + \\fr 3:5 \\fk berhala \\ft Lih. \\w gracious|lemma=\"grace\" x-myattr=\"metadata\" srcloc=\"gnt5:51.1.2.1\" \\w* di Daftar Istilah.\\f*").Contents[0].Contents[2].Contents[1]).Attributes["x-myattr"]);
-
         }
+
+        [TestMethod]
+        public void TestUtf8WordEntryParse()
+        {
+            var parsed =
+                parser.ParseFromString("\\w Δαυεὶδ|lemma=\"Δαυείδ\" strong=\"G11380\" x-morph=\"Gr,N,,,,,GMSI\"\\w*");
+           Assert.AreEqual("Δαυεὶδ", ((WMarker)parsed.Contents[0]).Term); 
+           Assert.AreEqual("Δαυείδ", ((WMarker)parsed.Contents[0]).Attributes["lemma"]); 
+           Assert.AreEqual("G11380", ((WMarker)parsed.Contents[0]).Attributes["strong"]); 
+           Assert.AreEqual("Gr,N,,,,,GMSI", ((WMarker)parsed.Contents[0]).Attributes["x-morph"]); 
+        }
+        
+        
         [TestMethod]
         public void TestPoetryParse()
         {
