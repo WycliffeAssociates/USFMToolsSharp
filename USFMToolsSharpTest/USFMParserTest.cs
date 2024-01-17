@@ -607,8 +607,7 @@ with a newline";
         {
             //PRE 3.0 TESTS
             //Description;
-            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString
-            ("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Description);
+            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Description);
             //FilePath;
             Assert.AreEqual("filepath", ((FIGMarker)parser.ParseFromString
             ("\\fig description| filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).FilePath);
