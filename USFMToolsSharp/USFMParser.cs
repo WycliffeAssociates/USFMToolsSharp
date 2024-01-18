@@ -112,8 +112,19 @@ namespace USFMToolsSharp
                 ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
                 result.marker.Position = match.Index;
 
-                // If this is an unkown marker and we're in Ignore Unkown Marker mode then don't add the marker. We still keep any remaining text though
-                if (!(result.marker is UnknownMarker) || !IgnoreUnknownMarkers)
+                // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though
+                if (result.marker is UnknownMarker unknownMarker)
+                {
+                    if (IgnoreUnknownMarkers)
+                    {
+                        output.Add(new TextBlock(unknownMarker.ParsedValue));
+                    }
+                    else
+                    {
+                        output.Add(result.marker);
+                    }
+                }
+                else
                 {
                     output.Add(result.marker);
                 }

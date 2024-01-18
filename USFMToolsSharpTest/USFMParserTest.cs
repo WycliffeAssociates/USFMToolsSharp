@@ -608,8 +608,7 @@ with a newline";
         {
             //PRE 3.0 TESTS
             //Description;
-            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString
-            ("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Description);
+            Assert.AreEqual("description", ((FIGMarker)parser.ParseFromString("\\fig description|filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).Description);
             //FilePath;
             Assert.AreEqual("filepath", ((FIGMarker)parser.ParseFromString
             ("\\fig description| filepath|width|location|copyright|caption caption caption|reference\\fig*").Contents[0]).FilePath);
@@ -680,12 +679,12 @@ with a newline";
             Assert.AreEqual(" ", ((TextBlock)parsed.Contents[0].Contents[3]).Text);
         }
         [TestMethod]
-        public void TestIgnoreUnkownMarkers()
+        public void TestIgnoreUnknownMarkers()
         {
             parser = new USFMParser(ignoreUnknownMarkers: true);
-            var parsed = parser.ParseFromString("\\v 1 Text \\unkown more text \\bd Text \\bd*");
+            var parsed = parser.ParseFromString("\\v 1 Text \\unknown more text \\bd Text \\bd*");
             Assert.AreEqual(1, parsed.Contents.Count);
-            Assert.AreEqual(3, parsed.Contents[0].Contents.Count);
+            Assert.AreEqual(4, parsed.Contents[0].Contents.Count);
         }
 
         [TestMethod]
