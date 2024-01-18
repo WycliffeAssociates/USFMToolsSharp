@@ -23,6 +23,15 @@ jobs:
       run: dotnet build --no-restore -c Release
     - name: Test
       run: dotnet test -c Release
+    - name: Load secret
+      if: contains( github.ref, 'refs/tags/v' )
+      uses: 1password/load-secrets-action@v1
+      with:
+          # Export loaded secrets as environment variables
+        export-env: true
+      env:
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+        NUGET_TOKEN: "op://DevOps/nuget-push-token/credential"
     - name: Push to Nuget if tagged
       if: contains( github.ref, 'refs/tags/v' )
       run:  |
@@ -30,4 +39,4 @@ jobs:
         PKG_NAME=$(ls *.nupkg) && \
         dotnet nuget push $PKG_NAME -k $NUGET_TOKEN -s https://api.nuget.org/v3/index.json
       env:
-        NUGET_TOKEN: ${{ secrets.NUGET_TOKEN }}
+        NUGET_TOKEN: ${{ env.NUGET_TOKEN }}
