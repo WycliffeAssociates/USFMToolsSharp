@@ -43,7 +43,7 @@ namespace USFMToolsSharp.Models.Markers
 
             }
 
-            return string.Empty;
+            return Term;
         }
 
     }
