@@ -114,6 +114,15 @@ namespace USFMToolsSharp.Models.Markers
         /// <remarks>In the case that the marker doesn't exist in the tree the dictionary will contain an empty list for that marker</remarks>
         public Dictionary<Marker, List<Marker>> GetHierachyToMultipleMarkers(List<Marker> targets)
         {
+            if (targets.Count == 0)
+            {
+                return new Dictionary<Marker, List<Marker>>();
+            }
+            if (Contents.Count == 0)
+            {
+                return targets.ToDictionary(i => i, i => new List<Marker>());
+            }
+            
             Dictionary<Marker, List<Marker>> output = new Dictionary<Marker, List<Marker>>(targets.Count);
             var parents = new Stack<(Marker marker, bool isLastInParent)>();
             int childMarkerContentsCount;
