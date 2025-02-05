@@ -140,6 +140,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(PMarker),
                     typeof(LIMarker),
                     typeof(PCMarker),
+                    typeof(TableBlock)
                 };
         public override bool TryInsert(Marker input)
         {
