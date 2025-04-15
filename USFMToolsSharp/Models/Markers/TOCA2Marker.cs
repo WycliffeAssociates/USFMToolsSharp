@@ -14,7 +14,7 @@ namespace USFMToolsSharp.Models.Markers
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             AltShortTableOfContentsText = input.Trim().ToString();
-            return string.Empty;
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

@@ -96,7 +96,7 @@ namespace USFMToolsSharp.Models.Markers
 
             
 
-            return string.Empty;
+            return ReadOnlySpan<char>.Empty;
             
         }
 

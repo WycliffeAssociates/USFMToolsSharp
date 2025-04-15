@@ -11,7 +11,7 @@ namespace USFMToolsSharp.Models.Markers
             Contents = new List<Marker>();
         }
 
-        public override string Identifier => "";
+        public override string Identifier => string.Empty;
 
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;

@@ -58,11 +58,11 @@ namespace USFMToolsSharp.Models.Markers
                 }
                 if (match.Groups[2].ValueSpan.Length == 0 || match.Groups[2].ValueSpan.IsWhiteSpace())
                 {
-                    return string.Empty;
+                    return ReadOnlySpan<char>.Empty;
                 }
                 return match.Groups[2].ValueSpan.TrimEnd();
             }
-            return string.Empty;
+            return ReadOnlySpan<char>.Empty;
         }
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
