@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace USFMToolsSharp.Models.Markers
@@ -28,14 +27,15 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "v";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            // TODO: This could be done with spans
-            Match match = CreateRegex().Match(input.ToString());
-            VerseNumber = match.Groups[1].Value;
+            var match = CreateRegex().Match(input.ToString());
+            var verseNumberSpan = match.Groups[1].ValueSpan;
+            VerseNumber = verseNumberSpan.ToString();
             if (!string.IsNullOrWhiteSpace(VerseNumber))
             {
-                var verseBridgeChars = VerseNumber.Split('-');
-                StartingVerse = int.Parse(verseBridgeChars[0]);
-                EndingVerse = verseBridgeChars.Length > 1 && !string.IsNullOrWhiteSpace(verseBridgeChars[1]) ? int.Parse(verseBridgeChars[1]) : StartingVerse;
+                var index = verseNumberSpan.IndexOf('-');
+                var isBridge = index != -1;
+                StartingVerse = int.Parse(isBridge ? verseNumberSpan[..index]: verseNumberSpan);
+                EndingVerse = isBridge && !verseNumberSpan[index..].IsWhiteSpace() ? int.Parse(verseNumberSpan[(index + 1)..]) : StartingVerse;
             }
             return match.Groups[2].ValueSpan;
         }
