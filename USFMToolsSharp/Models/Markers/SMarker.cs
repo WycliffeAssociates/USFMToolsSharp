@@ -12,12 +12,12 @@ namespace USFMToolsSharp.Models.Markers
         public int Weight = 1;
         public string Text;
         public override string Identifier => "s";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Text = input.TrimStart();
-            return string.Empty;
+            Text = input.TrimStart().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(RMarker),
             typeof(FMarker),
             typeof(FEndMarker),
@@ -37,5 +37,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(SUPEndMarker),
             typeof(TextBlock),
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

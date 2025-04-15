@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,11 +10,10 @@ namespace USFMToolsSharp
     /// <summary>
     /// Parses a USFM file into a Abstract Syntax Tree
     /// </summary>
-    public class USFMParser
+    public partial class USFMParser
     {
         private readonly List<string> IgnoredTags;
         private readonly bool IgnoreUnknownMarkers;
-        private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)", RegexOptions.Singleline);
 
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
@@ -57,12 +57,13 @@ namespace USFMToolsSharp
         }
 
         /// <summary>
-        /// Removes all the unessecary whitespace while preserving space between closing markers and opening markers
+        /// Removes all the unnecessary whitespace while preserving space between closing markers and opening markers
         /// </summary>
         /// <param name="input"></param>
         private List<Marker> CleanWhitespace(List<Marker> input)
         {
-            var output = new List<Marker>();
+            // We're guessing that the majority of this isn't whitespace so start the output at the size of the input to prevent resizing
+            var output = new List<Marker>(input.Count);
             for(var index = 0; index < input.Count; index++)
             {
                 if (! (input[index] is TextBlock block && string.IsNullOrWhiteSpace(block.Text)))
@@ -101,15 +102,15 @@ namespace USFMToolsSharp
         /// <returns>A List of Markers based upon the string</returns>
         private List<Marker> TokenizeFromString(string input)
         {
-            List<Marker> output = new List<Marker>();
+            List<Marker> output = new List<Marker>(input.Length / 10);
 
-            foreach (Match match in splitRegex.Matches(input))
+            foreach (Match match in GetSplitRegex().Matches(input))
             {
                 if (IgnoredTags.Contains(match.Groups[1].Value))
                 {
                     continue;
                 }
-                ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
+                var result = ConvertToMarker(match.Groups[1].ValueSpan, match.Groups[2].ValueSpan);
                 result.marker.Position = match.Index;
 
                 // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though
@@ -129,22 +130,22 @@ namespace USFMToolsSharp
                     output.Add(result.marker);
                 }
 
-                if (!string.IsNullOrEmpty(result.remainingText))
+                if (!result.remainingText.IsEmpty)
                 {
-                    output.Add(new TextBlock(result.remainingText));
+                    output.Add(new TextBlock(result.remainingText.ToString()));
                 }
             }
 
             return output;
         }
-        private ConvertToMarkerResult ConvertToMarker(string identifier, string value)
+        private ConvertToMarkerResult ConvertToMarker(ReadOnlySpan<char> identifier, ReadOnlySpan<char> value)
         {
             Marker output = SelectMarker(identifier);
-            string tmp = output.PreProcess(value);
+            var tmp = output.PreProcess(value);
             return new ConvertToMarkerResult(output, tmp);
         }
 
-        private Marker SelectMarker(string identifier)
+        private Marker SelectMarker(ReadOnlySpan<char> identifier)
         {
             switch (identifier)
             {
@@ -545,8 +546,11 @@ namespace USFMToolsSharp
                     return new FIGEndMarker();
 
                 default:
-                    return new UnknownMarker() { ParsedIdentifier = identifier };
+                    return new UnknownMarker() { ParsedIdentifier = identifier.ToString() };
             }
         }
+
+        [GeneratedRegex(@"\\([a-z0-9\-]*\**)([^\\]*)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex GetSplitRegex();
     }
 }

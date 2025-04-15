@@ -8,14 +8,14 @@ namespace USFMToolsSharp.Models
     /// <summary>
     /// A holder class to take the place of a tuple
     /// </summary>
-    class ConvertToMarkerResult
+    ref struct ConvertToMarkerResult
     {
-        public ConvertToMarkerResult(Marker marker, string remainingText)
+        public ConvertToMarkerResult(Marker marker, ReadOnlySpan<char> remainingText)
         {
             this.marker = marker;
             this.remainingText = remainingText;
         }
-        public Marker marker;
-        public string remainingText;
+        public Marker marker { get; set; }
+        public ReadOnlySpan<char> remainingText { get; set; }
     }
 }

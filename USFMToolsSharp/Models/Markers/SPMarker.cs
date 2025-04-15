@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Speaker;
         public override string Identifier => "sp";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Speaker = input.Trim();
-            return string.Empty;
+            Speaker = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string BookTitle;
         public override string Identifier => "bk";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            BookTitle = input.Trim();
-            return string.Empty;
+            BookTitle = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

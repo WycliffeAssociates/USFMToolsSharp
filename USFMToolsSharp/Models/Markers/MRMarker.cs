@@ -12,14 +12,15 @@ namespace USFMToolsSharp.Models.Markers
         public int Weight = 1;
         public string SectionReference;
         public override string Identifier => "mr";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            SectionReference= input.TrimStart();
-            return string.Empty;
+            SectionReference= input.TrimStart().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(FMarker),
             typeof(FEndMarker)
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

@@ -16,10 +16,10 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         public string Version { get; set; }
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Version = input.Trim();
-            return string.Empty;
+            Version = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

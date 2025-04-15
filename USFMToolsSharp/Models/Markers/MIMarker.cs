@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
     public class MIMarker : Marker
     {
         public override string Identifier => "mi";
-        public override List<Type> AllowedContents => new List<Type>()
+        private static HashSet<Type> AllowedContentsStatic => new ()
         {
             typeof(TextBlock),
             typeof(VMarker),
@@ -32,5 +32,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(SUPEndMarker)
 
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

@@ -12,11 +12,11 @@ namespace USFMToolsSharp.Models.Markers
         public int Depth = 1;
         public override string Identifier => "pi";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.TrimStart();
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(VMarker),
             typeof(BMarker),
             typeof(SPMarker),
@@ -26,5 +26,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(LIMarker),
             typeof(QMarker)
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

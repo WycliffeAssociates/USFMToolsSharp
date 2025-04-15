@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string VerseCharacter;
         public override string Identifier => "fv";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            VerseCharacter = input.Trim();
-            return string.Empty;
+            VerseCharacter = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

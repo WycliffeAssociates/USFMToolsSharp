@@ -11,11 +11,12 @@ namespace USFMToolsSharp.Models.Markers
     {
         public override string Identifier => "tr";
 
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(TCMarker),
             typeof(THMarker),
             typeof(TCRMarker),
             typeof(THRMarker)
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

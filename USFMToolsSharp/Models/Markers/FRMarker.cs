@@ -13,10 +13,10 @@ namespace USFMToolsSharp.Models.Markers
         public string VerseReference;
 
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            VerseReference = input.Trim();
-            return string.Empty;
+            VerseReference = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

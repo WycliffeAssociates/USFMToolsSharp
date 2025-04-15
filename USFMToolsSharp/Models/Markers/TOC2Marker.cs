@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string ShortTableOfContentsText;
         public override string Identifier => "toc2";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            ShortTableOfContentsText = input.Trim();
-            return string.Empty;
+            ShortTableOfContentsText = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

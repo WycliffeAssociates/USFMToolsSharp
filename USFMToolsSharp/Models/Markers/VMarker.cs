@@ -5,11 +5,10 @@ using System.Text.RegularExpressions;
 
 namespace USFMToolsSharp.Models.Markers
 {
-    public class VMarker : Marker
+    public partial class VMarker : Marker
     {
         // This is a string because of verse bridges. In the future this should have starting and ending verse
         public string VerseNumber;
-        private static Regex verseRegex = new Regex("^ *([0-9]*-?[0-9]*) ?(.*)", RegexOptions.Singleline);
         public int StartingVerse;
         public int EndingVerse;
 
@@ -27,9 +26,10 @@ namespace USFMToolsSharp.Models.Markers
             }
         }
         public override string Identifier => "v";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Match match = verseRegex.Match(input);
+            // TODO: This could be done with spans
+            Match match = CreateRegex().Match(input.ToString());
             VerseNumber = match.Groups[1].Value;
             if (!string.IsNullOrWhiteSpace(VerseNumber))
             {
@@ -37,10 +37,11 @@ namespace USFMToolsSharp.Models.Markers
                 StartingVerse = int.Parse(verseBridgeChars[0]);
                 EndingVerse = verseBridgeChars.Length > 1 && !string.IsNullOrWhiteSpace(verseBridgeChars[1]) ? int.Parse(verseBridgeChars[1]) : StartingVerse;
             }
-            return match.Groups[2].Value;
+            return match.Groups[2].ValueSpan;
         }
 
-        public override List<Type> AllowedContents => new List<Type>()
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+        private static HashSet<Type> AllowedContentsStatic { get; } = new()
                 {
                     typeof(VPMarker),
                     typeof(VPEndMarker),
@@ -156,5 +157,8 @@ namespace USFMToolsSharp.Models.Markers
 
             return base.TryInsert(input);
         }
+
+        [GeneratedRegex("^ *([0-9]*-?[0-9]*) ?(.*)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex CreateRegex();
     }
 }

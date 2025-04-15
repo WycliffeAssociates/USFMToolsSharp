@@ -11,11 +11,11 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int Depth = 1;
         public override string Identifier => "ili";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.Trim();
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        public override HashSet<Type> AllowedContents => new () {
             typeof(TextBlock)
         };
     }

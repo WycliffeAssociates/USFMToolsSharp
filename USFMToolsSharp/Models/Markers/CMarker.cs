@@ -8,9 +8,8 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Chapter marker
     /// </summary>
-    public class CMarker : Marker
+    public partial class CMarker : Marker
     {
-        private static Regex regex = new Regex(" *(\\d*) *(.*)", RegexOptions.Singleline);
         public int Number;
         public string PublishedChapterMarker
         {
@@ -44,28 +43,31 @@ namespace USFMToolsSharp.Models.Markers
             }
         }
         public override string Identifier => "c";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            var match = regex.Match(input);
+            var match = GetChapterRegex().Match(input.ToString());
             if (match.Success)
             {
-                if (string.IsNullOrWhiteSpace(match.Groups[1].Value))
+                if (match.Groups[1].ValueSpan.Length == 0 || match.Groups[1].ValueSpan.IsWhiteSpace())
                 {
                     Number = 0;
                 }
                 else
                 {
-                    Number = int.Parse(match.Groups[1].Value);
+                    Number = int.Parse(match.Groups[1].ValueSpan);
                 }
-                if (string.IsNullOrWhiteSpace(match.Groups[2].Value))
+                if (match.Groups[2].ValueSpan.Length == 0 || match.Groups[2].ValueSpan.IsWhiteSpace())
                 {
                     return string.Empty;
                 }
-                return match.Groups[2].Value.TrimEnd();
+                return match.Groups[2].ValueSpan.TrimEnd();
             }
             return string.Empty;
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(MMarker),
             typeof(MSMarker),
             typeof(SMarker),
@@ -101,5 +103,8 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FMarker),
             typeof(FEndMarker),
         };
+
+        [GeneratedRegex(" *(\\d*) *(.*)", RegexOptions.Compiled | RegexOptions.Singleline)]
+        private static partial Regex GetChapterRegex();
     }
 }

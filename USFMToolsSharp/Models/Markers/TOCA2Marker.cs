@@ -11,9 +11,9 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string AltShortTableOfContentsText;
         public override string Identifier => "toca2";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AltShortTableOfContentsText = input.Trim();
+            AltShortTableOfContentsText = input.Trim().ToString();
             return string.Empty;
         }
     }

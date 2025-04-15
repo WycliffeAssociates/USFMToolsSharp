@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public int Weight = 1;
         public string Heading;
         public override string Identifier => "is";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Heading = input.Trim();
-            return string.Empty;
+            Heading = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

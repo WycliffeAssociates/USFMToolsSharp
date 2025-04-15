@@ -10,11 +10,11 @@ namespace USFMToolsSharp.Models.Markers
     public class IPRMarker : Marker
     {
         public override string Identifier => "ipr";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.Trim();
         }
-        public override List<Type> AllowedContents => new List<Type>()
+        private static HashSet<Type> AllowedContentsStatic { get; } = new()
         {
             typeof(TextBlock),
             typeof(BKMarker),
@@ -35,6 +35,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(SUPEndMarker)
 
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
 
     }
 }

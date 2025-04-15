@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string PublishedChapterMarker;
         public override string Identifier => "cp";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            PublishedChapterMarker = input.Trim();
-            return string.Empty;
+            PublishedChapterMarker = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

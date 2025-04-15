@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string AcrosticLetter;
         public override string Identifier => "qac";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AcrosticLetter = input.Trim();
-            return string.Empty;
+            AcrosticLetter = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

@@ -11,12 +11,12 @@ namespace USFMToolsSharp.Models.Markers
     {
         public override string Identifier => "fqa";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.TrimStart();
         }
 
-        public override List<Type> AllowedContents => new List<Type>()
+        private static HashSet<Type> AllowedContentsStatic { get; } = new()
         {
             typeof(TextBlock),
             typeof(TLMarker),
@@ -24,5 +24,6 @@ namespace USFMToolsSharp.Models.Markers
             typeof(WMarker),
             typeof(WEndMarker),
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

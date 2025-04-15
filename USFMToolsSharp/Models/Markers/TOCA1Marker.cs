@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string AltLongTableOfContentsText;
         public override string Identifier => "toca1";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AltLongTableOfContentsText = input.Trim();
-            return string.Empty;
+            AltLongTableOfContentsText = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

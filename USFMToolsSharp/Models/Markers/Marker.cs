@@ -14,18 +14,15 @@ namespace USFMToolsSharp.Models.Markers
         public List<Marker> Contents;
         public abstract string Identifier { get; }
         public int Position { get; set; }
-        public virtual List<Type> AllowedContents {
-            get {
-                return new List<Type>();
-            }
-        }
+        private static HashSet<Type> EmptyHashSet = new HashSet<Type>();
+        public virtual HashSet<Type> AllowedContents => EmptyHashSet;
 
         /// <summary>
         /// Pre-process the text contents before creating text elements inside of it
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public virtual string PreProcess(string input)
+        public virtual ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input;
         }

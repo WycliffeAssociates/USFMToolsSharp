@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string AltBookAbbreviation;
         public override string Identifier => "toca3";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AltBookAbbreviation = input.Trim();
-            return string.Empty;
+            AltBookAbbreviation = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }
