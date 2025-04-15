@@ -12,13 +12,15 @@ namespace USFMToolsSharp
     /// </summary>
     public partial class USFMParser
     {
-        private readonly List<string> IgnoredTags;
+        private readonly HashSet<string> IgnoredMarkers;
         private readonly bool IgnoreUnknownMarkers;
+        private readonly bool hasIgnoredMarkers;
 
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
         {
-            IgnoredTags = tagsToIgnore ?? new List<string>();
+            hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;
+            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore] : [];
             IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
@@ -37,17 +39,17 @@ namespace USFMToolsSharp
 
 
 
-            for (int markerIndex = 0; markerIndex < markers.Count; markerIndex++)
+            for (var markerIndex = 0; markerIndex < markers.Count; markerIndex++)
             {
-                Marker marker = markers[markerIndex];
+                var marker = markers[markerIndex];
                 if (marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
                     output.Insert(new TableBlock());
                 }
 
-                if(marker is QMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
+                if(marker is QMarker parsedMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
                 {
-                    ((QMarker)marker).IsPoetryBlock = true;
+                    parsedMarker.IsPoetryBlock = true;
                 }
                 
                 output.Insert(marker);
@@ -60,7 +62,7 @@ namespace USFMToolsSharp
         /// Removes all the unnecessary whitespace while preserving space between closing markers and opening markers
         /// </summary>
         /// <param name="input"></param>
-        private List<Marker> CleanWhitespace(List<Marker> input)
+        private static List<Marker> CleanWhitespace(List<Marker> input)
         {
             // We're guessing that the majority of this isn't whitespace so start the output at the size of the input to prevent resizing
             var output = new List<Marker>(input.Count);
@@ -85,7 +87,7 @@ namespace USFMToolsSharp
                 }
 
                 // If this isn't between and end marker and another marker then delete it
-                if(!(input[index - 1].Identifier.EndsWith("*") && !input[index + 1].Identifier.EndsWith("*")))
+                if(!(input[index - 1].Identifier.EndsWith('*') && !input[index + 1].Identifier.EndsWith('*')))
                 {
                     continue;
                 }
@@ -103,10 +105,9 @@ namespace USFMToolsSharp
         private List<Marker> TokenizeFromString(string input)
         {
             List<Marker> output = new List<Marker>(input.Length / 10);
-
             foreach (Match match in GetSplitRegex().Matches(input))
             {
-                if (IgnoredTags.Contains(match.Groups[1].Value))
+                if (hasIgnoredMarkers && IgnoredMarkers.Contains(match.Groups[1].Value))
                 {
                     continue;
                 }

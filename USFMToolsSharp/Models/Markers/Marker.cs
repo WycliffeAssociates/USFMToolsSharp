@@ -197,9 +197,9 @@ namespace USFMToolsSharp.Models.Markers
             while (stack.Count > 0)
             {
                 var marker = stack.Pop();
-                if (marker is T)
+                if (marker is T castedMarker)
                 {
-                    output.Add((T)marker);
+                    output.Add(castedMarker);
                 }
                 foreach (var child in marker.Contents)
                 {
