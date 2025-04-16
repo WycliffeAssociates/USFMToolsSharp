@@ -45,24 +45,22 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "c";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            var match = GetChapterRegex().Match(input.ToString());
-            if (match.Success)
+            var startOfChapterNumber = input.IndexOfAny(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+            var foundChapterNumber = startOfChapterNumber != -1;
+            if (!foundChapterNumber)
             {
-                if (match.Groups[1].ValueSpan.Length == 0 || match.Groups[1].ValueSpan.IsWhiteSpace())
-                {
-                    Number = 0;
-                }
-                else
-                {
-                    Number = int.Parse(match.Groups[1].ValueSpan);
-                }
-                if (match.Groups[2].ValueSpan.Length == 0 || match.Groups[2].ValueSpan.IsWhiteSpace())
-                {
-                    return ReadOnlySpan<char>.Empty;
-                }
-                return match.Groups[2].ValueSpan.TrimEnd();
+                Number = 0;
+                return input.Trim();
             }
-            return ReadOnlySpan<char>.Empty;
+            var firstBlankAfterNumber = input[startOfChapterNumber..].IndexOf(' ') + startOfChapterNumber;
+            if (firstBlankAfterNumber <= 0)
+            {
+                firstBlankAfterNumber = input.Length;
+            }
+
+            Number = int.Parse(input[startOfChapterNumber..firstBlankAfterNumber]);
+
+            return input[firstBlankAfterNumber..].Trim();
         }
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
@@ -103,8 +101,5 @@ namespace USFMToolsSharp.Models.Markers
             typeof(FMarker),
             typeof(FEndMarker),
         };
-
-        [GeneratedRegex(" *(\\d*) *(.*)", RegexOptions.Compiled | RegexOptions.Singleline)]
-        private static partial Regex GetChapterRegex();
     }
 }
