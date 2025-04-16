@@ -27,17 +27,37 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "v";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            var match = CreateRegex().Match(input.ToString());
-            var verseNumberSpan = match.Groups[1].ValueSpan;
+            var startOfVerseNumber = input.IndexOfAny(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+            var foundVerseNumber = startOfVerseNumber != -1;
+            if (!foundVerseNumber)
+            {
+                VerseNumber = string.Empty;
+                StartingVerse = 0;
+                EndingVerse = 0;
+                return input.Trim();
+            }
+            var firstBlankAfterNumber = input[startOfVerseNumber..].IndexOf(' ') + startOfVerseNumber;
+            if (firstBlankAfterNumber <= 0)
+            {
+                firstBlankAfterNumber = input.Length;
+            }
+            var verseNumberSpan = input[startOfVerseNumber..firstBlankAfterNumber];
             VerseNumber = verseNumberSpan.ToString();
-            if (!string.IsNullOrWhiteSpace(VerseNumber))
+
+            var hasBridge = input[startOfVerseNumber..firstBlankAfterNumber].Contains('-');
+            if (hasBridge)
             {
                 var index = verseNumberSpan.IndexOf('-');
                 var isBridge = index != -1;
                 StartingVerse = int.Parse(isBridge ? verseNumberSpan[..index]: verseNumberSpan);
                 EndingVerse = isBridge && !verseNumberSpan[index..].IsWhiteSpace() ? int.Parse(verseNumberSpan[(index + 1)..]) : StartingVerse;
             }
-            return match.Groups[2].ValueSpan;
+            else
+            {
+                StartingVerse = int.Parse(verseNumberSpan);
+                EndingVerse = StartingVerse;
+            }
+            return input[firstBlankAfterNumber..].TrimStart();
         }
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
