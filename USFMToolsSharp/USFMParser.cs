@@ -170,7 +170,7 @@ namespace USFMToolsSharp
             else if (inContent)
             {
                 endOfContent = index;
-                // Handle content here
+                // Handle marker with content
                 AddMarkerToList(input[startOfMarker ..endOfMarker], startOfContent == endOfContent ? ReadOnlySpan<char>.Empty : input[startOfContent..endOfContent], startOfMarker, output);
             }
 
