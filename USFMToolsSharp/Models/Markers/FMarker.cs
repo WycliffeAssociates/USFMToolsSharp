@@ -18,7 +18,7 @@ namespace USFMToolsSharp.Models.Markers
             FootNoteCaller = input.Trim().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic => new ()
+        private static HashSet<Type> AllowedContentsStatic { get; } = new ()
         {
             typeof(FRMarker),
             typeof(FREndMarker),

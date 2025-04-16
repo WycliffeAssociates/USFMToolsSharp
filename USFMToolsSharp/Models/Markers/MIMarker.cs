@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
     public class MIMarker : Marker
     {
         public override string Identifier => "mi";
-        private static HashSet<Type> AllowedContentsStatic => new ()
+        private static HashSet<Type> AllowedContentsStatic { get; } = new ()
         {
             typeof(TextBlock),
             typeof(VMarker),
