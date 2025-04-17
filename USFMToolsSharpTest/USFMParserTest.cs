@@ -290,6 +290,9 @@ namespace USFMToolsSharpTest
             // Transliterated
             Assert.AreEqual("Hades", ((TextBlock)parser.ParseFromString("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*").Contents[0].Contents[2].Contents[1].Contents[0]).Text);
             Assert.AreEqual("TEKEL", ((TextBlock)parser.ParseFromString("\\v 27 \\tl TEKEL\\tl* :").Contents[0].Contents[0].Contents[0]).Text);
+            // Test with newline after the verse number
+            Assert.AreEqual("1", ((VMarker)parser.ParseFromString("\\v 1\n").Contents[0]).VerseNumber);
+            Assert.AreEqual("1", ((VMarker)parser.ParseFromString("\\v 1\"").Contents[0]).VerseNumber);
         }
         [TestMethod]
         public void TestTableParse()

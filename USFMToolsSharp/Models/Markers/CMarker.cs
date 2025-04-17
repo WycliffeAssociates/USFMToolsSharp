@@ -8,8 +8,9 @@ namespace USFMToolsSharp.Models.Markers
     /// <summary>
     /// Chapter marker
     /// </summary>
-    public partial class CMarker : Marker
+    public class CMarker : Marker
     {
+        private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
         public int Number;
         public string PublishedChapterMarker
         {
@@ -45,7 +46,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "c";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            var startOfChapterNumber = input.IndexOfAny(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
+            var startOfChapterNumber = input.IndexOfAny(Numbers);
             var foundChapterNumber = startOfChapterNumber != -1;
             if (!foundChapterNumber)
             {
