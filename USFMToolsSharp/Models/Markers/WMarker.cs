@@ -19,7 +19,6 @@ namespace USFMToolsSharp.Models.Markers
             input = input.Trim();
             Attributes = new Dictionary<string, string>();
 
-            // TODO: This could probably be spans too
             string[] wordEntry = input.ToString().Split('|');
             Term = wordEntry[0];
 
