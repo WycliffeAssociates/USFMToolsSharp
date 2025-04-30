@@ -55,6 +55,8 @@ namespace USFMToolsSharp
                 output.Insert(marker);
             }
 
+            output.NumberOfTotalMarkersAtParse = markers.Count;
+
             return output;
         }
 

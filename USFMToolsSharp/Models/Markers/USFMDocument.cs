@@ -12,7 +12,8 @@ namespace USFMToolsSharp.Models.Markers
         }
 
         public override string Identifier => string.Empty;
-
+        
+        public int NumberOfTotalMarkersAtParse { get; set; }
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
         private static HashSet<Type> AllowedContentsStatic { get; } =
@@ -66,7 +67,6 @@ namespace USFMToolsSharp.Models.Markers
             {
                 Insert(i);
             }
-
         }
     }
 }

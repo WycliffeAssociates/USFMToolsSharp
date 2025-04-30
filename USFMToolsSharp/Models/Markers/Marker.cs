@@ -90,14 +90,13 @@ namespace USFMToolsSharp.Models.Markers
                     }
                 }
             }
-            var output = new List<Marker>();
 
             if (!found)
             {
-                return output;
+                return [];
             }
+            var output = new List<Marker>(parents.Count + 1) { target };
 
-            output.Add(target);
             output.AddRange(parents.Select(i => i.marker));
             output.Reverse();
             return output;
@@ -169,10 +168,7 @@ namespace USFMToolsSharp.Models.Markers
 
             foreach (var i in targets)
             {
-                if (!output.ContainsKey(i))
-                {
-                    output.Add(i, new List<Marker>());
-                }
+                output.TryAdd(i, []);
             }
 
             return output;
