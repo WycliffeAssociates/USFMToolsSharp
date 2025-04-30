@@ -27,13 +27,13 @@ namespace USFMToolsSharp.Models.Markers
             return input;
         }
 
-        public virtual bool TryInsert(Marker input)
+        public virtual bool TryInsert(Marker input, Type markerType = null)
         {
             if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
             {
                 return true;
             }
-            if (AllowedContents.Contains(input.GetType()))
+            if (AllowedContents.Contains(markerType ?? input.GetType()))
             {
                 Contents.Add(input);
                 return true;

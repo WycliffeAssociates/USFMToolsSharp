@@ -33,14 +33,14 @@ namespace USFMToolsSharp.Models.Markers
         };
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
 
-        public override bool TryInsert(Marker input)
+        public override bool TryInsert(Marker input, Type markerType = null)
         {
             if (input is VMarker && Contents.Any(m => m is VMarker))
             {
                 return false;
             }
 
-            return base.TryInsert(input);
+            return base.TryInsert(input, markerType);
         }
     }
 }

@@ -167,7 +167,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(PCMarker),
                     typeof(TableBlock)
                 };
-        public override bool TryInsert(Marker input)
+        public override bool TryInsert(Marker input, Type markerType = null)
         {
             if (input is VMarker)
             {
@@ -179,7 +179,7 @@ namespace USFMToolsSharp.Models.Markers
                 return false;
             }
 
-            return base.TryInsert(input);
+            return base.TryInsert(input, markerType);
         }
     }
 }
