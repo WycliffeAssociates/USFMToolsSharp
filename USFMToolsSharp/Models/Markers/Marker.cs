@@ -201,8 +201,10 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     output.Add(castedMarker);
                 }
-                foreach (var child in marker.Contents)
+
+                for (var index = marker.Contents.Count - 1; index >= 0; index--)
                 {
+                    var child = marker.Contents[index];
                     if (ignoredParents == null || !ignoredParents.Contains(child.GetType()))
                     {
                         stack.Push(child);
@@ -210,7 +212,6 @@ namespace USFMToolsSharp.Models.Markers
                 }
             }
 
-            output.Reverse();
             return output;
         }
 
