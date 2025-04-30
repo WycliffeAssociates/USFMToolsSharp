@@ -803,5 +803,33 @@ with a newline";
             Assert.AreEqual(footnote, result[textInFootnote][3]);
             Assert.AreEqual(footnoteText, result[textInFootnote][4]);
         }
+
+        [TestMethod]
+        public void VerifyNewlinesStopMarker()
+        {
+            var doc = parser.ParseFromString("\\c 1\n \\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is CMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+        }
+
+        [TestMethod]
+        public void TestElementsAfterIgnore()
+        {
+            var parser = new USFMParser(tagsToIgnore: ["s5"]);
+            var doc = parser.ParseFromString("\\s5\n\\c 1\n \\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is CMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+        }
+
+        [TestMethod]
+        public void TestBackToBackMarkers()
+        {
+            var doc = parser.ParseFromString("\\p\\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents.Count > 0);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+        }
     }
 }

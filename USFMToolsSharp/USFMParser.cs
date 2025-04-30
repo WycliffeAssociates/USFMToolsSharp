@@ -127,9 +127,9 @@ namespace USFMToolsSharp
                     if (inMarker)
                     {
                         endOfMarker = index;
-                        inMarker = false;
                         // Handle marker without content
                         AddMarkerToList(input[startOfMarker ..endOfMarker], ReadOnlySpan<char>.Empty, startOfMarker, output);
+                        startOfMarker = index +1;
                         index++;
                         continue;
                     }
@@ -179,7 +179,7 @@ namespace USFMToolsSharp
 
         private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
         {
-            if (hasIgnoredMarkers && IgnoredMarkers.Contains(marker.ToString()))
+            if (hasIgnoredMarkers && IgnoredMarkers.Contains(marker.Trim().ToString()))
             {
                 return;
             }
