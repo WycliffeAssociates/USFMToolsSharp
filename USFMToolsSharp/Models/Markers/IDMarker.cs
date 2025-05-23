@@ -8,10 +8,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string TextIdentifier;
         public override string Identifier => "id";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            TextIdentifier = input.Trim();
-            return string.Empty;
+            TextIdentifier = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

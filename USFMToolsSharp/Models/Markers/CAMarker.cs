@@ -12,10 +12,11 @@ namespace USFMToolsSharp.Models.Markers
         public string AltChapterNumber;
 
         public override string Identifier => "ca";
-        public override string PreProcess(string input)
+        
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AltChapterNumber = input.Trim();
-            return string.Empty;
+            AltChapterNumber = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

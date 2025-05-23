@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public string AltVerseNumber;
         
         public override string Identifier => "va";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            AltVerseNumber = input.Trim();
-            return string.Empty;
+            AltVerseNumber = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

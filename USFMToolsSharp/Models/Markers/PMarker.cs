@@ -7,11 +7,14 @@ namespace USFMToolsSharp.Models.Markers
     public class PMarker : Marker
     {
         public override string Identifier => "p";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.TrimStart();
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(VMarker),
             typeof(BMarker),
             typeof(SPMarker),

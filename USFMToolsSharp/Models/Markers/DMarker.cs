@@ -11,17 +11,19 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Description;
         public override string Identifier => "d";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Description = input.Trim();
-            return string.Empty;
+            Description = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new () {
             typeof(FMarker),
             typeof(FEndMarker),
             typeof(ITMarker),
             typeof(ITEndMarker),
             typeof(TextBlock),
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+        
     }
 }

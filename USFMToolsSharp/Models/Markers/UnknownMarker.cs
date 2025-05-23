@@ -10,10 +10,10 @@ namespace USFMToolsSharp.Models.Markers
         public string ParsedValue;
 
         public override string Identifier => string.Empty;
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            ParsedValue = input;
-            return string.Empty;
+            ParsedValue = input.ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

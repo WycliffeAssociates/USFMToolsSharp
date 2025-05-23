@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,16 +10,17 @@ namespace USFMToolsSharp
     /// <summary>
     /// Parses a USFM file into a Abstract Syntax Tree
     /// </summary>
-    public class USFMParser
+    public partial class USFMParser
     {
-        private readonly List<string> IgnoredTags;
+        private readonly HashSet<string> IgnoredMarkers;
         private readonly bool IgnoreUnknownMarkers;
-        private static Regex splitRegex = new Regex("\\\\([a-z0-9\\-]*\\**)([^\\\\]*)", RegexOptions.Singleline);
+        private readonly bool hasIgnoredMarkers;
 
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
         {
-            IgnoredTags = tagsToIgnore ?? new List<string>();
+            hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;
+            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore] : [];
             IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
@@ -37,32 +39,35 @@ namespace USFMToolsSharp
 
 
 
-            for (int markerIndex = 0; markerIndex < markers.Count; markerIndex++)
+            for (var markerIndex = 0; markerIndex < markers.Count; markerIndex++)
             {
-                Marker marker = markers[markerIndex];
+                var marker = markers[markerIndex];
                 if (marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
                     output.Insert(new TableBlock());
                 }
 
-                if(marker is QMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
+                if(marker is QMarker parsedMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
                 {
-                    ((QMarker)marker).IsPoetryBlock = true;
+                    parsedMarker.IsPoetryBlock = true;
                 }
                 
                 output.Insert(marker);
             }
 
+            output.NumberOfTotalMarkersAtParse = markers.Count;
+
             return output;
         }
 
         /// <summary>
-        /// Removes all the unessecary whitespace while preserving space between closing markers and opening markers
+        /// Removes all the unnecessary whitespace while preserving space between closing markers and opening markers
         /// </summary>
         /// <param name="input"></param>
-        private List<Marker> CleanWhitespace(List<Marker> input)
+        private static List<Marker> CleanWhitespace(List<Marker> input)
         {
-            var output = new List<Marker>();
+            // We're guessing that the majority of this isn't whitespace so start the output at the size of the input to prevent resizing
+            var output = new List<Marker>(input.Count);
             for(var index = 0; index < input.Count; index++)
             {
                 if (! (input[index] is TextBlock block && string.IsNullOrWhiteSpace(block.Text)))
@@ -84,7 +89,7 @@ namespace USFMToolsSharp
                 }
 
                 // If this isn't between and end marker and another marker then delete it
-                if(!(input[index - 1].Identifier.EndsWith("*") && !input[index + 1].Identifier.EndsWith("*")))
+                if(!(input[index - 1].Identifier.EndsWith('*') && !input[index + 1].Identifier.EndsWith('*')))
                 {
                     continue;
                 }
@@ -99,52 +104,120 @@ namespace USFMToolsSharp
         /// </summary>
         /// <param name="input">USFM String to tokenize</param>
         /// <returns>A List of Markers based upon the string</returns>
-        private List<Marker> TokenizeFromString(string input)
+        private List<Marker> TokenizeFromString(ReadOnlySpan<char> input)
         {
-            List<Marker> output = new List<Marker>();
-
-            foreach (Match match in splitRegex.Matches(input))
+            var output = new List<Marker>(input.Length / 10);
+            var index = 0;
+            var startOfMarker = 0;
+            var endOfMarker = 0;
+            var startOfContent = 0;
+            var endOfContent = 0;
+            var inMarker = false;
+            var inContent = false;
+            while (index < input.Length)
             {
-                if (IgnoredTags.Contains(match.Groups[1].Value))
+                if (input[index] == '\\')
                 {
+                    if (!inMarker && !inContent)
+                    {
+                        inMarker = true;
+                        startOfMarker = index + 1;
+                        index++;
+                        continue;
+                    }
+
+                    if (inMarker)
+                    {
+                        endOfMarker = index;
+                        // Handle marker without content
+                        AddMarkerToList(input[startOfMarker ..endOfMarker], ReadOnlySpan<char>.Empty, startOfMarker, output);
+                        startOfMarker = index +1;
+                        index++;
+                        continue;
+                    }
+                    
+                    if (inContent)
+                    {
+                        inContent = false;
+                        endOfContent = index;
+                        
+                        // Handle content here
+                        AddMarkerToList(input[startOfMarker ..endOfMarker], startOfContent == endOfContent ? ReadOnlySpan<char>.Empty : input[startOfContent..endOfContent], startOfMarker, output);
+                        inMarker = true;
+                        startOfMarker = index + 1;
+                        
+                        index++;
+                        continue;
+                    }
+                }
+
+                if (input[index] == ' ' && inMarker)
+                {
+                    endOfMarker = index;
+                    inMarker = false;
+                    inContent = true;
+                    startOfContent = index;
+                    index++;
                     continue;
                 }
-                ConvertToMarkerResult result = ConvertToMarker(match.Groups[1].Value, match.Groups[2].Value);
-                result.marker.Position = match.Index;
+                
+                index++;
+            }
+            if (inMarker)
+            {
+                endOfMarker = index;
+                // Handle marker without content
+                AddMarkerToList(input[startOfMarker ..endOfMarker], ReadOnlySpan<char>.Empty, startOfMarker, output);
+            }
+            else if (inContent)
+            {
+                endOfContent = index;
+                // Handle marker with content
+                AddMarkerToList(input[startOfMarker ..endOfMarker], startOfContent == endOfContent ? ReadOnlySpan<char>.Empty : input[startOfContent..endOfContent], startOfMarker, output);
+            }
 
-                // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though
-                if (result.marker is UnknownMarker unknownMarker)
+            return output;
+        }
+
+        private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
+        {
+            if (hasIgnoredMarkers && IgnoredMarkers.Contains(marker.Trim().ToString()))
+            {
+                return;
+            }
+            var result = ConvertToMarker(marker, content);
+            result.marker.Position = index;
+
+            // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though
+            if (result.marker is UnknownMarker unknownMarker)
+            {
+                if (IgnoreUnknownMarkers)
                 {
-                    if (IgnoreUnknownMarkers)
-                    {
-                        output.Add(new TextBlock(unknownMarker.ParsedValue));
-                    }
-                    else
-                    {
-                        output.Add(result.marker);
-                    }
+                    output.Add(new TextBlock(unknownMarker.ParsedValue));
                 }
                 else
                 {
                     output.Add(result.marker);
                 }
-
-                if (!string.IsNullOrEmpty(result.remainingText))
-                {
-                    output.Add(new TextBlock(result.remainingText));
-                }
+            }
+            else
+            {
+                output.Add(result.marker);
             }
 
-            return output;
+            if (!result.remainingText.IsEmpty)
+            {
+                output.Add(new TextBlock(result.remainingText.ToString()));
+            }
         }
-        private ConvertToMarkerResult ConvertToMarker(string identifier, string value)
+        private ConvertToMarkerResult ConvertToMarker(ReadOnlySpan<char> identifier, ReadOnlySpan<char> value)
         {
             Marker output = SelectMarker(identifier);
-            string tmp = output.PreProcess(value);
+            var tmp = output.PreProcess(value);
             return new ConvertToMarkerResult(output, tmp);
         }
 
-        private Marker SelectMarker(string identifier)
+        private Marker SelectMarker(ReadOnlySpan<char> identifier)
         {
             switch (identifier)
             {
@@ -545,7 +618,7 @@ namespace USFMToolsSharp
                     return new FIGEndMarker();
 
                 default:
-                    return new UnknownMarker() { ParsedIdentifier = identifier };
+                    return new UnknownMarker() { ParsedIdentifier = identifier.ToString() };
             }
         }
     }

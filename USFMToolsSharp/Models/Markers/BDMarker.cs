@@ -14,13 +14,17 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         public string Text;
         public override string Identifier => "bd";
-        public override string PreProcess(string input)
+        
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.Trim();
         }
-        public override List<Type> AllowedContents => new List<Type>()
+
+        private static HashSet<Type> AllowedTypesStatic = new()
         {
             typeof(TextBlock),
         };
+
+        public override HashSet<Type> AllowedContents => AllowedTypesStatic;
     }
 }

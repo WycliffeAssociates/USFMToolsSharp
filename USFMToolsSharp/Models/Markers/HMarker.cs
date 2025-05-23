@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public string HeaderText;
         public override string Identifier => "h";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            HeaderText = input.Trim();
-            return string.Empty;
+            HeaderText = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
         
     }

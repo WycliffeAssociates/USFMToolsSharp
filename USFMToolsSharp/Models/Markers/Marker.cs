@@ -14,29 +14,26 @@ namespace USFMToolsSharp.Models.Markers
         public List<Marker> Contents;
         public abstract string Identifier { get; }
         public int Position { get; set; }
-        public virtual List<Type> AllowedContents {
-            get {
-                return new List<Type>();
-            }
-        }
+        private static HashSet<Type> EmptyHashSet = new HashSet<Type>();
+        public virtual HashSet<Type> AllowedContents => EmptyHashSet;
 
         /// <summary>
         /// Pre-process the text contents before creating text elements inside of it
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public virtual string PreProcess(string input)
+        public virtual ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input;
         }
 
-        public virtual bool TryInsert(Marker input)
+        public virtual bool TryInsert(Marker input, Type markerType = null)
         {
             if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
             {
                 return true;
             }
-            if (AllowedContents.Contains(input.GetType()))
+            if (AllowedContents.Contains(markerType ?? input.GetType()))
             {
                 Contents.Add(input);
                 return true;
@@ -93,14 +90,13 @@ namespace USFMToolsSharp.Models.Markers
                     }
                 }
             }
-            var output = new List<Marker>();
 
             if (!found)
             {
-                return output;
+                return [];
             }
+            var output = new List<Marker>(parents.Count + 1) { target };
 
-            output.Add(target);
             output.AddRange(parents.Select(i => i.marker));
             output.Reverse();
             return output;
@@ -172,10 +168,7 @@ namespace USFMToolsSharp.Models.Markers
 
             foreach (var i in targets)
             {
-                if (!output.ContainsKey(i))
-                {
-                    output.Add(i, new List<Marker>());
-                }
+                output.TryAdd(i, []);
             }
 
             return output;
@@ -200,12 +193,14 @@ namespace USFMToolsSharp.Models.Markers
             while (stack.Count > 0)
             {
                 var marker = stack.Pop();
-                if (marker is T)
+                if (marker is T castedMarker)
                 {
-                    output.Add((T)marker);
+                    output.Add(castedMarker);
                 }
-                foreach (var child in marker.Contents)
+
+                for (var index = marker.Contents.Count - 1; index >= 0; index--)
                 {
+                    var child = marker.Contents[index];
                     if (ignoredParents == null || !ignoredParents.Contains(child.GetType()))
                     {
                         stack.Push(child);
@@ -213,7 +208,6 @@ namespace USFMToolsSharp.Models.Markers
                 }
             }
 
-            output.Reverse();
             return output;
         }
 

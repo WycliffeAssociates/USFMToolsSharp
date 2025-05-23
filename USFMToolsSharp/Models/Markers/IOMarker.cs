@@ -11,10 +11,11 @@ namespace USFMToolsSharp.Models.Markers
     {
         public int Depth = 1;
         public override string Identifier => "io";
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(TextBlock),
             typeof(IORMarker),
             typeof(IOREndMarker)
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

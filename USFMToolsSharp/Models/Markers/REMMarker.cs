@@ -9,10 +9,10 @@ namespace USFMToolsSharp.Models.Markers
         public string Comment;
         public override string Identifier => "rem";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Comment = input.Trim();
-            return string.Empty;
+            Comment = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

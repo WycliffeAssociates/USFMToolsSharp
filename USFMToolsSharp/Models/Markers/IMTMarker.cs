@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public int Weight = 1;
         public string IntroTitle;
         public override string Identifier => "imt";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            IntroTitle = input.Trim();
-            return string.Empty;
+            IntroTitle = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

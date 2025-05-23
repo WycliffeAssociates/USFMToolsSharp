@@ -273,6 +273,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("26", ((VMarker)(parser.ParseFromString("\\v 26 God said, \"Let us make man in our image, after our likeness. Let them have dominion over the fish of the sea, over the birds of the sky, over the livestock, over all the earth, and over every creeping thing that creeps on the earth.\" \\f + \\ft Some ancient copies have: \\fqa ... Over the livestock, over all the animals of the earth, and over every creeping thing that creeps on the earth \\fqa*  . \\f*").Contents[0])).VerseNumber);
             Assert.AreEqual("0", ((VMarker)parser.ParseFromString("\\v 0 Not in the Bible").Contents[0]).VerseNumber);
             Assert.AreEqual("1-2", ((VMarker)parser.ParseFromString("\\v 1-2 Not in the Bible").Contents[0]).VerseNumber);
+            Assert.AreEqual(1, ((VMarker)parser.ParseFromString("\\v 1-2 Not in the Bible").Contents[0]).StartingVerse);
+            Assert.AreEqual(2, ((VMarker)parser.ParseFromString("\\v 1-2 Not in the Bible").Contents[0]).EndingVerse);
 
             // References - Quoted book title - Parallel passage reference
             Assert.AreEqual("(Luk. 3:23 - 38)", ((TextBlock)parser.ParseFromString("\\s Silsilah Yesus Kristus \\r (Luk. 3:23 - 38)").Contents[0].Contents[0].Contents[0]).Text);
@@ -288,6 +290,9 @@ namespace USFMToolsSharpTest
             // Transliterated
             Assert.AreEqual("Hades", ((TextBlock)parser.ParseFromString("\\f + \\fr 10:15 \\fk dunia orang mati \\ft Dalam bahasa Yunani adalah \\tl Hades\\tl* \\ft , tempat orang setelah meninggal.\\f*").Contents[0].Contents[2].Contents[1].Contents[0]).Text);
             Assert.AreEqual("TEKEL", ((TextBlock)parser.ParseFromString("\\v 27 \\tl TEKEL\\tl* :").Contents[0].Contents[0].Contents[0]).Text);
+            // Test with newline after the verse number
+            Assert.AreEqual("1", ((VMarker)parser.ParseFromString("\\v 1\n").Contents[0]).VerseNumber);
+            Assert.AreEqual("1", ((VMarker)parser.ParseFromString("\\v 1\"").Contents[0]).VerseNumber);
         }
         [TestMethod]
         public void TestTableParse()
@@ -797,6 +802,34 @@ with a newline";
             Assert.AreEqual(verse, result[textInFootnote][2]);
             Assert.AreEqual(footnote, result[textInFootnote][3]);
             Assert.AreEqual(footnoteText, result[textInFootnote][4]);
+        }
+
+        [TestMethod]
+        public void VerifyNewlinesStopMarker()
+        {
+            var doc = parser.ParseFromString("\\c 1\n \\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is CMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+        }
+
+        [TestMethod]
+        public void TestElementsAfterIgnore()
+        {
+            var parser = new USFMParser(tagsToIgnore: ["s5"]);
+            var doc = parser.ParseFromString("\\s5\n\\c 1\n \\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is CMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+        }
+
+        [TestMethod]
+        public void TestBackToBackMarkers()
+        {
+            var doc = parser.ParseFromString("\\p\\v 1 In the beginning ");
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents.Count > 0);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
     /// </summary>
     public class CMarker : Marker
     {
-        private static Regex regex = new Regex(" *(\\d*) *(.*)", RegexOptions.Singleline);
+        private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
         public int Number;
         public string PublishedChapterMarker
         {
@@ -44,28 +44,29 @@ namespace USFMToolsSharp.Models.Markers
             }
         }
         public override string Identifier => "c";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            var match = regex.Match(input);
-            if (match.Success)
+            var startOfChapterNumber = input.IndexOfAny(Numbers);
+            var foundChapterNumber = startOfChapterNumber != -1;
+            if (!foundChapterNumber)
             {
-                if (string.IsNullOrWhiteSpace(match.Groups[1].Value))
-                {
-                    Number = 0;
-                }
-                else
-                {
-                    Number = int.Parse(match.Groups[1].Value);
-                }
-                if (string.IsNullOrWhiteSpace(match.Groups[2].Value))
-                {
-                    return string.Empty;
-                }
-                return match.Groups[2].Value.TrimEnd();
+                Number = 0;
+                return input.Trim();
             }
-            return string.Empty;
+            var firstBlankAfterNumber = input[startOfChapterNumber..].IndexOf(' ') + startOfChapterNumber;
+            if (firstBlankAfterNumber <= 0)
+            {
+                firstBlankAfterNumber = input.Length;
+            }
+
+            Number = int.Parse(input[startOfChapterNumber..firstBlankAfterNumber]);
+
+            return input[firstBlankAfterNumber..].Trim();
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(MMarker),
             typeof(MSMarker),
             typeof(SMarker),

@@ -11,10 +11,10 @@ namespace USFMToolsSharp.Models.Markers
     {
         public string Description;
         public override string Identifier => "cd";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Description = input;
-            return string.Empty;
+            Description = input.ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

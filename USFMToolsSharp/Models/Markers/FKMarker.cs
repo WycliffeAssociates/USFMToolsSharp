@@ -13,10 +13,10 @@ namespace USFMToolsSharp.Models.Markers
         public string FootNoteKeyword;
 
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            FootNoteKeyword = input.Trim();
-            return string.Empty;
+            FootNoteKeyword = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

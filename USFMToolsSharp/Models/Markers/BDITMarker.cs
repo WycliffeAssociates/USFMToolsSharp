@@ -10,10 +10,12 @@ namespace USFMToolsSharp.Models.Markers
     public class BDITMarker : Marker
     {
         public override string Identifier => "bdit";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.Trim();
         }
-        public override List<Type> AllowedContents => new List<Type>() { typeof(TextBlock) };
+        private static HashSet<Type> AllowedContentsStatic { get; } = [typeof(TextBlock)];
+
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

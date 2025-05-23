@@ -11,44 +11,43 @@ namespace USFMToolsSharp.Models.Markers
             Contents = new List<Marker>();
         }
 
-        public override string Identifier => "";
+        public override string Identifier => string.Empty;
+        
+        public int NumberOfTotalMarkersAtParse { get; set; }
 
-        public override List<Type> AllowedContents
-        {
-            get
-            {
-                return new List<Type>(){
-                    typeof(HMarker),
-                    typeof(IDEMarker),
-                    typeof(IDMarker),
-                    typeof(IBMarker),
-                    typeof(IQMarker),
-                    typeof(ILIMarker),
-                    typeof(IOTMarker),
-                    typeof(IOMarker),
-                    typeof(STSMarker),
-                    typeof(USFMMarker),
-                    typeof(TOC1Marker),
-                    typeof(TOC2Marker),
-                    typeof(TOC3Marker),
-                    typeof(TOCA1Marker),
-                    typeof(TOCA2Marker),
-                    typeof(TOCA3Marker),
-                    typeof(ISMarker),
-                    typeof(MTMarker),
-                    typeof(IMTMarker),
-                    typeof(IPMarker),
-                    typeof(IPIMarker),
-                    typeof(IMMarker),
-                    typeof(IMIMarker),
-                    typeof(IPQMarker),
-                    typeof(IMQMarker),
-                    typeof(IPRMarker),
-                    typeof(CLMarker),
-                    typeof(CMarker)
-                };
-            }
-        }
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
+        private static HashSet<Type> AllowedContentsStatic { get; } =
+            new(){
+                typeof(HMarker),
+                typeof(IDEMarker),
+                typeof(IDMarker),
+                typeof(IBMarker),
+                typeof(IQMarker),
+                typeof(ILIMarker),
+                typeof(IOTMarker),
+                typeof(IOMarker),
+                typeof(STSMarker),
+                typeof(USFMMarker),
+                typeof(TOC1Marker),
+                typeof(TOC2Marker),
+                typeof(TOC3Marker),
+                typeof(TOCA1Marker),
+                typeof(TOCA2Marker),
+                typeof(TOCA3Marker),
+                typeof(ISMarker),
+                typeof(MTMarker),
+                typeof(IMTMarker),
+                typeof(IPMarker),
+                typeof(IPIMarker),
+                typeof(IMMarker),
+                typeof(IMIMarker),
+                typeof(IPQMarker),
+                typeof(IMQMarker),
+                typeof(IPRMarker),
+                typeof(CLMarker),
+                typeof(CMarker)
+            };
+
         public void Insert(Marker input)
         {
             if (!TryInsert(input))
@@ -68,7 +67,6 @@ namespace USFMToolsSharp.Models.Markers
             {
                 Insert(i);
             }
-
         }
     }
 }

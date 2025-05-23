@@ -12,10 +12,10 @@ namespace USFMToolsSharp.Models.Markers
         public string Encoding;
         public override string Identifier => "ide";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            Encoding = input.Trim();
-            return string.Empty;
+            Encoding = input.Trim().ToString();
+            return ReadOnlySpan<char>.Empty;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -20,11 +21,13 @@ namespace USFMToolsSharp.Models.Markers
 
         public override string Identifier => "fig";
 
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
+            // TODO: This can probably be done with a span so we can come back to it later
             input = input.Trim();
+            var split = input.ToString().Split('|');
 
-            string[] wordEntry = input.Split('|');
+            string[] wordEntry = split;
             if (wordEntry.Length > 0)
             {
                 Description = wordEntry[0].Trim();
@@ -56,7 +59,7 @@ namespace USFMToolsSharp.Models.Markers
 
 
             
-            string[] contentArr = input.Split('|');
+            string[] contentArr = split;
             if (contentArr.Length > 0 && contentArr.Length <= 2)
             {
                 Caption = contentArr[0].Trim();
@@ -93,7 +96,7 @@ namespace USFMToolsSharp.Models.Markers
 
             
 
-            return string.Empty;
+            return ReadOnlySpan<char>.Empty;
             
         }
 

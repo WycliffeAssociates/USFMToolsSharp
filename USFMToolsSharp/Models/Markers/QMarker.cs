@@ -14,11 +14,11 @@ namespace USFMToolsSharp.Models.Markers
         public string Text;
         public bool IsPoetryBlock;
         public override string Identifier => "q";
-        public override string PreProcess(string input)
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
             return input.TrimStart();
         }
-        public override List<Type> AllowedContents => new List<Type>() {
+        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
             typeof(BMarker),
             typeof(QSMarker),
             typeof(QSEndMarker),
@@ -31,15 +31,16 @@ namespace USFMToolsSharp.Models.Markers
             typeof(WEndMarker),
             typeof(VMarker),
         };
+        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
 
-        public override bool TryInsert(Marker input)
+        public override bool TryInsert(Marker input, Type markerType = null)
         {
             if (input is VMarker && Contents.Any(m => m is VMarker))
             {
                 return false;
             }
 
-            return base.TryInsert(input);
+            return base.TryInsert(input, markerType);
         }
     }
 }
