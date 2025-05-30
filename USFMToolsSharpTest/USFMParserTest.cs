@@ -831,5 +831,24 @@ with a newline";
             Assert.IsTrue(doc.Contents[0].Contents.Count > 0);
             Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
         }
+
+        [TestMethod]
+        public void TestTrailingCarriageReturnNewline()
+        {
+
+        var TestUSFMWithMissingTOC = 
+                    @"\id GEN
+        \c 1
+        \p
+        \v 1 In the beginning God created the heavens and the earth.";
+            var doc = parser.ParseFromString(TestUSFMWithMissingTOC);
+            Assert.IsTrue(doc.Contents[1] is CMarker);
+            Assert.IsTrue(doc.Contents[1].Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0] is VMarker);
+            Assert.AreEqual(((CMarker)doc.Contents[1]).Number, 1);
+            Assert.AreEqual( 1, ((VMarker)doc.Contents[1].Contents[0].Contents[0]).StartingVerse);
+            Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[1].Contents[0].Contents[0].Contents[0]).Text);
+        }
     }
 }

@@ -185,7 +185,7 @@ namespace USFMToolsSharp
             {
                 return;
             }
-            var result = ConvertToMarker(marker, content);
+            var result = ConvertToMarker(marker.Trim(), content);
             result.marker.Position = index;
 
             // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though
