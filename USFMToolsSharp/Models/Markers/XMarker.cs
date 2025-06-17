@@ -21,6 +21,7 @@ namespace USFMToolsSharp.Models.Markers
         {
             typeof(XOMarker),
             typeof(XTMarker),
+            typeof(XTEndMarker),
             typeof(XQMarker),
             typeof(TextBlock),
         };
