@@ -850,5 +850,18 @@ with a newline";
             Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0].Contents[0] is TextBlock);
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[1].Contents[0].Contents[0].Contents[0]).Text);
         }
+
+        [TestMethod]
+        public void TestTrailingContentAfterFootnote()
+        {
+            var doc = parser.ParseFromString(
+                @"\v 1 verse content \f + \ft footnote text \fqa Ebiasaph \fqa* in 1 Chronicles 9:19. \f*.");
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.IsTrue(doc.Contents[0].Contents[1] is FMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[2] is FEndMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[3] is TextBlock);
+            Assert.AreEqual(".", ((TextBlock)doc.Contents[0].Contents[3]).Text);
+        }
     }
 }
