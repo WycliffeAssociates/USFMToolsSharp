@@ -873,5 +873,20 @@ with a newline";
             Assert.IsTrue(doc.Contents[1] is BDEndMarker);
             Assert.AreEqual(2, doc.Contents.Count);
         }
+
+        [TestMethod]
+        public void TestNewlineEndsMarker()
+        {
+            // Test that unknown markers are ignored when ignoreUnknownMarkers is set to true
+            parser = new USFMParser(new List<string> { "s5" }, true);
+            var content = @"
+\p
+This next question is answered the same way in all the churches of God's people.";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("This next question is answered the same way in all the churches of God's people.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
+
     }
 }

@@ -151,7 +151,7 @@ namespace USFMToolsSharp
                     }
                 }
 
-                if ((input[index] == ' ' || input[index] == '*') && inMarker)
+                if ((input[index] == ' ' || input[index] == '\n' || input[index] == '*') && inMarker)
                 {
                     endOfMarker = index;
                     bool isEndMarker = input[index] == '*';
