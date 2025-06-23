@@ -863,5 +863,15 @@ with a newline";
             Assert.IsTrue(doc.Contents[0].Contents[3] is TextBlock);
             Assert.AreEqual(".", ((TextBlock)doc.Contents[0].Contents[3]).Text);
         }
+
+        [TestMethod]
+        public void TestEndMarkerAtEndOfString()
+        {
+            var doc = parser.ParseFromString(
+                @"\bd Bold text \bd*");
+            Assert.IsTrue(doc.Contents[0] is BDMarker);
+            Assert.IsTrue(doc.Contents[1] is BDEndMarker);
+            Assert.AreEqual(2, doc.Contents.Count);
+        }
     }
 }

@@ -156,15 +156,14 @@ namespace USFMToolsSharp
                     endOfMarker = index;
                     bool isEndMarker = input[index] == '*';
                     inMarker = false;
-                    inContent = !isEndMarker;
-                    startOfContent = index;
                     // If it's an end marker, skip the '*'
                     if (isEndMarker)
                     {
-                        // Add the marker, including the '*'
-                        AddMarkerToList(input[startOfMarker .. (endOfMarker + 1)], ReadOnlySpan<char>.Empty, startOfMarker, output);
+                        endOfMarker++;
+                        index++;
                     }
-                    index++;
+                    startOfContent = index;
+                    inContent = true;
                     continue;
                 }
                 
