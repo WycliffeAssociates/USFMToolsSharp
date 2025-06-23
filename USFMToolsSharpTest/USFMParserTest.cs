@@ -888,5 +888,15 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual("This next question is answered the same way in all the churches of God's people.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
         }
 
+        [TestMethod]
+        public void TestOtherSymbolEndsMarker()
+        {
+            var content = @"\p(this is text)";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("(this is text)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
+
     }
 }

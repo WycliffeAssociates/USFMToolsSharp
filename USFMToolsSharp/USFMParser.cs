@@ -151,7 +151,7 @@ namespace USFMToolsSharp
                     }
                 }
 
-                if ((input[index] == ' ' || input[index] == '\n' || input[index] == '*') && inMarker)
+                if (inMarker && !IsValidMarkerCharacter(input[index]))
                 {
                     endOfMarker = index;
                     bool isEndMarker = input[index] == '*';
@@ -183,6 +183,10 @@ namespace USFMToolsSharp
             }
 
             return output;
+        }
+        private bool IsValidMarkerCharacter(char c)
+        {
+            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
         }
 
         private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
