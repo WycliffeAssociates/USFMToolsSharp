@@ -909,5 +909,22 @@ This next question is answered the same way in all the churches of God's people.
             Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
             Assert.AreEqual("This is text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
         }
+
+        [TestMethod]
+        public void TestIdeographicSpaceRetentionInVerses()
+        {
+            var ideographicSpace = '\u3000'; // Ideographic space character
+            var content = $"\\v 1 This is text{ideographicSpace}with an ideographic space.";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual($"This is text{ideographicSpace}with an ideographic space.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            content = @$"\v 1 {ideographicSpace}This is more text";
+            doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual($"{ideographicSpace}This is more text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
     }
 }
