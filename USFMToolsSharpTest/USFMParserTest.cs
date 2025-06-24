@@ -898,5 +898,15 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual("(this is text)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
         }
 
+        [TestMethod]
+        [TestCategory("Permissive")]
+        public void TestPermissiveMarkerEndingWithNumber()
+        {
+            var content = @"\q1This is text";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is QMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("This is text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
     }
 }

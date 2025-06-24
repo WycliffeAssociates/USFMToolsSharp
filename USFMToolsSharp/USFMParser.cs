@@ -155,9 +155,10 @@ namespace USFMToolsSharp
                 {
                     endOfMarker = index;
                     bool isEndMarker = input[index] == '*';
+                    bool markerEndsWithNumber = char.IsNumber(input[index]);
                     inMarker = false;
                     // If it's an end marker, skip the '*'
-                    if (isEndMarker)
+                    if (isEndMarker || markerEndsWithNumber)
                     {
                         endOfMarker++;
                         index++;
@@ -186,7 +187,7 @@ namespace USFMToolsSharp
         }
         private bool IsValidMarkerCharacter(char c)
         {
-            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
+            return char.IsLetter(c) || c == '-';
         }
 
         private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
