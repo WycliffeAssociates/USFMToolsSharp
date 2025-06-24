@@ -889,6 +889,7 @@ This next question is answered the same way in all the churches of God's people.
         }
 
         [TestMethod]
+        [TestCategory("Permissive")]
         public void TestOtherSymbolEndsMarker()
         {
             var content = @"\p(this is text)";
