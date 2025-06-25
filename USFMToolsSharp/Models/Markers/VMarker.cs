@@ -61,7 +61,7 @@ namespace USFMToolsSharp.Models.Markers
                 StartingVerse = int.Parse(verseNumberSpan);
                 EndingVerse = StartingVerse;
             }
-            return input[firstNonNumericAfterNumber..].TrimStart();
+            return input[firstNonNumericAfterNumber..].TrimStart(' ');
         }
 
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;

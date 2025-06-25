@@ -850,5 +850,81 @@ with a newline";
             Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0].Contents[0] is TextBlock);
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[1].Contents[0].Contents[0].Contents[0]).Text);
         }
+
+        [TestMethod]
+        public void TestTrailingContentAfterFootnote()
+        {
+            var doc = parser.ParseFromString(
+                @"\v 1 verse content \f + \ft footnote text \fqa Ebiasaph \fqa* in 1 Chronicles 9:19. \f*.");
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.IsTrue(doc.Contents[0].Contents[1] is FMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[2] is FEndMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[3] is TextBlock);
+            Assert.AreEqual(".", ((TextBlock)doc.Contents[0].Contents[3]).Text);
+        }
+
+        [TestMethod]
+        public void TestEndMarkerAtEndOfString()
+        {
+            var doc = parser.ParseFromString(
+                @"\bd Bold text \bd*");
+            Assert.IsTrue(doc.Contents[0] is BDMarker);
+            Assert.IsTrue(doc.Contents[1] is BDEndMarker);
+            Assert.AreEqual(2, doc.Contents.Count);
+        }
+
+        [TestMethod]
+        public void TestNewlineEndsMarker()
+        {
+            // Test that unknown markers are ignored when ignoreUnknownMarkers is set to true
+            parser = new USFMParser(new List<string> { "s5" }, true);
+            var content = @"
+\p
+This next question is answered the same way in all the churches of God's people.";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("This next question is answered the same way in all the churches of God's people.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
+
+        [TestMethod]
+        [TestCategory("Permissive")]
+        public void TestOtherSymbolEndsMarker()
+        {
+            var content = @"\p(this is text)";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is PMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("(this is text)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
+
+        [TestMethod]
+        [TestCategory("Permissive")]
+        public void TestPermissiveMarkerEndingWithNumber()
+        {
+            var content = @"\q1This is text";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is QMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual("This is text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
+
+        [TestMethod]
+        public void TestIdeographicSpaceRetentionInVerses()
+        {
+            var ideographicSpace = '\u3000'; // Ideographic space character
+            var content = $"\\v 1 This is text{ideographicSpace}with an ideographic space.";
+            var doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual($"This is text{ideographicSpace}with an ideographic space.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+
+            content = @$"\v 1 {ideographicSpace}This is more text";
+            doc = parser.ParseFromString(content);
+            Assert.IsTrue(doc.Contents[0] is VMarker);
+            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            Assert.AreEqual($"{ideographicSpace}This is more text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+        }
     }
 }
