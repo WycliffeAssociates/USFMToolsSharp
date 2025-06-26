@@ -34,10 +34,13 @@ namespace USFMToolsSharpTest
             USFMDocument doc = parser.ParseFromString("\\v 1 In the beginning \\bd God \\bd*");
             Assert.AreEqual(1, doc.Contents.Count);
             VMarker vm = (VMarker)doc.Contents[0];
-            Assert.AreEqual(1, vm.Contents.Count);
+            Assert.AreEqual(2, vm.Contents.Count);
             TextBlock tb = (TextBlock)vm.Contents[0];
             Assert.AreEqual(0, tb.Contents.Count);
             Assert.AreEqual("In the beginning ", tb.Text);
+            tb = (TextBlock)vm.Contents[1];
+            Assert.AreEqual("God ", tb.Text);
+            
         }
 
         [TestMethod]
