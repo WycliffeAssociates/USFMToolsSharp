@@ -194,6 +194,10 @@ namespace USFMToolsSharp
         {
             if (hasIgnoredMarkers && IgnoredMarkers.Contains(marker.Trim().ToString()))
             {
+                if (!content.IsEmpty)
+                {
+                    output.Add(new TextBlock(content.TrimStart(' ').ToString()));
+                }
                 return;
             }
             var result = ConvertToMarker(marker.Trim(), content);
