@@ -163,6 +163,7 @@ namespace USFMToolsSharp.Models.Markers
                     typeof(PROEndMarker),
                     typeof(REMMarker),
                     typeof(PMarker),
+                    typeof(PMMarker),
                     typeof(LIMarker),
                     typeof(PCMarker),
                     typeof(TableBlock)

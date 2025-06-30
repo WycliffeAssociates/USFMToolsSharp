@@ -392,6 +392,8 @@ namespace USFMToolsSharp
                     return new FMarker();
                 case "fp":
                     return new FPMarker();
+                case "fl":
+                    return new FLMarker();
                 case "qa":
                     return new QAMarker();
                 case "nb":
@@ -562,6 +564,8 @@ namespace USFMToolsSharp
                     return new ORDMarker();
                 case "ord*":
                     return new ORDEndMarker();
+                case "pm":
+                    return new PMMarker();
                 case "pmc":
                     return new PMCMarker();
                 case "pmo":

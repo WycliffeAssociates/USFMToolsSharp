@@ -46,6 +46,7 @@ namespace USFMToolsSharp.Models.Markers
             typeof(BKEndMarker),
             typeof(BDMarker),
             typeof(BDEndMarker),
+            typeof(FLMarker),
         };
         public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
