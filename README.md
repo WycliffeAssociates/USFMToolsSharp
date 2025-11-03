@@ -20,20 +20,59 @@ higher are the bare minimum.
 
 # Building
 
-With Visual Studio just build the solution. With the .net core tooling use `dotnet build`
+## From Source
+
+To build USFMToolsSharp from source:
+
+```bash
+# Clone the repository
+git clone https://github.com/WycliffeAssociates/USFMToolsSharp.git
+cd USFMToolsSharp
+
+# Build using .NET CLI
+dotnet build
+
+# Run tests
+dotnet test
+```
+
+Or open `USFMToolsSharp.sln` in Visual Studio and build the solution.
 
 # Contributing
 
-Yes please! A couple things would be very helpful
+We welcome contributions! Here are some ways you can help:
 
-- Testing: Because I can't test every single possible USFM document in existance. If you find something that doesn't look right in the parsing or rendering please submit an issue.
-- Adding support for other markers to the parser. There are still plenty of things in the USFM spec that aren't implemented.
-- Adding support for other markers to the HTML renderer
-- Adding other renderers (LaTeX, PDF, EPUB, JSON, etc.). Some of those renderers might not be possible in .net standard and if that is the case we'll just need to create another repo to contain the renderer
+- **Testing**: Test with various USFM documents and report any parsing or rendering issues
+- **Marker Support**: Add support for additional USFM markers to the parser
+- **Documentation**: Improve examples and documentation
+- **Renderers**: Create new renderers (LaTeX, PDF, EPUB, etc.) or enhance existing ones
+
+Please submit issues for bugs or feature requests, and pull requests for contributions.
 
 # Usage
 
 USFMToolsSharp provides a parser and document model for working with USFM (Unified Standard Format Markers) content. Below are detailed examples to help you get started.
+
+## Installation
+
+Install the package from NuGet:
+
+**.NET CLI**
+```bash
+dotnet add package USFMToolsSharp
+```
+
+**Package Manager Console**
+```powershell
+Install-Package USFMToolsSharp
+```
+
+**PackageReference**
+```xml
+<PackageReference Include="USFMToolsSharp" Version="*" />
+```
+
+Or visit the [NuGet package page](https://www.nuget.org/packages/USFMToolsSharp/).
 
 ## Quick Start
 
@@ -175,146 +214,11 @@ document1.Insert(marker);
 document1.InsertMultiple(listOfMarkers);
 ```
 
-## Practical Examples
-
-### Example 1: Extract All Verse Text from a Chapter
-
-```csharp
-string usfm = File.ReadAllText("bible-book.usfm");
-USFMParser parser = new USFMParser();
-USFMDocument document = parser.ParseFromString(usfm);
-
-// Get chapter 1
-var chapter1 = document.GetChildMarkers<CMarker>()
-    .FirstOrDefault(c => c.Number == 1);
-
-if (chapter1 != null)
-{
-    var verses = chapter1.GetChildMarkers<VMarker>();
-    foreach (var verse in verses)
-    {
-        var textBlocks = verse.Contents.OfType<TextBlock>();
-        string text = string.Join("", textBlocks.Select(tb => tb.Text));
-        Console.WriteLine($"Verse {verse.VerseNumber}. {text.Trim()}");
-    }
-}
-```
-
-### Example 2: Generate a Table of Contents
-
-```csharp
-USFMDocument document = parser.ParseFromString(usfmContent);
-
-// Get book information
-var idMarker = document.GetChildMarkers<IDMarker>().FirstOrDefault();
-var toc1 = document.GetChildMarkers<TOC1Marker>().FirstOrDefault();
-var toc2 = document.GetChildMarkers<TOC2Marker>().FirstOrDefault();
-var toc3 = document.GetChildMarkers<TOC3Marker>().FirstOrDefault();
-
-Console.WriteLine($"Book: {toc1?.LongTableOfContentsText ?? idMarker?.TextIdentifier}");
-Console.WriteLine($"Short: {toc2?.ShortTableOfContentsText}");
-Console.WriteLine($"Abbr: {toc3?.BookAbbreviation}");
-
-// List all chapters
-var chapters = document.GetChildMarkers<CMarker>();
-Console.WriteLine($"\nChapters: {chapters.Count}");
-```
-
-### Example 3: Find and Process Introduction Material
-
-```csharp
-// Introduction markers often come before chapter 1
-var introMarkers = new List<string>();
-
-// \imt - Introduction major title
-var introTitles = document.GetChildMarkers<IMTMarker>();
-foreach (var title in introTitles)
-{
-    Console.WriteLine($"Intro Title: {title.IntroTitle}");
-}
-
-// \ip - Introduction paragraph
-var introParagraphs = document.GetChildMarkers<IPMarker>();
-
-// \is - Introduction section heading
-var introSections = document.GetChildMarkers<ISMarker>();
-```
-
-### Example 4: Working with Footnotes
-
-```csharp
-var verses = document.GetChildMarkers<VMarker>();
-
-foreach (var verse in verses)
-{
-    var footnotes = verse.GetChildMarkers<FMarker>();
-    
-    foreach (var footnote in footnotes)
-    {
-        // Get footnote reference
-        var refMarker = footnote.Contents.OfType<FRMarker>().FirstOrDefault();
-        
-        // Get footnote text
-        var textMarker = footnote.Contents.OfType<FTMarker>().FirstOrDefault();
-        
-        Console.WriteLine($"Verse {verse.VerseNumber} - Footnote: {refMarker?.VerseReference}");
-    }
-}
-```
-
-### Example 5: Custom Processing with Marker Traversal
-
-```csharp
-// Traverse all markers in the document
-void ProcessMarkers(List<Marker> markers, int depth = 0)
-{
-    foreach (var marker in markers)
-    {
-        string indent = new string(' ', depth * 2);
-        Console.WriteLine($"{indent}{marker.GetType().Name} at position {marker.Position}");
-        
-        if (marker.Contents.Count > 0)
-        {
-            ProcessMarkers(marker.Contents, depth + 1);
-        }
-    }
-}
-
-ProcessMarkers(document.Contents);
-```
-
-## Error Handling
-
-The parser is designed to be robust, but you should handle potential issues:
-
-```csharp
-try
-{
-    string usfmContent = File.ReadAllText("bible-book.usfm");
-    USFMParser parser = new USFMParser();
-    USFMDocument document = parser.ParseFromString(usfmContent);
-    
-    // Check if we got any content
-    if (document.Contents.Count == 0)
-    {
-        Console.WriteLine("Warning: Document has no content");
-    }
-}
-catch (FileNotFoundException)
-{
-    Console.WriteLine("USFM file not found");
-}
-catch (Exception ex)
-{
-    Console.WriteLine($"Error parsing USFM: {ex.Message}");
-}
-```
-
 ## Performance Tips
 
 - **Reuse Parser Instances**: Create one parser and reuse it for multiple documents
 - **Use Specific Queries**: Use `GetChildMarkers<T>()` instead of traversing all markers
-- **Lazy Processing**: Process markers on-demand rather than loading everything into memory at once
+- **Batch Hierarchy Queries**: If you need to get the hierarchy to multiple markers, use `GetHierachyToMultipleMarkers()` instead of calling `GetHierarchyToMarker()` in a loop
 
 # Renderers
 
@@ -327,3 +231,32 @@ For more information, please look into the [repository](https://github.com/Wycli
 ## JSONRenderer
 For more information, please look into the [repository](https://github.com/WycliffeAssociates/USFMToolsSharp.Renderers.JSON). 
 > JSON Renderer for USFM
+
+# Practical Examples
+
+## Extract Verse Text
+
+```csharp
+var chapter1 = document.GetChildMarkers<CMarker>().FirstOrDefault(c => c.Number == 1);
+var verses = chapter1?.GetChildMarkers<VMarker>();
+foreach (var verse in verses)
+{
+    var text = string.Join("", verse.Contents.OfType<TextBlock>().Select(t => t.Text));
+    Console.WriteLine($"{verse.VerseNumber}. {text.Trim()}");
+}
+```
+
+## Process Footnotes
+
+```csharp
+var verses = document.GetChildMarkers<VMarker>();
+foreach (var verse in verses)
+{
+    var footnotes = verse.GetChildMarkers<FMarker>();
+    foreach (var footnote in footnotes)
+    {
+        var refMarker = footnote.Contents.OfType<FRMarker>().FirstOrDefault();
+        Console.WriteLine($"Verse {verse.VerseNumber} has footnote: {refMarker?.VerseReference}");
+    }
+}
+```
