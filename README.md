@@ -15,8 +15,9 @@ You can install this package from nuget https://www.nuget.org/packages/USFMTools
 
 # Requirements
 
-We targeted .net standard 1.0 so .net core 1.0, .net framework 4.5, and mono 4.6 and
-higher are the bare minimum.
+In the past e targeted .net standard 1.0 to allow use in .net framework. We've since moved past 
+that to .net 8 since the performance increases of moving to that are rather significant.
+
 
 # Building
 
