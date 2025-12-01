@@ -18,20 +18,6 @@ namespace USFMToolsSharp.Models.Markers
         {
             return input.TrimStart();
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
-            typeof(BMarker),
-            typeof(QSMarker),
-            typeof(QSEndMarker),
-            typeof(TextBlock),
-            typeof(FMarker),
-            typeof(FEndMarker),
-            typeof(TLMarker),
-            typeof(TLEndMarker),
-            typeof(WMarker),
-            typeof(WEndMarker),
-            typeof(VMarker),
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
 
         public override bool TryInsert(Marker input, Type markerType = null)
         {

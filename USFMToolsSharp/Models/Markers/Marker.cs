@@ -27,9 +27,10 @@ namespace USFMToolsSharp.Models.Markers
             return input;
         }
 
-        public virtual bool TryInsert(Marker input, Type markerType = null)
+        public virtual bool TryInsert(Marker input, Type? markerType = null)
         {
-            if(Contents.Count > 0 && Contents[Contents.Count - 1].TryInsert(input))
+            if (markerType == null) throw new ArgumentNullException(nameof(markerType));
+            if(Contents.Count > 0 && Contents[^1].TryInsert(input))
             {
                 return true;
             }
@@ -46,7 +47,7 @@ namespace USFMToolsSharp.Models.Markers
             types.Add(GetType());
             if (Contents.Count > 0 )
             {
-                types.AddRange(Contents[Contents.Count - 1].GetTypesPathToLastMarker());
+                types.AddRange(Contents[^1].GetTypesPathToLastMarker());
             }
             return types;
         }
@@ -84,7 +85,7 @@ namespace USFMToolsSharp.Models.Markers
                     // We're ascending
                     var tmp = parents.Pop();
                     // keep moving up the parent stack until we aren't the last in a parent
-                    while(tmp.isLastInParent == true)
+                    while(tmp.isLastInParent)
                     {
                         tmp = parents.Pop();
                     }
@@ -119,7 +120,7 @@ namespace USFMToolsSharp.Models.Markers
                 return targets.ToDictionary(i => i, i => new List<Marker>());
             }
             
-            Dictionary<Marker, List<Marker>> output = new Dictionary<Marker, List<Marker>>(targets.Count);
+            var output = new Dictionary<Marker, List<Marker>>(targets.Count);
             var parents = new Stack<(Marker marker, bool isLastInParent)>();
             int childMarkerContentsCount;
 
@@ -159,7 +160,7 @@ namespace USFMToolsSharp.Models.Markers
                     // We're ascending
                     var tmp = parents.Pop();
                     // keep moving up the parent stack until we aren't the last in a parent
-                    while(tmp.isLastInParent == true)
+                    while(tmp.isLastInParent)
                     {
                         tmp = parents.Pop();
                     }
@@ -178,9 +179,9 @@ namespace USFMToolsSharp.Models.Markers
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public List<T> GetChildMarkers<T>(List<Type> ignoredParents = null) where T : Marker
+        public List<T> GetChildMarkers<T>(List<Type>? ignoredParents = null) where T : Marker
         {
-            List<T> output = new List<T>();
+            var output = new List<T>();
             var stack = new Stack<Marker>(Contents.Count);
 
             if (ignoredParents != null && ignoredParents.Contains(this.GetType()))
@@ -218,7 +219,7 @@ namespace USFMToolsSharp.Models.Markers
                 return this;
             }
 
-            return Contents[Contents.Count - 1].GetLastDescendent();
+            return Contents[^1].GetLastDescendent();
         }
     }
 }

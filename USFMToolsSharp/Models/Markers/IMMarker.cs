@@ -14,18 +14,6 @@ namespace USFMToolsSharp.Models.Markers
         {
             return input.Trim();
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new()
-        {
-            typeof(TextBlock),
-            typeof(BKMarker),
-            typeof(BKEndMarker),
-            typeof(BDMarker),
-            typeof(BDEndMarker),
-            typeof(ITMarker),
-            typeof(ITEndMarker)
-
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
 
     }
 }

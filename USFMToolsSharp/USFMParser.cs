@@ -16,6 +16,11 @@ namespace USFMToolsSharp
         private readonly bool IgnoreUnknownMarkers;
         private readonly bool hasIgnoredMarkers;
 
+        public List<Dictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new()
+        {
+            DefaultHierarchies.Default
+        };
+
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
         {
@@ -31,7 +36,11 @@ namespace USFMToolsSharp
         /// <returns>A USFMDocument representing the input</returns>
         public USFMDocument ParseFromString(string input)
         {
-            USFMDocument output = new USFMDocument();
+            var output = new USFMDocument();
+            for (var i = 0; i < HierarchyDefinitions.Count; i++)
+            {
+                output.Hierachies.Add(new HierachyNode(null));
+            }
             var markers = TokenizeFromString(input);
 
             // Clean out extra whitespace where it isn't needed
@@ -44,7 +53,7 @@ namespace USFMToolsSharp
                 var marker = markers[markerIndex];
                 if (marker is TRMarker && !output.GetTypesPathToLastMarker().Contains(typeof(TableBlock)))
                 {
-                    output.Insert(new TableBlock());
+                    output.Insert(new TableBlock(), HierarchyDefinitions);
                 }
 
                 if(marker is QMarker parsedMarker && markerIndex != markers.Count - 1 && markers[markerIndex + 1] is VMarker)
@@ -52,7 +61,7 @@ namespace USFMToolsSharp
                     parsedMarker.IsPoetryBlock = true;
                 }
                 
-                output.Insert(marker);
+                output.Insert(marker, HierarchyDefinitions);
             }
 
             output.NumberOfTotalMarkersAtParse = markers.Count;

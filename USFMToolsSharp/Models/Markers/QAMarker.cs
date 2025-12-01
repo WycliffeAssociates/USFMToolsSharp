@@ -19,10 +19,5 @@ namespace USFMToolsSharp.Models.Markers
             Heading = input.Trim().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
-            typeof(QACMarker),
-            typeof(QACEndMarker),
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

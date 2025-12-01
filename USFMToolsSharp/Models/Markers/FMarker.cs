@@ -18,36 +18,5 @@ namespace USFMToolsSharp.Models.Markers
             FootNoteCaller = input.Trim().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new ()
-        {
-            typeof(FRMarker),
-            typeof(FREndMarker),
-            typeof(FKMarker),
-            typeof(FTMarker),
-            typeof(FVMarker),
-            typeof(FVEndMarker),
-            typeof(FPMarker),
-            typeof(FQAMarker),
-            typeof(FQAEndMarker),
-            typeof(FQMarker),
-            typeof(FQEndMarker),
-            typeof(TLMarker),
-            typeof(TLEndMarker),
-            typeof(WMarker),
-            typeof(WEndMarker),
-            typeof(TextBlock),
-            typeof(ITMarker),
-            typeof(ITEndMarker),
-            typeof(SCMarker),
-            typeof(SCEndMarker),
-            typeof(SUPMarker),
-            typeof(SUPEndMarker),
-            typeof(BKMarker),
-            typeof(BKEndMarker),
-            typeof(BDMarker),
-            typeof(BDEndMarker),
-            typeof(FLMarker),
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

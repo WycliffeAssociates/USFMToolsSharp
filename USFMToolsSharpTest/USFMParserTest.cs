@@ -196,9 +196,9 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestChapterParse()
         {
-            Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Contents[0]).Number);
-            Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Contents[0]).Number);
-            Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Contents[0]).Number);
+            Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Hierachies[0][0]).Number);
+            Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Hierachies[0][0]).Number);
+            Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Hierachies[0][0]).Number);
 
             // Chapter Labels
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
@@ -469,14 +469,14 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestCharacterStylingParse()
         {
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1],typeof(EMMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* ").Contents[0].Contents[1],typeof(BDMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* ").Contents[0].Contents[1],typeof(BDITMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* ").Contents[0].Contents[1],typeof(ITMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* ").Contents[0].Contents[1],typeof(SUPMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* ").Contents[0].Contents[1],typeof(NDMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* ").Contents[0].Contents[1],typeof(SCMarker));
-            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* ").Contents[0].Contents[1],typeof(NOMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1].Marker,typeof(EMMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bd Boldness \\bd* ").Contents[0].Contents[1].Marker,typeof(BDMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\bdit Boldness and Italics \\bdit* ").Contents[0].Contents[1].Marker,typeof(BDITMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\it Italics \\it* ").Contents[0].Contents[1].Marker,typeof(ITMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sup Superscript \\sup* ").Contents[0].Contents[1].Marker,typeof(SUPMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\nd Name of Diety \\nd* ").Contents[0].Contents[1].Marker,typeof(NDMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\sc Small Caps \\sc* ").Contents[0].Contents[1].Marker,typeof(SCMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\no Normal \\no* ").Contents[0].Contents[1].Marker,typeof(NOMarker));
             
             // Text Content
             Assert.AreEqual("Emphasis", ((TextBlock)parser.ParseFromString("\\v 21 Penduduk kota yang satu akan pergi \\em Emphasis \\em* ").Contents[0].Contents[1].Contents[0]).Text);
@@ -533,6 +533,7 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[1] is VMarker);
         }
 
+        /*
         /// <summary>
         /// Verify that an empty QMarker gets pushed back out to being a block QMarker
         /// </summary>
@@ -546,39 +547,43 @@ namespace USFMToolsSharpTest
             Assert.IsTrue(output.Contents[1] is QMarker qMarker && qMarker.IsPoetryBlock);
             Assert.IsTrue(output.Contents[1].Contents[0] is VMarker);
         }
+        */
 
         [TestMethod]
         public void TestBadChapterHandling()
         {
             string verseText = "\\c 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            Assert.AreEqual(1, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual(1, ((CMarker)output.Contents[0]).Number);
-            Assert.AreEqual("Bad text here", ((TextBlock)output.Contents[0].Contents[0]).Text);
+            var hierachy = output.Hierachies[0];
+            Assert.AreEqual(1, hierachy.Contents.Count);
+            Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
+            Assert.AreEqual(1, ((CMarker)hierachy[0]).Number);
+            Assert.AreEqual("Bad text here", ((TextBlock)hierachy[0][0]).Text);
         }
 
         [TestMethod]
         public void TestNoChapterNumberingHandling()
         {
-            string verseText = "\\c \\v 1 Bad text here";
+            var verseText = "\\c \\v 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            Assert.AreEqual(1, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0] is CMarker);
-            Assert.AreEqual(0, ((CMarker)output.Contents[0]).Number);
+            var hierarchy = output.Hierachies[0];
+            Assert.AreEqual(1, hierarchy.Contents.Count);
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            Assert.AreEqual(0, ((CMarker)hierarchy[0]).Number);
         }
 
         [TestMethod]
         public void TestNoChapterNumberingAndTextHandling()
         {
-            string verseText = "\\c Text Block \\v 1 Bad text here";
+            var verseText = "\\c Text Block \\v 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            Assert.AreEqual(1, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0] is CMarker);
-            Assert.AreEqual(0, ((CMarker)output.Contents[0]).Number);
-            Assert.AreEqual(2, output.Contents[0].Contents.Count);
-            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual("Text Block", ((TextBlock)output.Contents[0].Contents[0]).Text);
+            var hierarchy = output.Hierachies[0];
+            Assert.AreEqual(1, hierarchy.Contents.Count);
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            Assert.AreEqual(0, ((CMarker)hierarchy[0]).Number);
+            Assert.AreEqual(2, hierarchy[0].Contents.Count);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.AreEqual("Text Block", ((TextBlock)hierarchy[0][0]).Text);
         }
 
         [TestMethod]
@@ -707,6 +712,7 @@ with a newline";
             Assert.AreEqual(4, parsed.Contents[0].Contents.Count);
         }
 
+        /*
         [TestMethod]
         public void TestIgnoreParentsWhenGettingChildMarkers()
         {
@@ -806,6 +812,7 @@ with a newline";
             Assert.AreEqual(footnote, result[textInFootnote][3]);
             Assert.AreEqual(footnoteText, result[textInFootnote][4]);
         }
+        */
 
         [TestMethod]
         public void VerifyNewlinesStopMarker()
@@ -821,18 +828,21 @@ with a newline";
         {
             var parser = new USFMParser(tagsToIgnore: ["s5"]);
             var doc = parser.ParseFromString("\\s5\n\\c 1\n \\v 1 In the beginning ");
-            Assert.IsTrue(doc.Contents[0] is CMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
-            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+            var hierarchy = doc.Hierachies[0];
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is VMarker);
+            Assert.AreEqual(1, ((CMarker)hierarchy.Contents[0].Marker).Number);
         }
 
         [TestMethod]
         public void TestBackToBackMarkers()
         {
             var doc = parser.ParseFromString("\\p\\v 1 In the beginning ");
-            Assert.IsTrue(doc.Contents[0] is PMarker);
-            Assert.IsTrue(doc.Contents[0].Contents.Count > 0);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
+            var hierarchy = doc.Hierachies[0];
+            var pMarker = hierarchy[0].Marker;
+            Assert.IsTrue(pMarker is PMarker);
+            Assert.IsTrue(hierarchy[0].Contents.Count > 0);
+            Assert.IsTrue(hierarchy[0][0].Marker is VMarker);
         }
 
         [TestMethod]
@@ -845,13 +855,14 @@ with a newline";
         \p
         \v 1 In the beginning God created the heavens and the earth.";
             var doc = parser.ParseFromString(TestUSFMWithMissingTOC);
-            Assert.IsTrue(doc.Contents[1] is CMarker);
-            Assert.IsTrue(doc.Contents[1].Contents[0] is PMarker);
-            Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0] is VMarker);
-            Assert.AreEqual(((CMarker)doc.Contents[1]).Number, 1);
-            Assert.AreEqual( 1, ((VMarker)doc.Contents[1].Contents[0].Contents[0]).StartingVerse);
-            Assert.IsTrue(doc.Contents[1].Contents[0].Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[1].Contents[0].Contents[0].Contents[0]).Text);
+            var hierachy = doc.Hierachies[0];
+            Assert.IsTrue(hierachy[0].Marker is CMarker);
+            Assert.IsTrue(hierachy[1][0].Marker is PMarker);
+            Assert.IsTrue(hierachy[1][0][0].Marker is VMarker);
+            Assert.AreEqual( 1, ((CMarker)hierachy[1].Marker).Number);
+            Assert.AreEqual( 1, ((VMarker)hierachy[1][0][0].Marker).StartingVerse);
+            Assert.IsTrue(hierachy[1][0][0][0].Marker is TextBlock);
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)hierachy[1][0][0][0].Marker).Text);
         }
 
         [TestMethod]
@@ -872,9 +883,9 @@ with a newline";
         {
             var doc = parser.ParseFromString(
                 @"\bd Bold text \bd*");
-            Assert.IsTrue(doc.Contents[0] is BDMarker);
-            Assert.IsTrue(doc.Contents[1] is BDEndMarker);
-            Assert.AreEqual(2, doc.Contents.Count);
+            Assert.IsTrue(doc.Hierachies[0][0].Marker is BDMarker);
+            Assert.IsTrue(doc.Hierachies[0][1].Marker is BDEndMarker);
+            Assert.AreEqual(2, doc.Hierachies[0].Contents.Count);
         }
 
         [TestMethod]

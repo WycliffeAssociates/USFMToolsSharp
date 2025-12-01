@@ -17,14 +17,5 @@ namespace USFMToolsSharp.Models.Markers
             CrossRefCaller = input.Trim().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new()
-        {
-            typeof(XOMarker),
-            typeof(XTMarker),
-            typeof(XTEndMarker),
-            typeof(XQMarker),
-            typeof(TextBlock),
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

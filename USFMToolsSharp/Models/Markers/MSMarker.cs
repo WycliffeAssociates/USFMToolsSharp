@@ -17,9 +17,5 @@ namespace USFMToolsSharp.Models.Markers
             Heading = input.TrimStart().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
-            typeof(MRMarker)
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

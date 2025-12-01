@@ -14,6 +14,7 @@
     <Description>A parsing library for USFM</Description>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
