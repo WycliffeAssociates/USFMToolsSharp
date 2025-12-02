@@ -53,7 +53,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("3.0", ((USFMMarker)parser.ParseFromString("\\usfm 3.0").Contents[0]).Version);
 
             USFMDocument doc = parser.ParseFromString("\\rem Remark");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(REMMarker));
+            Assert.IsInstanceOfType(doc.Hierarchies[0][0].Marker, typeof(REMMarker));
             REMMarker rem = (REMMarker)doc.Contents[0];
             Assert.AreEqual("Remark", rem.Comment);
         }
@@ -98,43 +98,52 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(3,      ((ILIMarker)parser.ParseFromString("\\ili3").Contents[0]).Depth);
 
             doc = parser.ParseFromString("\\ip Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPMarker));
-            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IPMarker));
+            Assert.AreEqual("Text", ((TextBlock)hierarchy[0][0]).Text);
 
             doc = parser.ParseFromString("\\ipi Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPIMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IPIMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\im Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IMMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\is Heading");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(ISMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(ISMarker));
             Assert.AreEqual("Heading", ((ISMarker)doc.Contents[0]).Heading);
 
             doc = parser.ParseFromString("\\iq Quote");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IQMarker));
-            Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IQMarker));
+            Assert.AreEqual("Quote", ((TextBlock)hierarchy[0][0]).Text);
             Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq Quote").Contents[0]).Depth);
             Assert.AreEqual(1, ((IQMarker)parser.ParseFromString("\\iq1 Quote").Contents[0]).Depth);
             Assert.AreEqual(2, ((IQMarker)parser.ParseFromString("\\iq2 Quote").Contents[0]).Depth);
             Assert.AreEqual(3, ((IQMarker)parser.ParseFromString("\\iq3 Quote").Contents[0]).Depth);
 
             doc = parser.ParseFromString("\\imi Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMIMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IMIMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\ipq Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPQMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IPQMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\imq Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IMQMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IMQMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\ipr Text");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(IPRMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(IPRMarker));
             Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
         }
@@ -196,9 +205,9 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestChapterParse()
         {
-            Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Hierachies[0][0]).Number);
-            Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Hierachies[0][0]).Number);
-            Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Hierachies[0][0]).Number);
+            Assert.AreEqual(1, ((CMarker)parser.ParseFromString("\\c 1").Hierarchies[0][0]).Number);
+            Assert.AreEqual(1000, ((CMarker)parser.ParseFromString("\\c 1000").Hierarchies[0][0]).Number);
+            Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Hierarchies[0][0]).Number);
 
             // Chapter Labels
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
@@ -206,7 +215,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("Chapter Two", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One \\c 2 \\cl Chapter Two").Contents[1].Contents[0]).Label);
 
             USFMDocument doc = parser.ParseFromString("\\cp Q");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(CPMarker));
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(CPMarker));
             Assert.AreEqual("Q", ((CPMarker)doc.Contents[0]).PublishedChapterMarker);
 
             doc = parser.ParseFromString("\\ca 53 \\ca*");
@@ -222,15 +232,18 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("22", vaBegin.AltVerseNumber);
 
             doc = parser.ParseFromString("\\p In the beginning God created the heavens and the earth.");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(PMarker));
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\pc In the beginning God created the heavens and the earth.");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(PCMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(PCMarker));
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\p \\v 1 In the beginning God created the heavens and the earth.");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(PMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(PMarker));
             PMarker pm = (PMarker)doc.Contents[0];
             VMarker vm = (VMarker)pm.Contents[0];
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
@@ -300,10 +313,10 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestTableParse()
         {
-            Assert.IsInstanceOfType(parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0], typeof(TableBlock));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Hierarchies[0][0].Marker, typeof(TableBlock));
 
             // Table Rows - Cells
-            Assert.IsInstanceOfType(parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0], typeof(TRMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Hierarchies[0][0][0].Marker, typeof(TRMarker));
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
             Assert.AreEqual("12.000", ((TextBlock)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[1].Contents[0]).Text);
             Assert.AreEqual(1, ((TCMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr2 12.000").Contents[0].Contents[0].Contents[0]).ColumnPosition);
@@ -314,7 +327,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(3, ((TCRMarker)parser.ParseFromString("\\tr \\tc1 dari suku Ruben \\tcr3 12.000").Contents[0].Contents[0].Contents[1]).ColumnPosition);
 
             // Test verses
-            Assert.IsTrue(parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Contents[1] is VMarker);
+            Assert.IsTrue(parser.ParseFromString("\\tc1 \\v 6 dari suku Asyer").Hierarchies[0][1].Marker is VMarker);
 
             // Table Headers
             Assert.AreEqual("dari suku Ruben", ((TextBlock)parser.ParseFromString("\\tr \\th1 dari suku Ruben \\thr2 12.000").Contents[0].Contents[0].Contents[0].Contents[0]).Text);
@@ -361,7 +374,7 @@ namespace USFMToolsSharpTest
 
             // Footnote Verse Marker - Paragraph
             Assert.AreEqual("56", ((FVMarker)parser.ParseFromString("\\f + \\fr 9:55 \\ft Beberapa salinan Bahasa Yunani menambahkan: Dan ia berkata, Kamu tidak tahu roh apa yang memilikimu. \\fv 56 \\fv* \\ft Anak Manusia tidak datang untuk menghancurkan hidup manusia, tetapi untuk menyelamatkan mereka.\\f*").Contents[0].Contents[2]).VerseCharacter);
-            Assert.IsInstanceOfType(parser.ParseFromString("\\f + \\fr 17.25 \\ft Kemungkinan maksudnya adalah bebas dari kewajiban pajak seumur hidup. (bdk. NIV. NET) \\fp \\f*").Contents[0].Contents[2],typeof(FPMarker));
+            Assert.IsInstanceOfType(parser.ParseFromString("\\f + \\fr 17.25 \\ft Kemungkinan maksudnya adalah bebas dari kewajiban pajak seumur hidup. (bdk. NIV. NET) \\fp \\f*").Hierarchies[0][0][2].Marker,typeof(FPMarker));
 
             // Make sure that a fqa end marker doesn't end up outside of the footnote
             Assert.AreEqual(1, parser.ParseFromString("\\v 1 Words \\f + \\fqa Thing \\fqa* \\f*").Contents.Count);
@@ -426,7 +439,8 @@ namespace USFMToolsSharpTest
         public void TestPoetryParse()
         {
             USFMDocument doc = parser.ParseFromString("\\q Quote");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMarker));
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QMarker));
             Assert.AreEqual("Quote", ((TextBlock)doc.Contents[0].Contents[0]).Text);
             Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q Quote").Contents[0]).Depth);
             Assert.AreEqual(1, ((QMarker)parser.ParseFromString("\\q1 Quote").Contents[0]).Depth);
@@ -434,15 +448,18 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(3, ((QMarker)parser.ParseFromString("\\q3 Quote").Contents[0]).Depth);
 
             doc = parser.ParseFromString("\\qr God's love never fails.");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QRMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QRMarker));
             Assert.AreEqual("God's love never fails.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\qc Amen! Amen!");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QCMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QCMarker));
             Assert.AreEqual("Amen! Amen!", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\qd For the director of music.");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QDMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QDMarker));
             Assert.AreEqual("For the director of music.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\qac P\\qac*");
@@ -452,8 +469,9 @@ namespace USFMToolsSharpTest
             Assert.AreEqual("P", qac.AcrosticLetter);
 
             doc = parser.ParseFromString("\\qm God is on your side.");
+            hierarchy = doc.Hierarchies[0];
             Assert.AreEqual(1, doc.Contents.Count);
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QMMarker));
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QMMarker));
             Assert.AreEqual("God is on your side.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
             Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm God is on your side.").Contents[0]).Depth);
             Assert.AreEqual(1, ((QMMarker)parser.ParseFromString("\\qm1 God is on your side.").Contents[0]).Depth);
@@ -461,7 +479,8 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(3, ((QMMarker)parser.ParseFromString("\\qm3 God is on your side.").Contents[0]).Depth);
 
             doc = parser.ParseFromString("\\qa Aleph");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(QAMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(QAMarker));
             QAMarker qa = (QAMarker)doc.Contents[0];
             Assert.AreEqual("Aleph", qa.Heading);
 
@@ -554,7 +573,7 @@ namespace USFMToolsSharpTest
         {
             string verseText = "\\c 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            var hierachy = output.Hierachies[0];
+            var hierachy = output.Hierarchies[0];
             Assert.AreEqual(1, hierachy.Contents.Count);
             Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
             Assert.AreEqual(1, ((CMarker)hierachy[0]).Number);
@@ -566,7 +585,7 @@ namespace USFMToolsSharpTest
         {
             var verseText = "\\c \\v 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            var hierarchy = output.Hierachies[0];
+            var hierarchy = output.Hierarchies[0];
             Assert.AreEqual(1, hierarchy.Contents.Count);
             Assert.IsTrue(hierarchy[0].Marker is CMarker);
             Assert.AreEqual(0, ((CMarker)hierarchy[0]).Number);
@@ -577,7 +596,7 @@ namespace USFMToolsSharpTest
         {
             var verseText = "\\c Text Block \\v 1 Bad text here";
             var output = parser.ParseFromString(verseText);
-            var hierarchy = output.Hierachies[0];
+            var hierarchy = output.Hierarchies[0];
             Assert.AreEqual(1, hierarchy.Contents.Count);
             Assert.IsTrue(hierarchy[0].Marker is CMarker);
             Assert.AreEqual(0, ((CMarker)hierarchy[0]).Number);
@@ -602,7 +621,7 @@ namespace USFMToolsSharpTest
         {
             string verseText = "\\q";
             var output = parser.ParseFromString(verseText);
-            Assert.IsTrue(output.Contents[0] is QMarker);
+            Assert.IsTrue(output.Hierarchies[0][0].Marker is QMarker);
         }
 
         [TestMethod]
@@ -610,10 +629,11 @@ namespace USFMToolsSharpTest
         {
             string text = "\\ip \\rq \\rq* \\ie";
             var output = parser.ParseFromString(text);
-            Assert.IsTrue(output.Contents[0] is IPMarker);
-            Assert.IsTrue(output.Contents[0].Contents[0] is RQMarker);
-            Assert.IsTrue(output.Contents[0].Contents[1] is RQEndMarker);
-            Assert.IsTrue(output.Contents[0].Contents[3] is IEMarker);
+            var hierarchy = output.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is IPMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is RQMarker);
+            Assert.IsTrue(hierarchy[0][1].Marker is RQEndMarker);
+            Assert.IsTrue(hierarchy[0][3].Marker is IEMarker);
         }
 
         [TestMethod]
@@ -623,9 +643,10 @@ namespace USFMToolsSharpTest
 with a newline";
             string usfm = $"\\v 1 {verseText}";
             var output = parser.ParseFromString(usfm);
-            Assert.IsTrue(output.Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual(verseText, ((TextBlock)output.Contents[0].Contents[0]).Text);
+            var hierarchy = output.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is VMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.AreEqual(verseText, ((TextBlock)hierarchy[0][0]).Text);
         }
 
         [TestMethod]
@@ -818,9 +839,10 @@ with a newline";
         public void VerifyNewlinesStopMarker()
         {
             var doc = parser.ParseFromString("\\c 1\n \\v 1 In the beginning ");
-            Assert.IsTrue(doc.Contents[0] is CMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is VMarker);
-            Assert.AreEqual(((CMarker)doc.Contents[0]).Number, 1);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is VMarker);
+            Assert.AreEqual(1, ((CMarker)hierarchy[0]).Number);
         }
 
         [TestMethod]
@@ -828,7 +850,7 @@ with a newline";
         {
             var parser = new USFMParser(tagsToIgnore: ["s5"]);
             var doc = parser.ParseFromString("\\s5\n\\c 1\n \\v 1 In the beginning ");
-            var hierarchy = doc.Hierachies[0];
+            var hierarchy = doc.Hierarchies[0];
             Assert.IsTrue(hierarchy[0].Marker is CMarker);
             Assert.IsTrue(hierarchy[0][0].Marker is VMarker);
             Assert.AreEqual(1, ((CMarker)hierarchy.Contents[0].Marker).Number);
@@ -838,7 +860,7 @@ with a newline";
         public void TestBackToBackMarkers()
         {
             var doc = parser.ParseFromString("\\p\\v 1 In the beginning ");
-            var hierarchy = doc.Hierachies[0];
+            var hierarchy = doc.Hierarchies[0];
             var pMarker = hierarchy[0].Marker;
             Assert.IsTrue(pMarker is PMarker);
             Assert.IsTrue(hierarchy[0].Contents.Count > 0);
@@ -855,14 +877,14 @@ with a newline";
         \p
         \v 1 In the beginning God created the heavens and the earth.";
             var doc = parser.ParseFromString(TestUSFMWithMissingTOC);
-            var hierachy = doc.Hierachies[0];
-            Assert.IsTrue(hierachy[0].Marker is CMarker);
-            Assert.IsTrue(hierachy[1][0].Marker is PMarker);
-            Assert.IsTrue(hierachy[1][0][0].Marker is VMarker);
-            Assert.AreEqual( 1, ((CMarker)hierachy[1].Marker).Number);
-            Assert.AreEqual( 1, ((VMarker)hierachy[1][0][0].Marker).StartingVerse);
-            Assert.IsTrue(hierachy[1][0][0][0].Marker is TextBlock);
-            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)hierachy[1][0][0][0].Marker).Text);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[1].Marker is CMarker);
+            Assert.IsTrue(hierarchy[1][0].Marker is PMarker);
+            Assert.IsTrue(hierarchy[1][0][0].Marker is VMarker);
+            Assert.AreEqual( 1, ((CMarker)hierarchy[1].Marker).Number);
+            Assert.AreEqual( 1, ((VMarker)hierarchy[1][0][0].Marker).StartingVerse);
+            Assert.IsTrue(hierarchy[1][0][0][0].Marker is TextBlock);
+            Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)hierarchy[1][0][0][0].Marker).Text);
         }
 
         [TestMethod]
@@ -870,12 +892,13 @@ with a newline";
         {
             var doc = parser.ParseFromString(
                 @"\v 1 verse content \f + \ft footnote text \fqa Ebiasaph \fqa* in 1 Chronicles 9:19. \f*.");
-            Assert.IsTrue(doc.Contents[0] is VMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
-            Assert.IsTrue(doc.Contents[0].Contents[1] is FMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[2] is FEndMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[3] is TextBlock);
-            Assert.AreEqual(".", ((TextBlock)doc.Contents[0].Contents[3]).Text);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is VMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.IsTrue(hierarchy[0][1].Marker is FMarker);
+            Assert.IsTrue(hierarchy[0][2].Marker is FEndMarker);
+            Assert.IsTrue(hierarchy[0][3].Marker is TextBlock);
+            Assert.AreEqual(".", ((TextBlock)hierarchy[0][3]).Text);
         }
 
         [TestMethod]
@@ -883,9 +906,9 @@ with a newline";
         {
             var doc = parser.ParseFromString(
                 @"\bd Bold text \bd*");
-            Assert.IsTrue(doc.Hierachies[0][0].Marker is BDMarker);
-            Assert.IsTrue(doc.Hierachies[0][1].Marker is BDEndMarker);
-            Assert.AreEqual(2, doc.Hierachies[0].Contents.Count);
+            Assert.IsTrue(doc.Hierarchies[0][0].Marker is BDMarker);
+            Assert.IsTrue(doc.Hierarchies[0][1].Marker is BDEndMarker);
+            Assert.AreEqual(2, doc.Hierarchies[0].Contents.Count);
         }
 
         [TestMethod]
@@ -897,8 +920,9 @@ with a newline";
 \p
 This next question is answered the same way in all the churches of God's people.";
             var doc = parser.ParseFromString(content);
-            Assert.IsTrue(doc.Contents[0] is PMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is PMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
             Assert.AreEqual("This next question is answered the same way in all the churches of God's people.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
         }
 
@@ -908,9 +932,10 @@ This next question is answered the same way in all the churches of God's people.
         {
             var content = @"\p(this is text)";
             var doc = parser.ParseFromString(content);
-            Assert.IsTrue(doc.Contents[0] is PMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual("(this is text)", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is PMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.AreEqual("(this is text)", ((TextBlock)hierarchy[0][0]).Text);
         }
 
         [TestMethod]
@@ -919,9 +944,10 @@ This next question is answered the same way in all the churches of God's people.
         {
             var content = @"\q1This is text";
             var doc = parser.ParseFromString(content);
-            Assert.IsTrue(doc.Contents[0] is QMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual("This is text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            var hierachy = doc.Hierarchies[0];
+            Assert.IsTrue(hierachy[0].Marker is QMarker);
+            Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
+            Assert.AreEqual("This is text", ((TextBlock)hierachy[0][0]).Text);
         }
 
         [TestMethod]
@@ -930,15 +956,17 @@ This next question is answered the same way in all the churches of God's people.
             var ideographicSpace = '\u3000'; // Ideographic space character
             var content = $"\\v 1 This is text{ideographicSpace}with an ideographic space.";
             var doc = parser.ParseFromString(content);
-            Assert.IsTrue(doc.Contents[0] is VMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual($"This is text{ideographicSpace}with an ideographic space.", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            var hierachy = doc.Hierarchies[0];
+            Assert.IsTrue(hierachy[0].Marker is VMarker);
+            Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
+            Assert.AreEqual($"This is text{ideographicSpace}with an ideographic space.", ((TextBlock)hierachy[0][0]).Text);
 
             content = @$"\v 1 {ideographicSpace}This is more text";
             doc = parser.ParseFromString(content);
-            Assert.IsTrue(doc.Contents[0] is VMarker);
-            Assert.IsTrue(doc.Contents[0].Contents[0] is TextBlock);
-            Assert.AreEqual($"{ideographicSpace}This is more text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            hierachy = doc.Hierarchies[0];
+            Assert.IsTrue(hierachy[0].Marker is VMarker);
+            Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
+            Assert.AreEqual($"{ideographicSpace}This is more text", ((TextBlock)hierachy[0][0]).Text);
         }
     }
 }

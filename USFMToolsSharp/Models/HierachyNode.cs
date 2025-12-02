@@ -9,7 +9,7 @@ public class HierachyNode
     {
         Marker = marker;
     }
-    public Marker Marker { get; set; }
+    public Marker? Marker { get; set; }
     public List<HierachyNode> Contents { get; set; } = new List<HierachyNode>();
     
     public HierachyNode this[int index]
@@ -18,5 +18,5 @@ public class HierachyNode
         set => Contents[index] = value;
     }
     
-    public static implicit operator Marker(HierachyNode input) => input.Marker;
+    public static implicit operator Marker?(HierachyNode input) => input.Marker;
 }

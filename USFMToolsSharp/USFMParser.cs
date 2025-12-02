@@ -39,7 +39,7 @@ namespace USFMToolsSharp
             var output = new USFMDocument();
             for (var i = 0; i < HierarchyDefinitions.Count; i++)
             {
-                output.Hierachies.Add(new HierachyNode(null));
+                output.Hierarchies.Add(new HierachyNode(null));
             }
             var markers = TokenizeFromString(input);
 

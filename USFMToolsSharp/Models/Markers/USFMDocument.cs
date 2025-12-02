@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
         {
         }
 
-        public List<HierachyNode> Hierachies { get; set; } = new List<HierachyNode>();
+        public List<HierachyNode> Hierarchies { get; set; } = new List<HierachyNode>();
         
         public int NumberOfTotalMarkersAtParse { get; set; }
 
@@ -19,15 +19,15 @@ namespace USFMToolsSharp.Models.Markers
             var markerType = input.GetType();
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
             {
-                if (Hierachies[i].Contents.Count == 0)
+                if (Hierarchies[i].Contents.Count == 0)
                 {
-                    Hierachies[i].Contents.Add(new HierachyNode(input));
+                    Hierarchies[i].Contents.Add(new HierachyNode(input));
                     return;
                 }
                 var stack = new Stack<HierachyNode>();
                 var toLastChildStack = new Stack<HierachyNode>();
-                toLastChildStack.Push(Hierachies[i].Contents[^1]);
-                stack.Push(Hierachies[i].Contents[^1]);
+                toLastChildStack.Push(Hierarchies[i].Contents[^1]);
+                stack.Push(Hierarchies[i].Contents[^1]);
                 while (toLastChildStack.Count > 0)
                 {
                     var currentNode = toLastChildStack.Pop();
@@ -38,6 +38,7 @@ namespace USFMToolsSharp.Models.Markers
                     }
                     toLastChildStack.Push(currentNode.Contents[^1]);
                 }
+                var inserted = false;
                 while (stack.Count > 0)
                 {
                     var currentNode = stack.Pop();
@@ -56,23 +57,32 @@ namespace USFMToolsSharp.Models.Markers
                         continue;
                     }
                     currentNode.Contents.Add(new HierachyNode(input));
+                    inserted = true;
                     break;
+                }
+
+                if (!inserted)
+                {
+                    Hierarchies[i].Contents.Add(new HierachyNode(input));
                 }
             }
         }
-        public List<Type> GetTypesPathToLastMarker()
+        public List<Type> GetTypesPathToLastMarker(int hierarchyIndex = 0)
         {
             List<Type> types = new List<Type>();
-            if (Hierachies.Count == 0)
+            if (Hierarchies.Count == 0)
             {
                 return types;
             }
-            types.Add(typeof(USFMDocument));
-            var currentNode = Hierachies[^1];
-            types.Add(currentNode.Marker.GetType());
+            var currentNode = Hierarchies[hierarchyIndex];
+            types.Add(currentNode.Marker != null ? currentNode.Marker.GetType() : typeof(USFMDocument));
             while (currentNode.Contents.Count > 0)
             {
                 currentNode = currentNode.Contents[^1];
+                if (currentNode.Marker == null)
+                {
+                    continue;
+                }
                 types.Add(currentNode.Marker.GetType());
             }
             return types;
@@ -80,7 +90,7 @@ namespace USFMToolsSharp.Models.Markers
         
         // Backwards compatibility
         [Obsolete("Use Hierachies[0].Contents instead")]
-        public List<HierachyNode> Contents => Hierachies[0].Contents;
+        public List<HierachyNode> Contents => Hierarchies[0].Contents;
         
         public void InsertMultiple(IEnumerable<Marker> input, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
