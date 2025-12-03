@@ -13,6 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         public List<HierachyNode> Hierarchies { get; set; } = new List<HierachyNode>();
         
         public int NumberOfTotalMarkersAtParse { get; set; }
+        
 
         public void Insert(Marker input, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
@@ -48,11 +49,11 @@ namespace USFMToolsSharp.Models.Markers
                     {
                         continue;
                     }
-                    if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
+                    if (currentNodeDefinition.CanInsert != null && !currentNodeDefinition.CanInsert(currentNodeType, currentNode, input))
                     {
                         continue;
                     }
-                    if (currentNodeDefinition.CanInsert != null && !currentNodeDefinition.CanInsert(currentNodeType, input))
+                    if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
                         continue;
                     }

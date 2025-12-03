@@ -33,13 +33,13 @@ namespace USFMToolsSharpTest
             parser = new USFMToolsSharp.USFMParser(new List<string> { "bd", "bd*" });
             USFMDocument doc = parser.ParseFromString("\\v 1 In the beginning \\bd God \\bd*");
             Assert.AreEqual(1, doc.Contents.Count);
-            VMarker vm = (VMarker)doc.Contents[0];
+            var vm = doc.Contents[0];
             Assert.AreEqual(2, vm.Contents.Count);
-            TextBlock tb = (TextBlock)vm.Contents[0];
+            var tb = vm.Contents[0];
             Assert.AreEqual(0, tb.Contents.Count);
-            Assert.AreEqual("In the beginning ", tb.Text);
-            tb = (TextBlock)vm.Contents[1];
-            Assert.AreEqual("God ", tb.Text);
+            Assert.AreEqual("In the beginning ", ((TextBlock)tb).Text);
+            tb = vm.Contents[1];
+            Assert.AreEqual("God ", ((TextBlock)tb).Text);
             
         }
 
@@ -210,7 +210,7 @@ namespace USFMToolsSharpTest
             Assert.AreEqual(0, ((CMarker)parser.ParseFromString("\\c 0").Hierarchies[0][0]).Number);
 
             // Chapter Labels
-            Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0].Contents[0]).Label);
+            Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One").Contents[0][0]).Label);
             Assert.AreEqual("Chapter One", ((CLMarker)parser.ParseFromString("\\cl Chapter One \\c 1").Contents[0]).Label);
             Assert.AreEqual("Chapter Two", ((CLMarker)parser.ParseFromString("\\c 1 \\cl Chapter One \\c 2 \\cl Chapter Two").Contents[1].Contents[0]).Label);
 
@@ -244,26 +244,30 @@ namespace USFMToolsSharpTest
             doc = parser.ParseFromString("\\p \\v 1 In the beginning God created the heavens and the earth.");
             hierarchy = doc.Hierarchies[0];
             Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(PMarker));
-            PMarker pm = (PMarker)doc.Contents[0];
-            VMarker vm = (VMarker)pm.Contents[0];
+            var pm = doc.Contents[0];
+            var vm = pm.Contents[0];
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
 
             doc = parser.ParseFromString("\\mi");
-            Assert.AreEqual(1, doc.Contents.Count);
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(MIMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.AreEqual(1, hierarchy.Contents.Count);
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(MIMarker));
 
             doc = parser.ParseFromString("\\d A Psalm of David");
             Assert.AreEqual("A Psalm of David", ((DMarker)doc.Contents[0]).Description);
 
             doc = parser.ParseFromString("\\nb");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(NBMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(NBMarker));
 
             doc = parser.ParseFromString("\\fq the Son of God");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(FQMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(FQMarker));
             Assert.AreEqual("the Son of God", ((TextBlock)doc.Contents[0].Contents[0]).Text);
 
             doc = parser.ParseFromString("\\pi The one who scattered");
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(PIMarker));
+            hierarchy = doc.Hierarchies[0];
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(PIMarker));
             Assert.AreEqual(1, doc.Contents.Count);
             Assert.AreEqual("The one who scattered", ((TextBlock)doc.Contents[0].Contents[0]).Text);
             Assert.AreEqual(1, ((PIMarker)parser.ParseFromString("\\pi").Contents[0]).Depth);
@@ -273,14 +277,15 @@ namespace USFMToolsSharpTest
 
             doc = parser.ParseFromString("\\m \\v 37 David himself called him 'Lord';");
             Assert.AreEqual(1, doc.Contents.Count);
-            MMarker mm = (MMarker)doc.Contents[0];
+            var mm = doc.Contents[0];
             Assert.AreEqual(1, mm.Contents.Count);
-            vm = (VMarker)mm.Contents[0];
+            vm = mm.Contents[0];
             Assert.AreEqual("David himself called him 'Lord';", ((TextBlock)vm.Contents[0]).Text);
 
             doc = parser.ParseFromString("\\b");
+            hierarchy = doc.Hierarchies[0];
             Assert.AreEqual(1, doc.Contents.Count);
-            Assert.IsInstanceOfType(doc.Contents[0], typeof(BMarker));
+            Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(BMarker));
         }
         [TestMethod]
         public void TestVerseParse()

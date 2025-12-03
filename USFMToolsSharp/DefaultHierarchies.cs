@@ -387,9 +387,9 @@ public static class DefaultHierarchies
             typeof(WMarker),
             typeof(WEndMarker),
             typeof(VMarker),
-        ]){ CanInsert = (type, marker) =>
+        ]){ CanInsert = (type, node, marker) =>
         {
-            return marker is not VMarker || !marker.Contents.Any(m => m is VMarker);
+            return marker is not VMarker || !node.Contents.Any(m => m.Marker is VMarker);
         }},
         [typeof(QRMarker)] = new HierarchyDefinition([
             typeof(TextBlock),
@@ -539,7 +539,7 @@ public static class DefaultHierarchies
             typeof(PMarker),
             typeof(PCMarker),
             typeof(TableBlock)
-        ]){CanInsert = (type, marker) =>
+        ]){CanInsert = (type, node, marker) =>
         {
             switch (marker)
             {

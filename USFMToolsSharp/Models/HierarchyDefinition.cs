@@ -16,5 +16,6 @@ public class HierarchyDefinition
         AllowedChildren = new HashSet<Type>(allowedTypes);
     }
     public HashSet<Type> AllowedChildren { get; set; } = new HashSet<Type>();
-    public Func<Type, Marker, bool>? CanInsert = null;
+    public Func<Type, HierachyNode, Marker, bool>? CanInsert = null;
+    
 }
