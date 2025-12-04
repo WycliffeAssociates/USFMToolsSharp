@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
@@ -16,16 +19,19 @@ namespace USFMToolsSharp
         private readonly bool IgnoreUnknownMarkers;
         private readonly bool hasIgnoredMarkers;
 
-        public List<Dictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new()
-        {
-            DefaultHierarchies.Default
-        };
+        private List<ReadOnlyDictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new();
 
 
-        public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false)
+        public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions = null)
         {
+            if (hierarchyDefinitions != null)
+            {
+                HierarchyDefinitions = [
+                    DefaultHierarchies.Default.AsReadOnly()
+                ];
+            }
             hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;
-            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore] : [];
+            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore]: [];
             IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
@@ -194,14 +200,16 @@ namespace USFMToolsSharp
 
             return output;
         }
-        private bool IsValidMarkerCharacter(char c)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsValidMarkerCharacter(char c)
         {
             return char.IsLetter(c) || c == '-';
         }
 
         private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
         {
-            if (hasIgnoredMarkers && IgnoredMarkers.Contains(marker.Trim().ToString()))
+            var trimmedMarker = marker.Trim();
+            if (hasIgnoredMarkers && IgnoredMarkers.Contains(trimmedMarker.ToString()))
             {
                 if (!content.IsEmpty)
                 {
@@ -209,7 +217,7 @@ namespace USFMToolsSharp
                 }
                 return;
             }
-            var result = ConvertToMarker(marker.Trim(), content);
+            var result = ConvertToMarker(trimmedMarker, content);
             result.marker.Position = index;
 
             // If this is an unknown marker and we're in Ignore Unknown Marker mode then don't add the marker. We still keep any remaining text though

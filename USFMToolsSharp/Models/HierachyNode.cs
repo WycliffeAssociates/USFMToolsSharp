@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using USFMToolsSharp.Models.Markers;
 
@@ -5,11 +6,13 @@ namespace USFMToolsSharp.Models;
 
 public class HierachyNode
 {
-    public HierachyNode(Marker marker)
+    public HierachyNode(Marker? marker)
     {
         Marker = marker;
+        MarkerType = marker?.GetType();
     }
-    public Marker? Marker { get; set; }
+    public Marker? Marker { get;  }
+    public Type? MarkerType { get; set; }
     public List<HierachyNode> Contents { get; set; } = new List<HierachyNode>();
     
     public HierachyNode this[int index]

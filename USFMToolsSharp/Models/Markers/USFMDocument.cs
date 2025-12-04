@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
@@ -14,11 +16,10 @@ namespace USFMToolsSharp.Models.Markers
         
         public int NumberOfTotalMarkersAtParse { get; set; }
         
-        private List<HierachyNode> _lastChildNode = [];
         private List<Stack<HierachyNode>> _toLastChildStack = new List<Stack<HierachyNode>>();
         
 
-        public void Insert(Marker input, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
+        public void Insert(Marker input, List<ReadOnlyDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
             var markerType = input.GetType();
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
@@ -27,49 +28,44 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     var firstNode = new HierachyNode(input);
                     Hierarchies[i].Contents.Add(firstNode);
-                    _toLastChildStack.Add(new Stack<HierachyNode>());
-                    _lastChildNode.Add(firstNode);
+                    _toLastChildStack.Add(new Stack<HierachyNode>([firstNode]));
                     return;
                 }
-                var stack = new Stack<HierachyNode>();
-                var toLastChildStack = new Stack<HierachyNode>();
-                var lastChildNode = Hierarchies[i].Contents[^1];
-                toLastChildStack.Push(Hierarchies[i].Contents[^1]);
-                stack.Push(Hierarchies[i].Contents[^1]);
-                while (lastChildNode.Contents.Count > 0)
-                {
-                    lastChildNode = lastChildNode.Contents[^1];
-                    stack.Push(lastChildNode);
-                }
+                
                 var inserted = false;
-                while (stack.Count > 0)
+                var currentStack = _toLastChildStack[i];
+                while (currentStack.Count > 0)
                 {
-                    var currentNode = stack.Pop();
-                    var currentNodeType = currentNode.Marker.GetType();
+                    var currentNode = currentStack.Peek();
+                    var currentNodeType = currentNode.MarkerType;
                     var currentNodeDefinition = hierarchyDefinitions[i].GetValueOrDefault(currentNodeType);
-                    if (currentNodeDefinition == null)
+                    if (currentNodeDefinition == null || currentNodeDefinition.CanInsert != null && !currentNodeDefinition.CanInsert(currentNodeType, currentNode, input) || !currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
+                        currentStack.Pop();
                         continue;
                     }
-                    if (currentNodeDefinition.CanInsert != null && !currentNodeDefinition.CanInsert(currentNodeType, currentNode, input))
-                    {
-                        continue;
-                    }
-                    if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
-                    {
-                        continue;
-                    }
-                    currentNode.Contents.Add(new HierachyNode(input));
+
+                    InsertNode(input, i, currentNode);
+                    // Going down
                     inserted = true;
                     break;
                 }
 
                 if (!inserted)
                 {
-                    Hierarchies[i].Contents.Add(new HierachyNode(input));
+                    InsertNode(input, i, Hierarchies[i]);
                 }
             }
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void InsertNode(Marker input, int i, HierachyNode target)
+        {
+            var tmp = new HierachyNode(input);
+            _toLastChildStack[i].Push(tmp);
+            target.Contents.Add(tmp);
+        }
+
         public List<Type> GetTypesPathToLastMarker(int hierarchyIndex = 0)
         {
             List<Type> types = new List<Type>();
@@ -95,7 +91,7 @@ namespace USFMToolsSharp.Models.Markers
         [Obsolete("Use Hierachies[0].Contents instead")]
         public List<HierachyNode> Contents => Hierarchies[0].Contents;
         
-        public void InsertMultiple(IEnumerable<Marker> input, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
+        public void InsertMultiple(IEnumerable<Marker> input, List<ReadOnlyDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
             foreach(Marker i in input)
             {

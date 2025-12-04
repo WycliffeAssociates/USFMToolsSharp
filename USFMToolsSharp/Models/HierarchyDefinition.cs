@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using USFMToolsSharp.Models.Markers;
 
@@ -8,14 +9,14 @@ public class HierarchyDefinition
 {
     public HierarchyDefinition()
     {
-        
+        AllowedChildren = new HashSet<Type>().ToFrozenSet();
     }
 
     public HierarchyDefinition(Type[] allowedTypes)
     {
-        AllowedChildren = new HashSet<Type>(allowedTypes);
+        AllowedChildren = new HashSet<Type>(allowedTypes).ToFrozenSet();
     }
-    public HashSet<Type> AllowedChildren { get; set; } = new HashSet<Type>();
+    public FrozenSet<Type> AllowedChildren { get; set; }
     public Func<Type, HierachyNode, Marker, bool>? CanInsert = null;
     
 }
