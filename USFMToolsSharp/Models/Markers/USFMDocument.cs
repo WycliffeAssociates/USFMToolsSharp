@@ -14,6 +14,9 @@ namespace USFMToolsSharp.Models.Markers
         
         public int NumberOfTotalMarkersAtParse { get; set; }
         
+        private List<HierachyNode> _lastChildNode = [];
+        private List<Stack<HierachyNode>> _toLastChildStack = new List<Stack<HierachyNode>>();
+        
 
         public void Insert(Marker input, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
@@ -22,22 +25,21 @@ namespace USFMToolsSharp.Models.Markers
             {
                 if (Hierarchies[i].Contents.Count == 0)
                 {
-                    Hierarchies[i].Contents.Add(new HierachyNode(input));
+                    var firstNode = new HierachyNode(input);
+                    Hierarchies[i].Contents.Add(firstNode);
+                    _toLastChildStack.Add(new Stack<HierachyNode>());
+                    _lastChildNode.Add(firstNode);
                     return;
                 }
                 var stack = new Stack<HierachyNode>();
                 var toLastChildStack = new Stack<HierachyNode>();
+                var lastChildNode = Hierarchies[i].Contents[^1];
                 toLastChildStack.Push(Hierarchies[i].Contents[^1]);
                 stack.Push(Hierarchies[i].Contents[^1]);
-                while (toLastChildStack.Count > 0)
+                while (lastChildNode.Contents.Count > 0)
                 {
-                    var currentNode = toLastChildStack.Pop();
-                    stack.Push(currentNode);
-                    if (currentNode.Contents.Count == 0)
-                    {
-                        continue;
-                    }
-                    toLastChildStack.Push(currentNode.Contents[^1]);
+                    lastChildNode = lastChildNode.Contents[^1];
+                    stack.Push(lastChildNode);
                 }
                 var inserted = false;
                 while (stack.Count > 0)
