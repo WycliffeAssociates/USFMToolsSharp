@@ -24,7 +24,7 @@ namespace USFMToolsSharp
 
         public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions = null)
         {
-            if (hierarchyDefinitions != null)
+            if (hierarchyDefinitions == null)
             {
                 HierarchyDefinitions = [
                     DefaultHierarchies.Default.AsReadOnly()

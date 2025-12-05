@@ -543,21 +543,20 @@ namespace USFMToolsSharpTest
             string verseText = "\\q \\v 1 This is verse one \\q another poetry \\v 2 second verse";
             var output = parser.ParseFromString(verseText);
             Assert.AreEqual(2, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0] is QMarker);
-            Assert.IsTrue(output.Contents[0].Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[0].Contents[0].Contents[1] is QMarker);
-            Assert.IsTrue(output.Contents[1] is VMarker);
+            Assert.IsTrue(output.Contents[0].Marker is QMarker);
+            Assert.IsTrue(output.Contents[0][0].Marker is VMarker);
+            Assert.IsTrue(output.Contents[0][0][1].Marker is QMarker);
+            Assert.IsTrue(output.Contents[1].Marker is VMarker);
 
             string secondVerseText = "\\v 1 This is verse one \\q another poetry \\v 2 second verse";
 
             output = parser.ParseFromString(secondVerseText);
             Assert.AreEqual(2, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[0].Contents[1] is QMarker);
-            Assert.IsTrue(output.Contents[1] is VMarker);
+            Assert.IsTrue(output.Contents[0].Marker is VMarker);
+            Assert.IsTrue(output.Contents[0].Contents[1].Marker is QMarker);
+            Assert.IsTrue(output.Contents[1].Marker is VMarker);
         }
 
-        /*
         /// <summary>
         /// Verify that an empty QMarker gets pushed back out to being a block QMarker
         /// </summary>
@@ -567,11 +566,10 @@ namespace USFMToolsSharpTest
             string verseText = "\\v 1 This is verse one \\q \\v 2 second verse";
             var output = parser.ParseFromString(verseText);
             Assert.AreEqual(2, output.Contents.Count);
-            Assert.IsTrue(output.Contents[0] is VMarker);
-            Assert.IsTrue(output.Contents[1] is QMarker qMarker && qMarker.IsPoetryBlock);
-            Assert.IsTrue(output.Contents[1].Contents[0] is VMarker);
+            Assert.IsTrue(output.Contents[0].Marker is VMarker);
+            Assert.IsTrue(output.Contents[1].Marker is QMarker { IsPoetryBlock: true });
+            Assert.IsTrue(output.Contents[1].Contents[0].Marker is VMarker);
         }
-        */
 
         [TestMethod]
         public void TestBadChapterHandling()
