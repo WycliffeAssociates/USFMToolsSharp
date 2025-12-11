@@ -7,7 +7,7 @@ using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
-    public class USFMDocument
+    public class USFMDocument: Marker
     {
         public USFMDocument()
         {
@@ -124,5 +124,7 @@ namespace USFMToolsSharp.Models.Markers
                 Insert(i, hierarchyDefinitions);
             }
         }
+
+        public override string Identifier { get; }
     }
 }

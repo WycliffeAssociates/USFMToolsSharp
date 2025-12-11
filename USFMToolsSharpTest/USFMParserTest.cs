@@ -1,9 +1,12 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using USFMToolsSharp;
+using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharpTest
@@ -19,7 +22,7 @@ namespace USFMToolsSharpTest
         {
             parser = new USFMToolsSharp.USFMParser();
         }
-        private void CheckTypeList(List<Type> types, List<Marker> markers)
+        private static void CheckTypeList(List<Type> types, List<Marker> markers)
         {
             for (var i = 0; i < types.Count; i++)
             {
@@ -516,7 +519,7 @@ namespace USFMToolsSharpTest
         [TestMethod]
         public void TestUnknownMarkerParse()
         {
-            Assert.AreEqual(" what is yy?", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedValue);
+            Assert.AreEqual(" what is yy?", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Hierarchies[0][0]).ParsedValue);
             Assert.AreEqual("yy", ((UnknownMarker)parser.ParseFromString("\\yy what is yy?").Contents[0]).ParsedIdentifier);
             Assert.AreEqual(" what is z?", ((UnknownMarker)parser.ParseFromString("\\z what is z?").Contents[0]).ParsedValue);
             Assert.AreEqual("z", ((UnknownMarker)parser.ParseFromString("\\z what is z?").Contents[0]).ParsedIdentifier);
@@ -736,15 +739,15 @@ with a newline";
             Assert.AreEqual(4, parsed.Contents[0].Contents.Count);
         }
 
-        /*
         [TestMethod]
         public void TestIgnoreParentsWhenGettingChildMarkers()
         {
             var ignoredParents = new List<Type> { typeof(FMarker) };
             var result = parser.ParseFromString("\\v 1 Text blocks \\f \\ft Text \\f*");
-            Assert.AreEqual(2, result.GetChildMarkers<TextBlock>().Count);
-            Assert.AreEqual(1, result.GetChildMarkers<TextBlock>(ignoredParents).Count);
-            var verse = result.GetChildMarkers<VMarker>()[0];
+            var hierarchy = result.Hierarchies[0];
+            Assert.AreEqual(2, hierarchy.GetChildMarkers<TextBlock>().Count);
+            Assert.AreEqual(1, hierarchy.GetChildMarkers<TextBlock>(ignoredParents).Count);
+            var verse = hierarchy.GetChildMarkers<VMarker>()[0];
             Assert.AreEqual(2, verse.GetChildMarkers<TextBlock>().Count);
             Assert.AreEqual(1, verse.GetChildMarkers<TextBlock>(ignoredParents).Count);
             Assert.AreEqual(0, verse.GetChildMarkers<TextBlock>(new List<Type>() { typeof(VMarker)}).Count);
@@ -754,22 +757,23 @@ with a newline";
         public void TestGetChildMarkers()
         {
             var result = parser.ParseFromString("\\c 1 \\v 1 Text blocks \\f \\ft Text \\f* \\v 2 Third block \\c 2 \\v 1 Fourth block");
-            var markers = result.GetChildMarkers<VMarker>();
+            var markers = result.Hierarchies[0].GetChildMarkers<VMarker>();
             Assert.AreEqual(3, markers.Count);
-            Assert.AreEqual("1", markers[0].VerseNumber);
-            Assert.AreEqual("2", markers[1].VerseNumber);
-            Assert.AreEqual("1", markers[2].VerseNumber);
+            Assert.AreEqual("1", markers[0].As<VMarker>().VerseNumber);
+            Assert.AreEqual("2", markers[1].As<VMarker>().VerseNumber);
+            Assert.AreEqual("1", markers[2].As<VMarker>().VerseNumber);
         }
 
         [TestMethod]
         public void TestGetHierarchyToMarker()
         {
             var document = new USFMDocument();
+            document.Hierarchies = [new HierachyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
-            document.InsertMultiple(new Marker[] { chapter, verse, textblock });
-            var result = document.GetHierarchyToMarker(textblock);
+            document.InsertMultiple([chapter, verse, textblock], [DefaultHierarchies.Default.AsReadOnly()]);
+            var result = document.Hierarchies[0].GetHierarchyToMarker(textblock);
             Assert.AreEqual(document, result[0]);
             Assert.AreEqual(chapter, result[1]);
             Assert.AreEqual(verse, result[2]);
@@ -777,14 +781,14 @@ with a newline";
 
             document = parser.ParseFromString(@"\c 1\p \v 1 Before \f + \ft In footnote \f* After footnore");
 
-            var markers = document.GetChildMarkers<TextBlock>().ToArray();
-            var baseMarker = document.Contents[0].Contents[0].Contents[0];
+            var markers = document.Hierarchies[0].GetChildMarkers<TextBlock>().ToArray();
+            var baseMarker = document.Contents[0][0][0];
             var hierarchy = baseMarker.GetHierarchyToMarker(markers[0]).ToList();
-            CheckTypeList(new List<Type> { typeof(VMarker), typeof(TextBlock) }, hierarchy);
+            CheckTypeList([typeof(VMarker), typeof(TextBlock)], hierarchy);
             hierarchy = baseMarker.GetHierarchyToMarker(markers[1]).ToList();
-            CheckTypeList(new List<Type> { typeof(VMarker), typeof(FMarker), typeof(FTMarker), typeof(TextBlock) }, hierarchy);
+            CheckTypeList([typeof(VMarker), typeof(FMarker), typeof(FTMarker), typeof(TextBlock)], hierarchy);
             hierarchy = baseMarker.GetHierarchyToMarker(markers[2]).ToList();
-            CheckTypeList(new List<Type> { typeof(VMarker), typeof(TextBlock) }, hierarchy);
+            CheckTypeList([typeof(VMarker), typeof(TextBlock)], hierarchy);
 
         }
 
@@ -792,12 +796,13 @@ with a newline";
         public void TestGetHierarchyToMarkerWithNonExistantMarker()
         {
             var document = new USFMDocument();
+            document.Hierarchies = [new HierachyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
             var secondBlock = new TextBlock("Hello again");
-            document.InsertMultiple(new Marker[] { chapter, verse, textblock });
-            var result = document.GetHierarchyToMarker(secondBlock);
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock }, [DefaultHierarchies.Default.AsReadOnly()]);
+            var result = document.Hierarchies[0].GetHierarchyToMarker(secondBlock);
             Assert.AreEqual(0, result.Count);
         }
 
@@ -805,6 +810,7 @@ with a newline";
         public void TestGetHierarchyToMultipleMarkers()
         {
             var document = new USFMDocument();
+            document.Hierarchies = [new HierachyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
@@ -814,13 +820,16 @@ with a newline";
             var textInFootnote = new TextBlock("Text in footnote");
             var secondBlock = new TextBlock("Hello again");
             var nonExistant = new VMarker();
-            var result = document.GetHierachyToMultipleMarkers(new List<Marker>());
+            var result = document.Hierarchies[0].GetHierachyToMultipleMarkers([]);
             Assert.AreEqual(0, result.Count);
-            result = document.GetHierachyToMultipleMarkers(new List<Marker>() {footnote});
+            result = document.Hierarchies[0].GetHierachyToMultipleMarkers([footnote]);
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result[footnote].Count);
-            document.InsertMultiple(new Marker[] { chapter, verse, textblock, footnote, footnoteText, textInFootnote, footnoteEndMarker, secondBlock });
-            result = document.GetHierachyToMultipleMarkers(new List<Marker>() { textblock, secondBlock, nonExistant, textInFootnote });
+            document.InsertMultiple([chapter, verse, textblock, footnote, footnoteText, textInFootnote, footnoteEndMarker, secondBlock
+            ], [DefaultHierarchies.Default.AsReadOnly()]);
+            result = document.Hierarchies[0].GetHierachyToMultipleMarkers([
+                textblock, secondBlock, nonExistant, textInFootnote
+            ]);
             Assert.AreEqual(document, result[textblock][0]);
             Assert.AreEqual(chapter, result[textblock][1]);
             Assert.AreEqual(verse, result[textblock][2]);
@@ -836,7 +845,6 @@ with a newline";
             Assert.AreEqual(footnote, result[textInFootnote][3]);
             Assert.AreEqual(footnoteText, result[textInFootnote][4]);
         }
-        */
 
         [TestMethod]
         public void VerifyNewlinesStopMarker()
@@ -851,7 +859,7 @@ with a newline";
         [TestMethod]
         public void TestElementsAfterIgnore()
         {
-            var parser = new USFMParser(tagsToIgnore: ["s5"]);
+            parser = new USFMParser(tagsToIgnore: ["s5"]);
             var doc = parser.ParseFromString("\\s5\n\\c 1\n \\v 1 In the beginning ");
             var hierarchy = doc.Hierarchies[0];
             Assert.IsTrue(hierarchy[0].Marker is CMarker);
@@ -947,10 +955,10 @@ This next question is answered the same way in all the churches of God's people.
         {
             var content = @"\q1This is text";
             var doc = parser.ParseFromString(content);
-            var hierachy = doc.Hierarchies[0];
-            Assert.IsTrue(hierachy[0].Marker is QMarker);
-            Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
-            Assert.AreEqual("This is text", ((TextBlock)hierachy[0][0]).Text);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is QMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.AreEqual("This is text", hierarchy[0][0].As<TextBlock>().Text);
         }
 
         [TestMethod]

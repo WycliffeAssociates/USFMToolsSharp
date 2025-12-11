@@ -15,6 +15,7 @@ namespace USFMToolsSharp.Models.Markers
         public int StartingVerse;
         public int EndingVerse;
 
+        /*
         public string VerseCharacter {
             get {
                 var firstCharacterMarker = GetChildMarkers<VPMarker>();
@@ -28,6 +29,7 @@ namespace USFMToolsSharp.Models.Markers
                 }
             }
         }
+        */
         public override string Identifier => "v";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {

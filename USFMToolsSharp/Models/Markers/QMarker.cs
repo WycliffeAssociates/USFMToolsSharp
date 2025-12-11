@@ -18,15 +18,5 @@ namespace USFMToolsSharp.Models.Markers
         {
             return input.TrimStart();
         }
-
-        public override bool TryInsert(Marker input, Type markerType = null)
-        {
-            if (input is VMarker && Contents.Any(m => m is VMarker))
-            {
-                return false;
-            }
-
-            return base.TryInsert(input, markerType);
-        }
     }
 }

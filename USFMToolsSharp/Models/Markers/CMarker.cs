@@ -12,6 +12,7 @@ namespace USFMToolsSharp.Models.Markers
     {
         private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
         public int Number;
+        /*
         public string PublishedChapterMarker
         {
             get
@@ -43,6 +44,7 @@ namespace USFMToolsSharp.Models.Markers
 
             }
         }
+        */
         public override string Identifier => "c";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {

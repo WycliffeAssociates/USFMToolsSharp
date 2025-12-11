@@ -22,7 +22,7 @@ namespace USFMToolsSharp
         private List<ReadOnlyDictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new();
 
 
-        public USFMParser(List<string> tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>> hierarchyDefinitions = null)
+        public USFMParser(List<string>? tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>>? hierarchyDefinitions = null)
         {
             if (hierarchyDefinitions == null)
             {
@@ -31,7 +31,7 @@ namespace USFMToolsSharp
                 ];
             }
             hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;
-            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore]: [];
+            IgnoredMarkers = hasIgnoredMarkers ? [..tagsToIgnore!]: [];
             IgnoreUnknownMarkers = ignoreUnknownMarkers;
         }
 
@@ -45,7 +45,7 @@ namespace USFMToolsSharp
             var output = new USFMDocument();
             for (var i = 0; i < HierarchyDefinitions.Count; i++)
             {
-                output.Hierarchies.Add(new HierachyNode(null));
+                output.Hierarchies.Add(new HierachyNode(output));
             }
             var markers = TokenizeFromString(input);
 
