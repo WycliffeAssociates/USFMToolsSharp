@@ -27,6 +27,7 @@ namespace USFMToolsSharp.Models.Markers
             var markerType = input.GetType();
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
             {
+                var isDefaultHierarchy = i == 0;
                 if (Hierarchies[i].Contents.Count == 0)
                 {
                     var firstNode = new HierarchyNode(input);
@@ -103,25 +104,34 @@ namespace USFMToolsSharp.Models.Markers
                         continue;
                     }
 
-                    InsertNode(input, i, currentNode, currentNodeDefinition);
+                    var node = InsertNode(input, i, currentNode, currentNodeDefinition);
+                    if (isDefaultHierarchy)
+                    {
+                        input.DefaultHierarchyNode = node;
+                    }
                     inserted = true;
                     break;
                 }
 
                 if (!inserted)
                 {
-                    InsertNode(input, i, Hierarchies[i], null);
+                    var node = InsertNode(input, i, Hierarchies[i], null);
+                    if (isDefaultHierarchy)
+                    {
+                        input.DefaultHierarchyNode = node;
+                    }
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void InsertNode(Marker input, int i, HierarchyNode target, HierarchyDefinition? definition)
+        private HierarchyNode InsertNode(Marker input, int i, HierarchyNode target, HierarchyDefinition? definition)
         {
             var tmp = new HierarchyNode(input);
             _toLastChildPath[i].Add(tmp);
             _canInsertFunctions.Add(definition?.CanInsert);
             target.Contents.Add(tmp);
+            return tmp;
         }
 
         public List<Type> GetTypesPathToLastMarker(int hierarchyIndex = 0)
