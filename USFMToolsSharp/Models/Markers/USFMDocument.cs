@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -17,11 +18,11 @@ namespace USFMToolsSharp.Models.Markers
         
         public int NumberOfTotalMarkersAtParse { get; set; }
         
-        private List<Stack<HierachyNode>> _toLastChildStack = new List<Stack<HierachyNode>>();
-        private LinkedList<Func<Type, HierachyNode, Marker, bool>?> _canInsertFunctions = new();
+        private List<List<HierachyNode>> _toLastChildPath = new List<List<HierachyNode>>();
+        private List<Func<Type, HierachyNode, Marker, bool>?> _canInsertFunctions = new();
         
 
-        public void Insert(Marker input, List<ReadOnlyDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
+        public void Insert(Marker input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
             var markerType = input.GetType();
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
@@ -30,48 +31,79 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     var firstNode = new HierachyNode(input);
                     Hierarchies[i].Contents.Add(firstNode);
-                    _toLastChildStack.Add(new Stack<HierachyNode>([firstNode]));
-                    _canInsertFunctions.AddLast(new LinkedListNode<Func<Type, HierachyNode, Marker, bool>?>(null));
+                    _toLastChildPath.Add(new List<HierachyNode> { firstNode });
+                    _canInsertFunctions.Add(null);
                     return;
                 }
+                var currentHierarchy = hierarchyDefinitions[i];
                 
                 var inserted = false;
-                var currentStack = _toLastChildStack[i];
-                while (currentStack.Count > 0)
+                var currentPath = _toLastChildPath[i];
+                
+                // Check all ancestor CanInsert functions from root down
+                var canInsertBasedOnFunctions = true;
+                var distanceAtWhichFailed = -1;
+                for (var ii = 0; ii < _canInsertFunctions.Count; ii++)
                 {
-                    var currentNode = currentStack.Peek();
-                    var currentNodeType = currentNode.MarkerType;
-                    var currentNodeDefinition = hierarchyDefinitions[i].GetValueOrDefault(currentNodeType);
-                    var canInsertBasedOnFunctions = true;
-                    if (currentNodeDefinition == null)
+                    var func = _canInsertFunctions[ii];
+                    if (func == null)
                     {
-                        currentStack.Pop();
                         continue;
                     }
-                    foreach(var func in _canInsertFunctions.Where(i => i != null))
+                    
+                    var currentNode = currentPath[ii];
+                    var currentNodeType = currentNode.MarkerType;
+
+                    if (!func(currentNodeType, currentNode, input))
                     {
-                        if (!func(currentNodeType, currentNode, input))
-                        {
-                            canInsertBasedOnFunctions = false;
-                            break;
-                        }
+                        canInsertBasedOnFunctions = false;
+                        distanceAtWhichFailed = ii;
+                        break;
                     }
+                }
+                
+                // If a CanInsert function failed at index ii, trim back to the parent (index ii-1)
+                // This means removing everything from index ii onwards
+                if (distanceAtWhichFailed >= 0)
+                {
+                    var targetDepth = distanceAtWhichFailed;
+                    while (currentPath.Count > targetDepth)
+                    {
+                        currentPath.RemoveAt(currentPath.Count - 1);
+                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                    }
+                    canInsertBasedOnFunctions = false;
+                }
+
+                // Now walk back up the path to find a valid parent for this marker
+                while (currentPath.Count > 0)
+                {
+                    var currentNode = currentPath[^1];
+                    var currentNodeType = currentNode.MarkerType;
+                    var currentNodeDefinition = currentHierarchy.GetValueOrDefault(currentNodeType);
+                    
+                    if (currentNodeDefinition == null)
+                    {
+                        currentPath.RemoveAt(currentPath.Count - 1);
+                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        continue;
+                    }
+
                     if (!canInsertBasedOnFunctions)
                     {
-                        _canInsertFunctions.RemoveLast();
-                        currentStack.Pop();
+                        currentPath.RemoveAt(currentPath.Count - 1);
+                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
                         continue;
                     }
                     
                     if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
-                        _canInsertFunctions.RemoveLast();
-                        currentStack.Pop();
+                        currentPath.RemoveAt(currentPath.Count - 1);
+                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
                         continue;
                     }
 
                     InsertNode(input, i, currentNode, currentNodeDefinition);
-                    // Going down
                     inserted = true;
                     break;
                 }
@@ -87,8 +119,8 @@ namespace USFMToolsSharp.Models.Markers
         private void InsertNode(Marker input, int i, HierachyNode target, HierarchyDefinition? definition)
         {
             var tmp = new HierachyNode(input);
-            _toLastChildStack[i].Push(tmp);
-            _canInsertFunctions.AddLast(definition?.CanInsert);
+            _toLastChildPath[i].Add(tmp);
+            _canInsertFunctions.Add(definition?.CanInsert);
             target.Contents.Add(tmp);
         }
 
@@ -117,7 +149,7 @@ namespace USFMToolsSharp.Models.Markers
         [Obsolete("Use Hierachies[0].Contents instead")]
         public List<HierachyNode> Contents => Hierarchies[0].Contents;
         
-        public void InsertMultiple(IEnumerable<Marker> input, List<ReadOnlyDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
+        public void InsertMultiple(IEnumerable<Marker> input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
             foreach(Marker i in input)
             {

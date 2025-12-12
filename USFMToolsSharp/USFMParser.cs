@@ -19,7 +19,7 @@ namespace USFMToolsSharp
         private readonly bool IgnoreUnknownMarkers;
         private readonly bool hasIgnoredMarkers;
 
-        private List<ReadOnlyDictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new();
+        private List<FrozenDictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new();
 
 
         public USFMParser(List<string>? tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>>? hierarchyDefinitions = null)
@@ -27,7 +27,7 @@ namespace USFMToolsSharp
             if (hierarchyDefinitions == null)
             {
                 HierarchyDefinitions = [
-                    DefaultHierarchies.Default.AsReadOnly()
+                    DefaultHierarchies.Default.ToFrozenDictionary()
                 ];
             }
             hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;
