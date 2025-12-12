@@ -14,12 +14,12 @@ namespace USFMToolsSharp.Models.Markers
         {
         }
 
-        public List<HierachyNode> Hierarchies { get; set; } = new List<HierachyNode>();
+        public List<HierarchyNode> Hierarchies { get; set; } = new List<HierarchyNode>();
         
         public int NumberOfTotalMarkersAtParse { get; set; }
         
-        private List<List<HierachyNode>> _toLastChildPath = new List<List<HierachyNode>>();
-        private List<Func<Type, HierachyNode, Marker, bool>?> _canInsertFunctions = new();
+        private List<List<HierarchyNode>> _toLastChildPath = new List<List<HierarchyNode>>();
+        private List<Func<Type, HierarchyNode, Marker, bool>?> _canInsertFunctions = new();
         
 
         public void Insert(Marker input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
@@ -29,9 +29,9 @@ namespace USFMToolsSharp.Models.Markers
             {
                 if (Hierarchies[i].Contents.Count == 0)
                 {
-                    var firstNode = new HierachyNode(input);
+                    var firstNode = new HierarchyNode(input);
                     Hierarchies[i].Contents.Add(firstNode);
-                    _toLastChildPath.Add(new List<HierachyNode> { firstNode });
+                    _toLastChildPath.Add(new List<HierarchyNode> { firstNode });
                     _canInsertFunctions.Add(null);
                     return;
                 }
@@ -116,9 +116,9 @@ namespace USFMToolsSharp.Models.Markers
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void InsertNode(Marker input, int i, HierachyNode target, HierarchyDefinition? definition)
+        private void InsertNode(Marker input, int i, HierarchyNode target, HierarchyDefinition? definition)
         {
-            var tmp = new HierachyNode(input);
+            var tmp = new HierarchyNode(input);
             _toLastChildPath[i].Add(tmp);
             _canInsertFunctions.Add(definition?.CanInsert);
             target.Contents.Add(tmp);
@@ -147,7 +147,7 @@ namespace USFMToolsSharp.Models.Markers
         
         // Backwards compatibility
         [Obsolete("Use Hierachies[0].Contents instead")]
-        public List<HierachyNode> Contents => Hierarchies[0].Contents;
+        public List<HierarchyNode> Contents => Hierarchies[0].Contents;
         
         public void InsertMultiple(IEnumerable<Marker> input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {

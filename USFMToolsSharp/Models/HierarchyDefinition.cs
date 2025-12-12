@@ -17,6 +17,6 @@ public class HierarchyDefinition
         AllowedChildren = new HashSet<Type>(allowedTypes).ToFrozenSet();
     }
     public FrozenSet<Type> AllowedChildren { get; set; }
-    public Func<Type, HierachyNode, Marker, bool>? CanInsert = null;
+    public Func<Type, HierarchyNode, Marker, bool>? CanInsert = null;
     
 }

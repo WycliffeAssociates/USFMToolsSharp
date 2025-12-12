@@ -9,11 +9,11 @@ namespace USFMToolsSharp.Models.Markers
     {
         public Marker()
         {
-            Contents = new List<Marker>();
+            
         }
-        public List<Marker> Contents;
         public abstract string Identifier { get; }
         public int Position { get; set; }
+        public HierarchyNode DefaultHierarchyNode { get; set; }
 
         /// <summary>
         /// Pre-process the text contents before creating text elements inside of it

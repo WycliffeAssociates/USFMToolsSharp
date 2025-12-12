@@ -768,7 +768,7 @@ with a newline";
         public void TestGetHierarchyToMarker()
         {
             var document = new USFMDocument();
-            document.Hierarchies = [new HierachyNode(document)];
+            document.Hierarchies = [new HierarchyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
@@ -796,7 +796,7 @@ with a newline";
         public void TestGetHierarchyToMarkerWithNonExistantMarker()
         {
             var document = new USFMDocument();
-            document.Hierarchies = [new HierachyNode(document)];
+            document.Hierarchies = [new HierarchyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
@@ -810,7 +810,7 @@ with a newline";
         public void TestGetHierarchyToMultipleMarkers()
         {
             var document = new USFMDocument();
-            document.Hierarchies = [new HierachyNode(document)];
+            document.Hierarchies = [new HierarchyNode(document)];
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");

@@ -5,9 +5,9 @@ using USFMToolsSharp.Models.Markers;
 
 namespace USFMToolsSharp.Models;
 
-public class HierachyNode
+public class HierarchyNode
 {
-    public HierachyNode(Marker? marker)
+    public HierarchyNode(Marker? marker)
     {
         Marker = marker;
         MarkerType = marker?.GetType();
@@ -18,24 +18,24 @@ public class HierachyNode
     {
         return (T)Marker!;
     }
-    public List<HierachyNode> Contents { get; set; } = new List<HierachyNode>();
+    public List<HierarchyNode> Contents { get; set; } = new List<HierarchyNode>();
     
-    public HierachyNode this[int index]
+    public HierarchyNode this[int index]
     {
         get => Contents[index];
         set => Contents[index] = value;
     }
     
-    public static implicit operator Marker?(HierachyNode input) => input.Marker;
+    public static implicit operator Marker?(HierarchyNode input) => input.Marker;
     /// <summary>
     /// A recursive search for children of a certain type
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public List<HierachyNode> GetChildMarkers<T>(List<Type>? ignoredParents = null) where T : Marker
+    public List<HierarchyNode> GetChildMarkers<T>(List<Type>? ignoredParents = null) where T : Marker
     {
-        var output = new List<HierachyNode>();
-        var stack = new Stack<HierachyNode>(Contents.Count);
+        var output = new List<HierarchyNode>();
+        var stack = new Stack<HierarchyNode>(Contents.Count);
 
         if (ignoredParents != null && ignoredParents.Contains(this.MarkerType))
         {
@@ -66,11 +66,11 @@ public class HierachyNode
     }
     public List<Marker> GetHierarchyToMarker(Marker target)
     {
-        var parents = new Stack<(HierachyNode node, bool isLastInParent)>();
+        var parents = new Stack<(HierarchyNode node, bool isLastInParent)>();
         int childMarkerContentsCount;
 
         bool found = false;
-        var stack = new Stack<(HierachyNode node, bool isLastInParent)>();
+        var stack = new Stack<(HierarchyNode node, bool isLastInParent)>();
         stack.Push((this, false));
         while (stack.Count > 0)
         {
@@ -132,10 +132,10 @@ public class HierachyNode
             }
             
             var output = new Dictionary<Marker, List<Marker>>(targets.Count);
-            var parents = new Stack<(HierachyNode marker, bool isLastInParent)>();
+            var parents = new Stack<(HierarchyNode marker, bool isLastInParent)>();
             int childMarkerContentsCount;
 
-            var stack = new Stack<(HierachyNode marker, bool isLastInParent)>();
+            var stack = new Stack<(HierarchyNode marker, bool isLastInParent)>();
             stack.Push((this, false));
             while (stack.Count > 0)
             {
