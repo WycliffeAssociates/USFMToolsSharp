@@ -143,6 +143,16 @@ namespace USFMToolsSharp
 
                     if (inMarker)
                     {
+                        if (index == startOfMarker)
+                        {
+                            // Handle escaped backslash
+                            inMarker = false;
+                            endOfMarker = index + 1;
+                            inContent = true;
+                            startOfContent = index + 1;
+                            index+=2;
+                            continue;
+                        }
                         endOfMarker = index;
                         // Handle marker without content
                         AddMarkerToList(input[startOfMarker ..endOfMarker], ReadOnlySpan<char>.Empty, startOfMarker, output);
@@ -652,6 +662,8 @@ namespace USFMToolsSharp
                     return new FIGMarker();
                 case "fig*":
                     return new FIGEndMarker();
+                case "\\":
+                    return new TextBlock("\\");
 
                 default:
                     return new UnknownMarker() { ParsedIdentifier = identifier.ToString() };

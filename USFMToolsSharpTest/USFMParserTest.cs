@@ -979,5 +979,24 @@ This next question is answered the same way in all the churches of God's people.
             Assert.IsTrue(hierachy[0][0].Marker is TextBlock);
             Assert.AreEqual($"{ideographicSpace}This is more text", ((TextBlock)hierachy[0][0]).Text);
         }
+
+        [TestMethod]
+        public void TestBackslashEscapedInText()
+        {
+            var content = @"\v 1 This is text with a backslash \\ in it.";
+            var doc = parser.ParseFromString(content);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is VMarker);
+            Assert.IsTrue(hierarchy[0][0].Marker is TextBlock);
+            Assert.AreEqual("This is text with a backslash ", hierarchy[0][0].As<TextBlock>().Text);
+            Assert.AreEqual("\\", hierarchy[0][1].As<TextBlock>().Text);
+            Assert.AreEqual(" in it.", hierarchy[0][2].As<TextBlock>().Text);
+            content = @"\v 1 This is text that is n\\a";
+            doc = parser.ParseFromString(content);
+            hierarchy = doc.Hierarchies[0];
+            Assert.AreEqual("This is text that is n", hierarchy[0][0].As<TextBlock>().Text);
+            Assert.AreEqual("\\", hierarchy[0][1].As<TextBlock>().Text);
+            Assert.AreEqual("a", hierarchy[0][2].As<TextBlock>().Text);
+        }
     }
 }
