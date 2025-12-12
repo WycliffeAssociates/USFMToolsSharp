@@ -772,7 +772,7 @@ with a newline";
             var chapter = new CMarker() { Number = 1 };
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
-            document.InsertMultiple([chapter, verse, textblock], [DefaultHierarchies.Default.AsReadOnly()]);
+            document.InsertMultiple([chapter, verse, textblock], [DefaultHierarchies.Default.ToFrozenDictionary()]);
             var result = document.Hierarchies[0].GetHierarchyToMarker(textblock);
             Assert.AreEqual(document, result[0]);
             Assert.AreEqual(chapter, result[1]);
@@ -801,7 +801,7 @@ with a newline";
             var verse = new VMarker() { VerseNumber = "1" };
             var textblock = new TextBlock("Hello world");
             var secondBlock = new TextBlock("Hello again");
-            document.InsertMultiple(new Marker[] { chapter, verse, textblock }, [DefaultHierarchies.Default.AsReadOnly()]);
+            document.InsertMultiple(new Marker[] { chapter, verse, textblock }, [DefaultHierarchies.Default.ToFrozenDictionary()]);
             var result = document.Hierarchies[0].GetHierarchyToMarker(secondBlock);
             Assert.AreEqual(0, result.Count);
         }
@@ -826,7 +826,7 @@ with a newline";
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result[footnote].Count);
             document.InsertMultiple([chapter, verse, textblock, footnote, footnoteText, textInFootnote, footnoteEndMarker, secondBlock
-            ], [DefaultHierarchies.Default.AsReadOnly()]);
+            ], [DefaultHierarchies.Default.ToFrozenDictionary()]);
             result = document.Hierarchies[0].GetHierachyToMultipleMarkers([
                 textblock, secondBlock, nonExistant, textInFootnote
             ]);
