@@ -15,13 +15,12 @@ namespace USFMToolsSharp.Models.Markers
         public int StartingVerse;
         public int EndingVerse;
 
-        /*
         public string VerseCharacter {
             get {
-                var firstCharacterMarker = GetChildMarkers<VPMarker>();
+                var firstCharacterMarker = DefaultHierarchyNode.GetChildMarkers<VPMarker>();
                 if (firstCharacterMarker.Count > 0)
                 {
-                    return firstCharacterMarker[0].VerseCharacter;
+                    return firstCharacterMarker[0].As<VPMarker>().VerseCharacter;
                 }
                 else
                 {
@@ -29,7 +28,6 @@ namespace USFMToolsSharp.Models.Markers
                 }
             }
         }
-        */
         public override string Identifier => "v";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {

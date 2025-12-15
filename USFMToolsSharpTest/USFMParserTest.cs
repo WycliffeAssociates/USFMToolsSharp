@@ -998,5 +998,27 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual("\\", hierarchy[0][1].As<TextBlock>().Text);
             Assert.AreEqual("a", hierarchy[0][2].As<TextBlock>().Text);
         }
+
+        [TestMethod]
+        public void TestChapterLabelInChapter()
+        {
+            var content = @"\c 1\cl Chapter Label Text \v 1 In the beginning God created the heavens and the earth.";
+            var doc = parser.ParseFromString(content);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            var chapter = hierarchy[0].As<CMarker>();
+            Assert.AreEqual("Chapter Label Text", chapter.CustomChapterLabel);
+        }
+
+        [TestMethod]
+        public void TestPublishedChapterNumber()
+        {
+            var content = @"\c 1 \cp T \v 1 In the beginning God created the heavens and the earth.";
+            var doc = parser.ParseFromString(content);
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is CMarker);
+            var chapter = hierarchy[0].As<CMarker>();
+            Assert.AreEqual("T", chapter.PublishedChapterMarker);
+        }
     }
 }

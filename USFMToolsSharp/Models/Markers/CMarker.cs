@@ -12,15 +12,14 @@ namespace USFMToolsSharp.Models.Markers
     {
         private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
         public int Number;
-        /*
         public string PublishedChapterMarker
         {
             get
             {
-                var childCharacterMarker = GetChildMarkers<CPMarker>();
+                var childCharacterMarker = DefaultHierarchyNode.GetChildMarkers<CPMarker>();
                 if (childCharacterMarker.Count > 0)
                 {
-                    return childCharacterMarker[0].PublishedChapterMarker;
+                    return childCharacterMarker[0].As<CPMarker>().PublishedChapterMarker;
                 }
                 else
                 {
@@ -32,10 +31,10 @@ namespace USFMToolsSharp.Models.Markers
         {
             get
             {
-                var childChapLabelMarker = GetChildMarkers<CLMarker>();
+                var childChapLabelMarker = DefaultHierarchyNode.GetChildMarkers<CLMarker>();
                 if (childChapLabelMarker.Count > 0)
                 {
-                    return childChapLabelMarker[0].Label;
+                    return childChapLabelMarker[0].As<CLMarker>().Label;
                 }
                 else
                 {
@@ -44,7 +43,6 @@ namespace USFMToolsSharp.Models.Markers
 
             }
         }
-        */
         public override string Identifier => "c";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {

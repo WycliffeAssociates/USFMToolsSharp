@@ -31,8 +31,12 @@ namespace USFMToolsSharp.Models.Markers
                 if (Hierarchies[i].Contents.Count == 0)
                 {
                     var firstNode = new HierarchyNode(input);
+                    if (isDefaultHierarchy)
+                    {
+                        input.DefaultHierarchyNode = firstNode;
+                    }
                     Hierarchies[i].Contents.Add(firstNode);
-                    _toLastChildPath.Add(new List<HierarchyNode> { firstNode });
+                    _toLastChildPath.Add([firstNode]);
                     _canInsertFunctions.Add(null);
                     return;
                 }
@@ -142,7 +146,7 @@ namespace USFMToolsSharp.Models.Markers
                 return types;
             }
             var currentNode = Hierarchies[hierarchyIndex];
-            types.Add(currentNode.Marker != null ? currentNode.Marker.GetType() : typeof(USFMDocument));
+            types.Add(currentNode.Marker != null ? currentNode.MarkerType : typeof(USFMDocument));
             while (currentNode.Contents.Count > 0)
             {
                 currentNode = currentNode.Contents[^1];
@@ -150,7 +154,7 @@ namespace USFMToolsSharp.Models.Markers
                 {
                     continue;
                 }
-                types.Add(currentNode.Marker.GetType());
+                types.Add(currentNode.MarkerType);
             }
             return types;
         }
