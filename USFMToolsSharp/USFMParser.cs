@@ -27,7 +27,8 @@ namespace USFMToolsSharp
             if (hierarchyDefinitions == null)
             {
                 HierarchyDefinitions = [
-                    DefaultHierarchies.Default.ToFrozenDictionary()
+                    DefaultHierarchies.Default.ToFrozenDictionary(),
+                    DefaultHierarchies.Presentation.ToFrozenDictionary()
                 ];
             }
             hasIgnoredMarkers = tagsToIgnore != null && tagsToIgnore.Count != 0;

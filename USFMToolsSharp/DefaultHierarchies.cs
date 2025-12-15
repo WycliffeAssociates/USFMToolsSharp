@@ -587,4 +587,30 @@ public static class DefaultHierarchies
             typeof(SUPEndMarker),
         ]),
     };
+
+    public static readonly Dictionary<Type, HierarchyDefinition> Presentation = new()
+    {
+        [typeof(PMarker)] = new HierarchyDefinition([
+            typeof(VMarker),
+            typeof(BMarker),
+            typeof(SPMarker),
+            typeof(TextBlock),
+        ]),
+        [typeof(QMarker)] = new HierarchyDefinition([
+            typeof(CMarker),
+            typeof(VMarker)
+        ]),
+        [typeof(FMarker)] = new HierarchyDefinition([
+            typeof(FTMarker),
+            typeof(FVMarker),
+            typeof(FVEndMarker),
+            typeof(FPMarker),
+            typeof(FQMarker),
+            typeof(FQEndMarker),
+            typeof(TextBlock),
+            typeof(FQAMarker),
+            typeof(FQAEndMarker)
+        ])
+    };
+
 }

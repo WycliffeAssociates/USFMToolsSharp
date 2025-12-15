@@ -19,7 +19,7 @@ namespace USFMToolsSharp.Models.Markers
         public int NumberOfTotalMarkersAtParse { get; set; }
         
         private List<List<HierarchyNode>> _toLastChildPath = new List<List<HierarchyNode>>();
-        private List<Func<Type, HierarchyNode, Marker, bool>?> _canInsertFunctions = new();
+        private List<List<Func<Type, HierarchyNode, Marker, bool>?>> _canInsertFunctions = new();
         
 
         public void Insert(Marker input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
@@ -37,9 +37,10 @@ namespace USFMToolsSharp.Models.Markers
                     }
                     Hierarchies[i].Contents.Add(firstNode);
                     _toLastChildPath.Add([firstNode]);
-                    _canInsertFunctions.Add(null);
+                    _canInsertFunctions.Add([null]);
                     return;
                 }
+                var currentCanInsertFunctions = _canInsertFunctions[i];
                 var currentHierarchy = hierarchyDefinitions[i];
                 
                 var inserted = false;
@@ -48,9 +49,9 @@ namespace USFMToolsSharp.Models.Markers
                 // Check all ancestor CanInsert functions from root down
                 var canInsertBasedOnFunctions = true;
                 var distanceAtWhichFailed = -1;
-                for (var ii = 0; ii < _canInsertFunctions.Count; ii++)
+                for (var ii = 0; ii < currentCanInsertFunctions.Count; ii++)
                 {
-                    var func = _canInsertFunctions[ii];
+                    var func = currentCanInsertFunctions[ii];
                     if (func == null)
                     {
                         continue;
@@ -75,7 +76,7 @@ namespace USFMToolsSharp.Models.Markers
                     while (currentPath.Count > targetDepth)
                     {
                         currentPath.RemoveAt(currentPath.Count - 1);
-                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        currentCanInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
                     }
                     canInsertBasedOnFunctions = false;
                 }
@@ -90,21 +91,21 @@ namespace USFMToolsSharp.Models.Markers
                     if (currentNodeDefinition == null)
                     {
                         currentPath.RemoveAt(currentPath.Count - 1);
-                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
                         continue;
                     }
 
                     if (!canInsertBasedOnFunctions)
                     {
                         currentPath.RemoveAt(currentPath.Count - 1);
-                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
                         continue;
                     }
                     
                     if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
                         currentPath.RemoveAt(currentPath.Count - 1);
-                        _canInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
                         continue;
                     }
 
@@ -133,7 +134,7 @@ namespace USFMToolsSharp.Models.Markers
         {
             var tmp = new HierarchyNode(input);
             _toLastChildPath[i].Add(tmp);
-            _canInsertFunctions.Add(definition?.CanInsert);
+            _canInsertFunctions[i].Add(definition?.CanInsert);
             target.Contents.Add(tmp);
             return tmp;
         }
