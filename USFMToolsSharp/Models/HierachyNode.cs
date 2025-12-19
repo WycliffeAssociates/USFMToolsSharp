@@ -215,4 +215,56 @@ public class HierarchyNode
             }
             return current.Marker!;
         }
+        public List<HierarchyNode> GetNodesToMarker(Marker target)
+        {
+            var parents = new Stack<(HierarchyNode node, bool isLastInParent)>();
+            int childMarkerContentsCount;
+
+            bool found = false;
+            var stack = new Stack<(HierarchyNode node, bool isLastInParent)>();
+            stack.Push((this, false));
+            HierarchyNode foundNode = null;
+            while (stack.Count > 0)
+            {
+                var (marker, isLastInParent) = stack.Pop();
+                if (marker.Marker == target)
+                {
+                    found = true;
+                    foundNode = marker;
+                    break;
+                }
+
+                if (marker.Contents.Count != 0)
+                {
+                    // We're descending
+                    parents.Push((marker, isLastInParent));
+
+                    childMarkerContentsCount = marker.Contents.Count;
+                    for (int i = 0; i < childMarkerContentsCount; i++)
+                    {
+                        stack.Push((marker.Contents[i], i == 0));
+                    }
+                }
+                else if (stack.Count == 0 || isLastInParent)
+                {
+                    // We're ascending
+                    var tmp = parents.Pop();
+                    // keep moving up the parent stack until we aren't the last in a parent
+                    while(tmp.isLastInParent)
+                    {
+                        tmp = parents.Pop();
+                    }
+                }
+            }
+
+            if (!found)
+            {
+                return [];
+            }
+            var output = new List<HierarchyNode>(parents.Count + 1) { foundNode };
+
+            output.AddRange(parents.Select(i => i.node));
+            output.Reverse();
+            return output;
+        }
 }

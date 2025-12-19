@@ -1020,5 +1020,18 @@ This next question is answered the same way in all the churches of God's people.
             var chapter = hierarchy[0].As<CMarker>();
             Assert.AreEqual("T", chapter.PublishedChapterMarker);
         }
+
+        [TestMethod]
+        public void TestFindingMarkerInAnotherHierarchy()
+        {
+            var content = @"\p \c 1 \p \v 1 In the beginning God created the heavens and the earth.";
+            var doc = parser.ParseFromString(content);
+            var defaultHierarchy = doc.Hierarchies[0];
+            var presentationHierarchy = doc.Hierarchies[1];
+            var markerPathInPresentation = presentationHierarchy.GetNodesToMarker(defaultHierarchy[1][0][0]);
+            Assert.AreEqual(typeof(USFMDocument), markerPathInPresentation[0].MarkerType);
+            Assert.AreEqual(typeof(PMarker), markerPathInPresentation[1].MarkerType);
+            Assert.AreEqual(typeof(VMarker), markerPathInPresentation[2].MarkerType);
+        }
     }
 }
