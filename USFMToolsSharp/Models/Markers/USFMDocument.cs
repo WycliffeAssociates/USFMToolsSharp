@@ -76,7 +76,7 @@ namespace USFMToolsSharp.Models.Markers
                     while (currentPath.Count > targetDepth)
                     {
                         currentPath.RemoveAt(currentPath.Count - 1);
-                        currentCanInsertFunctions.RemoveAt(_canInsertFunctions.Count - 1);
+                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
                     }
                     canInsertBasedOnFunctions = false;
                 }

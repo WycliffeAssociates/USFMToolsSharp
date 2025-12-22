@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.AccessControl;
 using USFMToolsSharp.Models;
 using USFMToolsSharp.Models.Markers;
 
@@ -588,29 +586,170 @@ public static class DefaultHierarchies
         ]),
     };
 
+    // shared paragraph/paragraph-like presentation children to avoid duplication
+    private static readonly Type[] ParagraphPresentationChildren = new[]
+    {
+         typeof(CMarker),
+         typeof(VMarker),
+         typeof(BMarker),
+         typeof(SPMarker),
+         typeof(TextBlock),
+         // inline presentation/formatting allowed inside a paragraph
+         typeof(TLMarker),
+         typeof(TLEndMarker),
+         typeof(WMarker),
+         typeof(WEndMarker),
+         typeof(ITMarker),
+         typeof(ITEndMarker),
+         typeof(SCMarker),
+         typeof(SCEndMarker),
+         typeof(SUPMarker),
+         typeof(SUPEndMarker),
+         // footnote related markers
+         typeof(FMarker),
+         typeof(FEndMarker),
+         typeof(FPMarker),
+         typeof(FRMarker),
+         typeof(FREndMarker),
+         typeof(FVMarker),
+         typeof(FVEndMarker),
+         typeof(FQMarker),
+         typeof(FQEndMarker),
+         typeof(FQAMarker),
+         typeof(FQAEndMarker),
+     };
+
+    // Structure-specific paragraph children must NOT include structural markers (CMarker, VMarker)
+    // to avoid creating cycles where paragraphs allow chapters/verses which allow paragraphs.
+    private static readonly Type[] ParagraphStructureChildren = ParagraphPresentationChildren
+        .Where(t => t != typeof(CMarker) && t != typeof(VMarker))
+        .ToArray();
+
     public static readonly Dictionary<Type, HierarchyDefinition> Presentation = new()
     {
-        [typeof(PMarker)] = new HierarchyDefinition([
+        [typeof(PMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(QMarker)] = new HierarchyDefinition([
+            // allow chapter/verse and common inline markers within quote/poetry blocks
+            typeof(CMarker),
             typeof(VMarker),
             typeof(BMarker),
-            typeof(SPMarker),
+            typeof(QSMarker),
+            typeof(QSEndMarker),
             typeof(TextBlock),
-        ]),
-        [typeof(QMarker)] = new HierarchyDefinition([
-            typeof(CMarker),
-            typeof(VMarker)
+            typeof(TLMarker),
+            typeof(TLEndMarker),
+            typeof(WMarker),
+            typeof(WEndMarker),
+            typeof(ITMarker),
+            typeof(ITEndMarker),
+            typeof(SCMarker),
+            typeof(SCEndMarker),
+            typeof(SUPMarker),
+            typeof(SUPEndMarker),
+            // footnote support inside quotes/poetry
+            typeof(FMarker),
+            typeof(FEndMarker),
+            typeof(FPMarker),
+            typeof(FRMarker),
+            typeof(FREndMarker),
+            typeof(FVMarker),
+            typeof(FVEndMarker),
+            typeof(FQMarker),
+            typeof(FQEndMarker),
+            typeof(FQAMarker),
+            typeof(FQAEndMarker),
         ]),
         [typeof(FMarker)] = new HierarchyDefinition([
+            // keep existing F-specific children and add common inline/presentation markers
             typeof(FTMarker),
             typeof(FVMarker),
             typeof(FVEndMarker),
             typeof(FPMarker),
             typeof(FQMarker),
             typeof(FQEndMarker),
+            typeof(FRMarker),
+            typeof(FREndMarker),
+            typeof(FKMarker),
             typeof(TextBlock),
             typeof(FQAMarker),
-            typeof(FQAEndMarker)
-        ])
+            typeof(FQAEndMarker),
+            // inline presentation inside footnotes
+            typeof(TLMarker),
+            typeof(TLEndMarker),
+            typeof(WMarker),
+            typeof(WEndMarker),
+            typeof(ITMarker),
+            typeof(ITEndMarker),
+            typeof(SCMarker),
+            typeof(SCEndMarker),
+            typeof(SUPMarker),
+            typeof(SUPEndMarker),
+            // reference/book markers often appear in notes
+            typeof(BKMarker),
+            typeof(BKEndMarker),
+            typeof(BDMarker),
+            typeof(BDEndMarker),
+            typeof(FLMarker),
+        ]),
+        // paragraph-like markers use the shared children to avoid duplication
+        [typeof(PCMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PIMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PMMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PMCMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PMOMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PMRMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PNMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PNGMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PRMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+        [typeof(PROMarker)] = new HierarchyDefinition(ParagraphPresentationChildren),
+    };
+
+    // A structure-focused hierarchy: chapter -> verse, with paragraphs allowed under either
+    public static readonly Dictionary<Type, HierarchyDefinition> Structure = new()
+    {
+        // Chapter may contain verses and paragraph markers
+        [typeof(CMarker)] = new HierarchyDefinition([
+            typeof(VMarker),
+            typeof(PMarker),
+            typeof(PCMarker),
+            typeof(PIMarker),
+            typeof(PMMarker),
+            typeof(PMCMarker),
+            typeof(PMOMarker),
+            typeof(PMRMarker),
+            typeof(PNMarker),
+            typeof(PNGMarker),
+            typeof(PRMarker),
+            typeof(PROMarker),
+        ]),
+
+        // Verse may contain paragraph markers
+        [typeof(VMarker)] = new HierarchyDefinition([
+            typeof(PMarker),
+            typeof(PCMarker),
+            typeof(PIMarker),
+            typeof(PMMarker),
+            typeof(PMCMarker),
+            typeof(PMOMarker),
+            typeof(PMRMarker),
+            typeof(PNMarker),
+            typeof(PNGMarker),
+            typeof(PRMarker),
+            typeof(PROMarker),
+        ]),
+
+        // Paragraph-like markers use structure-safe children (no CMarker/VMarker to prevent cycles)
+        [typeof(PMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PCMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PIMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PMMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PMCMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PMOMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PMRMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PNMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PNGMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PRMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
+        [typeof(PROMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
     };
 
 }
