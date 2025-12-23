@@ -123,7 +123,7 @@ namespace USFMToolsSharp
         /// <returns>A List of Markers based upon the string</returns>
         private List<Marker> TokenizeFromString(ReadOnlySpan<char> input)
         {
-            var output = new List<Marker>(input.Length / 10);
+            var output = new List<Marker>(input.Count('\\'));
             var index = 0;
             var startOfMarker = 0;
             var endOfMarker = 0;
