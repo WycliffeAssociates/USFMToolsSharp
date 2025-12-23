@@ -215,12 +215,20 @@ namespace USFMToolsSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static bool IsValidMarkerCharacter(char c)
         {
-            return char.IsLetter(c) || c == '-';
+            return char.IsLetter(c) || c == '-' || c == '+';
         }
 
         private void AddMarkerToList(ReadOnlySpan<char> marker, ReadOnlySpan<char> content, int index, List<Marker> output)
         {
             var trimmedMarker = marker.Trim();
+            
+            // Strip leading '+' for nested markers (older USFM style)
+            // According to https://docs.usfm.bible/usfm/3.1.1/char/nesting.html
+            if (trimmedMarker.Length > 0 && trimmedMarker[0] == '+')
+            {
+                trimmedMarker = trimmedMarker[1..];
+            }
+            
             var lookup = IgnoredMarkers.GetAlternateLookup<ReadOnlySpan<char>>();
             if (hasIgnoredMarkers && lookup.Contains(trimmedMarker))
             {

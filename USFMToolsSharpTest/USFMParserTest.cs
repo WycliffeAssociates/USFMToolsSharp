@@ -1080,5 +1080,52 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual(1, vMarkerPresentation.StartingVerse);
             Assert.AreEqual(1, vMarkerStructure.StartingVerse);
         }
+
+        [TestMethod]
+        public void TestWithNestedMarkers()
+        {
+            // Test older style nested markers with + prefix
+            // According to https://docs.usfm.bible/usfm/3.1.1/char/nesting.html
+            // The + prefix should be ignored in the marker type
+            
+            // Test simple nested bold marker
+            USFMDocument doc = parser.ParseFromString("\\v 1 \\+bd Bold \\+bd*");
+            Assert.AreEqual(1, doc.Contents.Count);
+            var vm = doc.Contents[0];
+            Assert.AreEqual(2, vm.Contents.Count);
+            var marker = vm.Contents[0];
+            Assert.IsInstanceOfType(marker.Marker, typeof(BDMarker), "Nested marker \\+bd should be recognized as BDMarker");
+            
+            // Test nested word marker with attributes
+            doc = parser.ParseFromString("\\v 1 \\+w gracious|lemma=\"grace\" \\+w*");
+            Assert.AreEqual(1, doc.Contents.Count);
+            vm = doc.Contents[0];
+            Assert.AreEqual(2, vm.Contents.Count);
+            marker = vm.Contents[0];
+            Assert.IsInstanceOfType(marker.Marker, typeof(WMarker), "Nested marker \\+w should be recognized as WMarker");
+            
+            // Test mixed nested and non-nested markers in same verse
+            doc = parser.ParseFromString("\\v 1 Normal \\bd Bold \\bd* and \\+em Nested Emphasis \\+em* text");
+            Assert.AreEqual(1, doc.Contents.Count);
+            vm = doc.Contents[0];
+            Assert.IsTrue(vm.Contents.Count >= 4, "Should have multiple content items");
+            
+            // Verify there is a bd marker (should be second item after "Normal " text)
+            bool hasBd = false;
+            bool hasNestedEm = false;
+            for (int i = 0; i < vm.Contents.Count; i++)
+            {
+                if (vm.Contents[i].Marker is BDMarker)
+                {
+                    hasBd = true;
+                }
+                if (vm.Contents[i].Marker is EMMarker)
+                {
+                    hasNestedEm = true;
+                }
+            }
+            Assert.IsTrue(hasBd, "Should find bold marker");
+            Assert.IsTrue(hasNestedEm, "Should find nested emphasis marker");
+        }
     }
 }
