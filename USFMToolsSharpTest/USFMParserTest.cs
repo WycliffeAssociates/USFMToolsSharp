@@ -1033,5 +1033,52 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual(typeof(PMarker), markerPathInPresentation[1].MarkerType);
             Assert.AreEqual(typeof(VMarker), markerPathInPresentation[2].MarkerType);
         }
+
+        [TestMethod]
+        public void TestAllHierarchiesPopulatedFromEmptyDocument()
+        {
+            // Regression test for bug in USFMDocument.Insert() method.
+            // 
+            // BUG: When inserting the first marker into an empty document, if the code used
+            // "return" instead of "continue" (line 40), only the first hierarchy would be
+            // populated and hierarchies 1 and 2 would remain empty.
+            //
+            // This test verifies that when inserting into an empty document, ALL hierarchies
+            // (Default, Presentation, Structure) are populated, not just the first one.
+            //
+            // Without the fix, this test would fail with:
+            // - Hierarchy 0 would have 1 item (VMarker)
+            // - Hierarchy 1 would have 0 items (empty - BUG!)
+            // - Hierarchy 2 would have 0 items (empty - BUG!)
+            var content = @"\v 1 In the beginning God created the heavens and the earth.";
+            var doc = parser.ParseFromString(content);
+            
+            // Verify all three hierarchies exist
+            Assert.AreEqual(3, doc.Hierarchies.Count, "Should have 3 hierarchies (Default, Presentation, Structure)");
+            
+            // Verify all hierarchies have content (not empty)
+            for (int i = 0; i < doc.Hierarchies.Count; i++)
+            {
+                Assert.IsTrue(doc.Hierarchies[i].Contents.Count > 0, 
+                    $"Hierarchy {i} should not be empty");
+            }
+            
+            // Verify the verse marker exists in all hierarchies
+            Assert.IsInstanceOfType(doc.Hierarchies[0][0].Marker, typeof(VMarker), 
+                "Default hierarchy should contain VMarker");
+            Assert.IsInstanceOfType(doc.Hierarchies[1][0].Marker, typeof(VMarker), 
+                "Presentation hierarchy should contain VMarker");
+            Assert.IsInstanceOfType(doc.Hierarchies[2][0].Marker, typeof(VMarker), 
+                "Structure hierarchy should contain VMarker");
+            
+            // Verify the verse number is correct in all hierarchies
+            var vMarkerDefault = doc.Hierarchies[0][0].As<VMarker>();
+            var vMarkerPresentation = doc.Hierarchies[1][0].As<VMarker>();
+            var vMarkerStructure = doc.Hierarchies[2][0].As<VMarker>();
+            
+            Assert.AreEqual(1, vMarkerDefault.StartingVerse);
+            Assert.AreEqual(1, vMarkerPresentation.StartingVerse);
+            Assert.AreEqual(1, vMarkerStructure.StartingVerse);
+        }
     }
 }

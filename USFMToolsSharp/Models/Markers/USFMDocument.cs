@@ -38,7 +38,7 @@ namespace USFMToolsSharp.Models.Markers
                     Hierarchies[i].Contents.Add(firstNode);
                     _toLastChildPath.Add([firstNode]);
                     _canInsertFunctions.Add([null]);
-                    return;
+                    continue;
                 }
                 var currentCanInsertFunctions = _canInsertFunctions[i];
                 var currentHierarchy = hierarchyDefinitions[i];
@@ -47,8 +47,9 @@ namespace USFMToolsSharp.Models.Markers
                 var currentPath = _toLastChildPath[i];
                 
                 // Check all ancestor CanInsert functions from root down
-                var canInsertBasedOnFunctions = true;
-                var distanceAtWhichFailed = -1;
+                // If any CanInsert function fails, we need to trim the path back and try to find
+                // a different insertion point (the path will be further trimmed in the loop below)
+                var needsToFindNewParent = false;
                 for (var ii = 0; ii < currentCanInsertFunctions.Count; ii++)
                 {
                     var func = currentCanInsertFunctions[ii];
@@ -62,50 +63,42 @@ namespace USFMToolsSharp.Models.Markers
 
                     if (!func(currentNodeType, currentNode, input))
                     {
-                        canInsertBasedOnFunctions = false;
-                        distanceAtWhichFailed = ii;
+                        // CanInsert function failed at index ii
+                        // Trim back to include this node (we'll check it in the main loop below)
+                        while (currentPath.Count > ii + 1)
+                        {
+                            TrimPathEnd(currentPath, currentCanInsertFunctions);
+                        }
+                        needsToFindNewParent = true;
                         break;
                     }
                 }
-                
-                // If a CanInsert function failed at index ii, trim back to the parent (index ii-1)
-                // This means removing everything from index ii onwards
-                if (distanceAtWhichFailed >= 0)
-                {
-                    var targetDepth = distanceAtWhichFailed;
-                    while (currentPath.Count > targetDepth)
-                    {
-                        currentPath.RemoveAt(currentPath.Count - 1);
-                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
-                    }
-                    canInsertBasedOnFunctions = false;
-                }
 
-                // Now walk back up the path to find a valid parent for this marker
+                // Walk back up the path to find a valid parent for this marker
                 while (currentPath.Count > 0)
                 {
                     var currentNode = currentPath[^1];
                     var currentNodeType = currentNode.MarkerType;
                     var currentNodeDefinition = currentHierarchy.GetValueOrDefault(currentNodeType);
                     
+                    // Skip nodes without hierarchy definitions
                     if (currentNodeDefinition == null)
                     {
-                        currentPath.RemoveAt(currentPath.Count - 1);
-                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
+                        TrimPathEnd(currentPath, currentCanInsertFunctions);
                         continue;
                     }
 
-                    if (!canInsertBasedOnFunctions)
+                    // If we need to find a new parent (because CanInsert failed), skip the current node
+                    if (needsToFindNewParent)
                     {
-                        currentPath.RemoveAt(currentPath.Count - 1);
-                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
+                        TrimPathEnd(currentPath, currentCanInsertFunctions);
                         continue;
                     }
                     
+                    // Check if this parent allows this child type
                     if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
-                        currentPath.RemoveAt(currentPath.Count - 1);
-                        currentCanInsertFunctions.RemoveAt(currentCanInsertFunctions.Count - 1);
+                        TrimPathEnd(currentPath, currentCanInsertFunctions);
                         continue;
                     }
 
@@ -139,6 +132,13 @@ namespace USFMToolsSharp.Models.Markers
             return tmp;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void TrimPathEnd(List<HierarchyNode> path, List<Func<Type, HierarchyNode, Marker, bool>?> functions)
+        {
+            path.RemoveAt(path.Count - 1);
+            functions.RemoveAt(functions.Count - 1);
+        }
+
         public List<Type> GetTypesPathToLastMarker(int hierarchyIndex = 0)
         {
             List<Type> types = new List<Type>();
@@ -161,7 +161,7 @@ namespace USFMToolsSharp.Models.Markers
         }
         
         // Backwards compatibility
-        [Obsolete("Use Hierachies[0].Contents instead")]
+        [Obsolete("Use Hierarchies[0].Contents instead")]
         public List<HierarchyNode> Contents => Hierarchies[0].Contents;
         
         public void InsertMultiple(IEnumerable<Marker> input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
