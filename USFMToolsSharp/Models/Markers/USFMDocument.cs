@@ -15,15 +15,36 @@ namespace USFMToolsSharp.Models.Markers
         }
 
         public List<HierarchyNode> Hierarchies { get; set; } = new List<HierarchyNode>();
+        public List<Marker> AllMarkers { get; set; } = new List<Marker>();
         
         public int NumberOfTotalMarkersAtParse { get; set; }
         
         private List<List<HierarchyNode>> _toLastChildPath = new List<List<HierarchyNode>>();
         private List<List<Func<Type, HierarchyNode, Marker, bool>?>> _canInsertFunctions = new();
-        
+
+        public void Insert(Marker input)
+        {
+            if (Hierarchies.Count == 0)
+            {
+                Hierarchies =
+                [
+                    new HierarchyNode(null), // Default
+                    new HierarchyNode(null), // Structure
+                    new HierarchyNode(null)  // Presentation
+                ];
+            }
+
+            if (input is USFMDocument doc)
+            {
+                InsertMultiple(doc.AllMarkers, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
+            }
+
+            Insert(input, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
+        }
 
         public void Insert(Marker input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
+            AllMarkers.Add(input);
             var markerType = input.GetType();
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
             {

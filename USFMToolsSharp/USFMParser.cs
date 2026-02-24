@@ -3,6 +3,7 @@ using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using USFMToolsSharp.Models;
@@ -20,7 +21,7 @@ namespace USFMToolsSharp
         private readonly bool hasIgnoredMarkers;
 
         private List<FrozenDictionary<Type, HierarchyDefinition>> HierarchyDefinitions { get; set; } = new();
-
+        public event EventHandler<List<Marker>>? OnMarkersTokenized;
 
         public USFMParser(List<string>? tagsToIgnore = null, bool ignoreUnknownMarkers = false, List<Dictionary<Type, HierarchyDefinition>>? hierarchyDefinitions = null)
         {
@@ -50,11 +51,11 @@ namespace USFMToolsSharp
                 output.Hierarchies.Add(new HierarchyNode(output));
             }
             var markers = TokenizeFromString(input);
-
+            
             // Clean out extra whitespace where it isn't needed
             markers = CleanWhitespace(markers);
 
-
+            OnMarkersTokenized?.Invoke(this, markers);
 
             for (var markerIndex = 0; markerIndex < markers.Count; markerIndex++)
             {
