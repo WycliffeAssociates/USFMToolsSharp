@@ -120,7 +120,7 @@ public class HierarchyNode
         /// <param name="targets">A list of markers to find</param>
         /// <returns>A dictionary of markers and paths</returns>
         /// <remarks>In the case that the marker doesn't exist in the tree the dictionary will contain an empty list for that marker</remarks>
-        public Dictionary<Marker, List<Marker>> GetHierachyToMultipleMarkers(List<Marker> targets)
+        public Dictionary<Marker, List<Marker>> GetHierarchyToMultipleMarkers(List<Marker> targets)
         {
             if (targets.Count == 0)
             {

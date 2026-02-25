@@ -820,14 +820,14 @@ with a newline";
             var textInFootnote = new TextBlock("Text in footnote");
             var secondBlock = new TextBlock("Hello again");
             var nonExistant = new VMarker();
-            var result = document.Hierarchies[0].GetHierachyToMultipleMarkers([]);
+            var result = document.Hierarchies[0].GetHierarchyToMultipleMarkers([]);
             Assert.AreEqual(0, result.Count);
-            result = document.Hierarchies[0].GetHierachyToMultipleMarkers([footnote]);
+            result = document.Hierarchies[0].GetHierarchyToMultipleMarkers([footnote]);
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual(0, result[footnote].Count);
             document.InsertMultiple([chapter, verse, textblock, footnote, footnoteText, textInFootnote, footnoteEndMarker, secondBlock
             ], [DefaultHierarchies.Default.ToFrozenDictionary()]);
-            result = document.Hierarchies[0].GetHierachyToMultipleMarkers([
+            result = document.Hierarchies[0].GetHierarchyToMultipleMarkers([
                 textblock, secondBlock, nonExistant, textInFootnote
             ]);
             Assert.AreEqual(document, result[textblock][0]);
@@ -844,6 +844,53 @@ with a newline";
             Assert.AreEqual(verse, result[textInFootnote][2]);
             Assert.AreEqual(footnote, result[textInFootnote][3]);
             Assert.AreEqual(footnoteText, result[textInFootnote][4]);
+        }
+
+        /// <summary>
+        /// This test covers the potential bug where nodes in a straight line (only children)
+        /// are marked as "last in parent". The current implementation handles this correctly
+        /// because the root is always initialized with isLastInParent = false.
+        /// We're keeping this in because it's a potential edge case that could cause an infinite loop if not handled correctly,
+        /// and we want to ensure it continues to be handled correctly in the future.
+        /// </summary>
+        [TestMethod]
+        public void TestGetHierarchyToMarkerWithAllLastInParent()
+        {
+            var document = new USFMDocument();
+            document.Hierarchies = [new HierarchyNode(document)];
+            
+            // Create a straight-line hierarchy where each marker has only one child
+            var chapter = new CMarker() { Number = 1 };
+            var verse = new VMarker() { VerseNumber = "1" };
+            var textblock = new TextBlock("Only child at each level");
+            
+            document.InsertMultiple([chapter, verse, textblock], [DefaultHierarchies.Default.ToFrozenDictionary()]);
+            
+            // Test GetHierarchyToMarker - should not crash
+            var result = document.Hierarchies[0].GetHierarchyToMarker(textblock);
+            Assert.HasCount(4, result);
+            Assert.AreEqual(document, result[0]);
+            Assert.AreEqual(chapter, result[1]);
+            Assert.AreEqual(verse, result[2]);
+            Assert.AreEqual(textblock, result[3]);
+            
+            // Test GetHierarchyToMultipleMarkers - should not crash
+            var multiResult = document.Hierarchies[0].GetHierarchyToMultipleMarkers([textblock, verse]);
+            Assert.HasCount(2, multiResult);
+            Assert.HasCount(4, multiResult[textblock]);
+            Assert.HasCount(3, multiResult[verse]);
+            Assert.AreEqual(document, multiResult[textblock][0]);
+            Assert.AreEqual(chapter, multiResult[textblock][1]);
+            Assert.AreEqual(verse, multiResult[textblock][2]);
+            Assert.AreEqual(textblock, multiResult[textblock][3]);
+            
+            // Test GetNodesToMarker - should not crash
+            var nodeResult = document.Hierarchies[0].GetNodesToMarker(textblock);
+            Assert.HasCount(4, nodeResult);
+            Assert.AreEqual(document.Hierarchies[0], nodeResult[0]);
+            Assert.AreEqual(chapter.DefaultHierarchyNode, nodeResult[1]);
+            Assert.AreEqual(verse.DefaultHierarchyNode, nodeResult[2]);
+            Assert.AreEqual(textblock.DefaultHierarchyNode, nodeResult[3]);
         }
 
         [TestMethod]
