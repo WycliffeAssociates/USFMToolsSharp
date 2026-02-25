@@ -1127,5 +1127,16 @@ This next question is answered the same way in all the churches of God's people.
             Assert.IsTrue(hasBd, "Should find bold marker");
             Assert.IsTrue(hasNestedEm, "Should find nested emphasis marker");
         }
+
+        [TestMethod]
+        public void CheckDoubleSlashAtEndOfVerse()
+        {
+            var doc = parser.ParseFromString(@"\v 1 This is verse text with a double slash at the end.\\");
+            var hierarchy = doc.Hierarchies[0];
+            Assert.IsTrue(hierarchy[0].Marker is VMarker);
+            Assert.IsTrue(hierarchy[0][1].Marker is TextBlock);
+            Assert.AreEqual(@"\",
+                ((TextBlock)hierarchy[0][0]).Text);
+        }
     }
 }
