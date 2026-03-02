@@ -134,6 +134,7 @@ namespace USFMToolsSharp
             var inContent = false;
             while (index < input.Length)
             {
+                // If this is a backslash then we're starting a marker.
                 if (input[index] == '\\')
                 {
                     if (!inMarker && !inContent)
@@ -146,6 +147,7 @@ namespace USFMToolsSharp
 
                     if (inMarker)
                     {
+                        // If the backslash is immediately after the start of the marker then this is an escaped backslash and not a marker
                         if (index == startOfMarker)
                         {
                             // Handle escaped backslash
