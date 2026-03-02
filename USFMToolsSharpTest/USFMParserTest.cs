@@ -1183,7 +1183,7 @@ This next question is answered the same way in all the churches of God's people.
             Assert.IsTrue(hierarchy[0].Marker is VMarker);
             Assert.IsTrue(hierarchy[0][1].Marker is TextBlock);
             Assert.AreEqual(@"\",
-                ((TextBlock)hierarchy[0][0]).Text);
+                ((TextBlock)hierarchy[0][1]).Text);
         }
 
         [TestMethod]

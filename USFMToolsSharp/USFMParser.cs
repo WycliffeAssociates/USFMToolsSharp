@@ -155,7 +155,7 @@ namespace USFMToolsSharp
                             endOfMarker = index + 1;
                             inContent = true;
                             startOfContent = index + 1;
-                            index+=2;
+                            index++;
                             continue;
                         }
                         endOfMarker = index;
