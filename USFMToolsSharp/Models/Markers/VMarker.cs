@@ -17,15 +17,13 @@ namespace USFMToolsSharp.Models.Markers
 
         public string VerseCharacter {
             get {
-                var firstCharacterMarker = DefaultHierarchyNode.GetChildMarkers<VPMarker>();
-                if (firstCharacterMarker.Count > 0)
+                var firstCharacterMarker = DefaultHierarchyNode?.GetChildMarkers<VPMarker>();
+                if (firstCharacterMarker?.Count > 0)
                 {
                     return firstCharacterMarker[0].As<VPMarker>().VerseCharacter;
                 }
-                else
-                {
-                    return VerseNumber;
-                }
+                
+                return VerseNumber;
             }
         }
         public override string Identifier => "v";

@@ -223,7 +223,7 @@ public class HierarchyNode
             bool found = false;
             var stack = new Stack<(HierarchyNode node, bool isLastInParent)>();
             stack.Push((this, false));
-            HierarchyNode foundNode = null;
+            HierarchyNode? foundNode = null;
             while (stack.Count > 0)
             {
                 var (marker, isLastInParent) = stack.Pop();
@@ -261,7 +261,7 @@ public class HierarchyNode
             {
                 return [];
             }
-            var output = new List<HierarchyNode>(parents.Count + 1) { foundNode };
+            var output = new List<HierarchyNode>(parents.Count + 1) { foundNode! };
 
             output.AddRange(parents.Select(i => i.node));
             output.Reverse();

@@ -16,30 +16,26 @@ namespace USFMToolsSharp.Models.Markers
         {
             get
             {
-                var childCharacterMarker = DefaultHierarchyNode.GetChildMarkers<CPMarker>();
-                if (childCharacterMarker.Count > 0)
+                var childCharacterMarker = DefaultHierarchyNode?.GetChildMarkers<CPMarker>();
+                if (childCharacterMarker?.Count > 0)
                 {
                     return childCharacterMarker[0].As<CPMarker>().PublishedChapterMarker;
                 }
-                else
-                {
-                    return Number.ToString();
-                }
+                
+                return Number.ToString();
             }
         }
         public string CustomChapterLabel
         {
             get
             {
-                var childChapLabelMarker = DefaultHierarchyNode.GetChildMarkers<CLMarker>();
-                if (childChapLabelMarker.Count > 0)
+                var childChapLabelMarker = DefaultHierarchyNode?.GetChildMarkers<CLMarker>();
+                if (childChapLabelMarker?.Count > 0)
                 {
                     return childChapLabelMarker[0].As<CLMarker>().Label;
                 }
-                else
-                {
-                    return PublishedChapterMarker;
-                }
+                
+                return PublishedChapterMarker;
 
             }
         }

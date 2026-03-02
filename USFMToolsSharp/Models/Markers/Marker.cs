@@ -13,7 +13,7 @@ namespace USFMToolsSharp.Models.Markers
         }
         public abstract string Identifier { get; }
         public int Position { get; set; }
-        public HierarchyNode DefaultHierarchyNode { get; set; }
+        public HierarchyNode? DefaultHierarchyNode { get; set; }
 
         /// <summary>
         /// Pre-process the text contents before creating text elements inside of it
