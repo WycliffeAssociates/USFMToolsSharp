@@ -1185,5 +1185,21 @@ This next question is answered the same way in all the churches of God's people.
             Assert.AreEqual(@"\",
                 ((TextBlock)hierarchy[0][0]).Text);
         }
+
+        [TestMethod]
+        public void NullInChildMarkerTypes()
+        {
+            var vMarker = new VMarker() { VerseNumber = "1" };
+            var node = new HierarchyNode(vMarker);
+            var nullNode = new HierarchyNode(null);
+            var actualMarker = new TextBlock("Actual marker");
+            var actualNodeMarker = new HierarchyNode(actualMarker);
+            node.Contents.Add(nullNode);
+            node.Contents.Add(actualNodeMarker);
+            
+            // Verify that these don't cause exceptions
+            node.GetChildMarkers<TextBlock>([typeof(CMarker)]);
+            nullNode.GetChildMarkers<TextBlock>([typeof(CMarker)]);
+        }
     }
 }
