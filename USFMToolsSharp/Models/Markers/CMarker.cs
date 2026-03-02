@@ -11,7 +11,7 @@ namespace USFMToolsSharp.Models.Markers
     public class CMarker : Marker
     {
         private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
-        public int Number;
+        public int Number { get; set; } = 0;
         public string PublishedChapterMarker
         {
             get

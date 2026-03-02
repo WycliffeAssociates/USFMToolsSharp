@@ -11,9 +11,9 @@ namespace USFMToolsSharp.Models.Markers
         private static readonly SearchValues<char> NumbersAndBridge = SearchValues.Create("0123456789-");
 
         // This is a string because of verse bridges. In the future this should have starting and ending verse
-        public string VerseNumber;
-        public int StartingVerse;
-        public int EndingVerse;
+        public string VerseNumber { get; set; } = string.Empty;
+        public int StartingVerse { get; set; }
+        public int EndingVerse { get; set; }
 
         public string VerseCharacter {
             get {
