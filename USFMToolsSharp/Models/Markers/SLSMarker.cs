@@ -1,8 +1,6 @@
 ﻿﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace USFMToolsSharp.Models.Markers
+ namespace USFMToolsSharp.Models.Markers
 {
     public class SLSMarker : Marker
     {
