@@ -893,6 +893,35 @@ with a newline";
             Assert.AreEqual(textblock.DefaultHierarchyNode, nodeResult[3]);
         }
 
+        /// <summary>
+        /// A node with no children should report "marker not found" (an empty list)
+        /// rather than crashing. GetHierarchyToMultipleMarkers already guards this with
+        /// an early return when Contents is empty; GetHierarchyToMarker and
+        /// GetNodesToMarker must do the same. Without the guard, the search descends into
+        /// the "ascending" branch on the very first node, pops the empty parent stack, and
+        /// throws InvalidOperationException.
+        /// </summary>
+        [TestMethod]
+        public void TestSearchOnNodeWithEmptyContents()
+        {
+            var node = new HierarchyNode(null);
+            Assert.AreEqual(0, node.Contents.Count);
+            var missingMarker = new TextBlock("not in tree");
+
+            // Control: GetHierarchyToMultipleMarkers already handles the empty case.
+            var multiResult = node.GetHierarchyToMultipleMarkers([missingMarker]);
+            Assert.AreEqual(1, multiResult.Count);
+            Assert.AreEqual(0, multiResult[missingMarker].Count);
+
+            // GetHierarchyToMarker should return an empty list, not throw.
+            var hierarchyResult = node.GetHierarchyToMarker(missingMarker);
+            Assert.AreEqual(0, hierarchyResult.Count);
+
+            // GetNodesToMarker should return an empty list, not throw.
+            var nodeResult = node.GetNodesToMarker(missingMarker);
+            Assert.AreEqual(0, nodeResult.Count);
+        }
+
         [TestMethod]
         public void VerifyNewlinesStopMarker()
         {
@@ -1074,7 +1103,7 @@ This next question is answered the same way in all the churches of God's people.
             var content = @"\p \c 1 \p \v 1 In the beginning God created the heavens and the earth.";
             var doc = parser.ParseFromString(content);
             var defaultHierarchy = doc.Hierarchies[0];
-            var presentationHierarchy = doc.Hierarchies[1];
+            var presentationHierarchy = doc.Hierarchies[2];
             var markerPathInPresentation = presentationHierarchy.GetNodesToMarker(defaultHierarchy[1][0][0]);
             Assert.AreEqual(typeof(USFMDocument), markerPathInPresentation[0].MarkerType);
             Assert.AreEqual(typeof(PMarker), markerPathInPresentation[1].MarkerType);

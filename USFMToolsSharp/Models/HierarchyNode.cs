@@ -13,7 +13,7 @@ public class HierarchyNode
         MarkerType = marker?.GetType();
     }
     public Marker? Marker { get;  }
-    public Type? MarkerType { get; set; }
+    public Type? MarkerType { get; }
     public T As<T>() where T : Marker
     {
         return (T)Marker!;
@@ -66,6 +66,10 @@ public class HierarchyNode
     }
     public List<Marker> GetHierarchyToMarker(Marker target)
     {
+        if (this.Contents.Count == 0)
+        {
+            return [];
+        }
         var parents = new Stack<(HierarchyNode node, bool isLastInParent)>();
         int childMarkerContentsCount;
 
@@ -217,6 +221,11 @@ public class HierarchyNode
         }
         public List<HierarchyNode> GetNodesToMarker(Marker target)
         {
+            if (this.Contents.Count == 0)
+            {
+                return [];
+            }
+            
             var parents = new Stack<(HierarchyNode node, bool isLastInParent)>();
             int childMarkerContentsCount;
 
