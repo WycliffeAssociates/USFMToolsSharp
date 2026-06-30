@@ -9,7 +9,7 @@ public class HierarchyDefinition
 {
     public HierarchyDefinition()
     {
-        AllowedChildren = new HashSet<Type>().ToFrozenSet();
+        AllowedChildren = FrozenSet<Type>.Empty;
     }
 
     public HierarchyDefinition(Type[] allowedTypes)

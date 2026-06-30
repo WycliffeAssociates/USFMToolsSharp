@@ -33,11 +33,11 @@ namespace USFMToolsSharp.Models.Markers
 
             if (input is USFMDocument doc)
             {
-                InsertMultiple(doc.AllMarkers, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
+                InsertMultiple(doc.AllMarkers, DefaultHierarchies.DefaultHierarchyList );
                 return;
             }
 
-            Insert(input, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
+            Insert(input, DefaultHierarchies.DefaultHierarchyList );
         }
 
         public void Insert(Marker input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)

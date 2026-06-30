@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using USFMToolsSharp.Models;
@@ -751,5 +752,8 @@ public static class DefaultHierarchies
         [typeof(PRMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
         [typeof(PROMarker)] = new HierarchyDefinition(ParagraphStructureChildren),
     };
+    
+    public static readonly List<FrozenDictionary<Type, HierarchyDefinition>> DefaultHierarchyList = 
+        [Default.ToFrozenDictionary(), Structure.ToFrozenDictionary(), Presentation.ToFrozenDictionary()];
 
 }
