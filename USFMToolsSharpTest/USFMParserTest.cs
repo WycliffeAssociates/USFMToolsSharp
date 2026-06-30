@@ -922,6 +922,64 @@ with a newline";
             Assert.AreEqual(0, nodeResult.Count);
         }
 
+        /// <summary>
+        /// A freshly constructed document has no markers, so the back-compat Contents
+        /// accessor should report an empty collection. Because Contents now delegates to
+        /// Hierarchies[0].Contents and Hierarchies starts empty (it is only seeded on the
+        /// first Insert), indexing Hierarchies[0] throws ArgumentOutOfRangeException until
+        /// the document has had something inserted. The old Contents was a field always
+        /// initialized to an empty list, so this is a regression for any consumer that
+        /// reads Contents before inserting.
+        /// </summary>
+        [TestMethod]
+        public void TestContentsOnEmptyDocument()
+        {
+            var document = new USFMDocument();
+            Assert.AreEqual(0, document.Contents.Count);
+        }
+
+        /// <summary>
+        /// Merging one document into another via Insert(Marker) should splice in the
+        /// source's markers only. The single-arg Insert detects `input is USFMDocument`
+        /// and inserts doc.AllMarkers, but then falls through to Insert(input, ...) on the
+        /// USFMDocument object itself, adding the document to AllMarkers. The merged
+        /// document object should never appear in the target's AllMarkers.
+        /// </summary>
+        [TestMethod]
+        public void TestMergeDocumentDoesNotAddDocumentToAllMarkers()
+        {
+            var child = parser.ParseFromString(@"\c 1 \v 1 Hello world");
+            var parent = new USFMDocument();
+
+            parent.Insert(child);
+
+            // Only the child's markers should have been merged in - not the document object.
+            CollectionAssert.DoesNotContain(parent.AllMarkers, child);
+            Assert.AreEqual(0, parent.AllMarkers.Count(m => m is USFMDocument));
+            Assert.AreEqual(child.AllMarkers.Count, parent.AllMarkers.Count);
+        }
+
+        /// <summary>
+        /// The fall-through described above also places the merged USFMDocument object as a
+        /// node in the target's hierarchies. Since USFMDocument has no hierarchy definition,
+        /// it lands at the root of each hierarchy via the !inserted fallback. No hierarchy
+        /// should contain a node whose Marker is the merged document.
+        /// </summary>
+        [TestMethod]
+        public void TestMergeDocumentDoesNotAddStrayDocumentNode()
+        {
+            var child = parser.ParseFromString(@"\c 1 \v 1 Hello world");
+            var parent = new USFMDocument();
+
+            parent.Insert(child);
+
+            foreach (var hierarchy in parent.Hierarchies)
+            {
+                var nodes = hierarchy.GetChildMarkers<USFMDocument>();
+                Assert.AreEqual(0, nodes.Count, "A merged USFMDocument was left as a stray node in a hierarchy");
+            }
+        }
+
         [TestMethod]
         public void VerifyNewlinesStopMarker()
         {

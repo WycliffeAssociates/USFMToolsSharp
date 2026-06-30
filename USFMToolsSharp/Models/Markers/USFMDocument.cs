@@ -34,6 +34,7 @@ namespace USFMToolsSharp.Models.Markers
             if (input is USFMDocument doc)
             {
                 InsertMultiple(doc.AllMarkers, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
+                return;
             }
 
             Insert(input, [DefaultHierarchies.Default.ToFrozenDictionary(), DefaultHierarchies.Structure.ToFrozenDictionary(), DefaultHierarchies.Presentation.ToFrozenDictionary() ] );
@@ -180,8 +181,8 @@ namespace USFMToolsSharp.Models.Markers
         
         // Backwards compatibility
         [Obsolete("Use Hierarchies[0].Contents instead")]
-        public List<HierarchyNode> Contents => Hierarchies[0].Contents;
-        
+        public List<HierarchyNode> Contents => Hierarchies.Count == 0 ? [] : Hierarchies[0].Contents;
+
         public void InsertMultiple(IEnumerable<Marker> input, List<FrozenDictionary<Type, HierarchyDefinition>> hierarchyDefinitions)
         {
             foreach(Marker i in input)
