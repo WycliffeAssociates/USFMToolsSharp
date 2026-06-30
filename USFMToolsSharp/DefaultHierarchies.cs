@@ -543,6 +543,8 @@ public static class DefaultHierarchies
         {
             switch (marker)
             {
+                // A verse never holds another verse or a poetry block - those break out.
+                // Inline poetry (IsPoetryBlock false) nests under the verse.
                 case VMarker:
                 case QMarker { IsPoetryBlock: true }:
                     return false;

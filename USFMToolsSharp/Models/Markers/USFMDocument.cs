@@ -61,61 +61,38 @@ namespace USFMToolsSharp.Models.Markers
                 }
                 var currentCanInsertFunctions = _canInsertFunctions[i];
                 var currentHierarchy = hierarchyDefinitions[i];
-                
+
                 var inserted = false;
                 var currentPath = _toLastChildPath[i];
-                
-                // Check all ancestor CanInsert functions from root down
-                // If any CanInsert function fails, we need to trim the path back and try to find
-                // a different insertion point (the path will be further trimmed in the loop below)
-                var needsToFindNewParent = false;
-                for (var ii = 0; ii < currentCanInsertFunctions.Count; ii++)
-                {
-                    var func = currentCanInsertFunctions[ii];
-                    if (func == null)
-                    {
-                        continue;
-                    }
-                    
-                    var currentNode = currentPath[ii];
-                    var currentNodeType = currentNode.MarkerType;
 
-                    if (!func(currentNodeType, currentNode, input))
+                // A node's CanInsert can refuse to hold this marker. When an ancestor
+                // refuses, the marker must break out of that ancestor's entire subtree, so find
+                // the shallowest ancestor that refuses it and trim the path back to just above
+                // it before looking for a parent below.
+                for (var ii = 0; ii < currentPath.Count; ii++)
+                {
+                    var ancestor = currentPath[ii];
+                    var ancestorDefinition = currentHierarchy.GetValueOrDefault(ancestor.MarkerType);
+                    if (ancestorDefinition?.CanInsert?.Invoke(ancestor.MarkerType, ancestor, input) == false)
                     {
-                        // CanInsert function failed at index ii
-                        // Trim back to include this node (we'll check it in the main loop below)
-                        while (currentPath.Count > ii + 1)
+                        while (currentPath.Count > ii)
                         {
                             TrimPathEnd(currentPath, currentCanInsertFunctions);
                         }
-                        needsToFindNewParent = true;
                         break;
                     }
                 }
 
-                // Walk back up the path to find a valid parent for this marker
+                // Walk back up the remaining path to find a parent that allows this child type.
                 while (currentPath.Count > 0)
                 {
                     var currentNode = currentPath[^1];
                     var currentNodeType = currentNode.MarkerType;
                     var currentNodeDefinition = currentHierarchy.GetValueOrDefault(currentNodeType);
-                    
-                    // Skip nodes without hierarchy definitions
-                    if (currentNodeDefinition == null)
-                    {
-                        TrimPathEnd(currentPath, currentCanInsertFunctions);
-                        continue;
-                    }
 
-                    // If we need to find a new parent (because CanInsert failed), skip the current node
-                    if (needsToFindNewParent)
-                    {
-                        TrimPathEnd(currentPath, currentCanInsertFunctions);
-                        continue;
-                    }
-                    
-                    // Check if this parent allows this child type
-                    if (!currentNodeDefinition.AllowedChildren.Contains(markerType))
+                    // Skip nodes without hierarchy definitions or that don't allow this child type
+                    if (currentNodeDefinition == null ||
+                        !currentNodeDefinition.AllowedChildren.Contains(markerType))
                     {
                         TrimPathEnd(currentPath, currentCanInsertFunctions);
                         continue;

@@ -556,7 +556,7 @@ namespace USFMToolsSharpTest
             output = parser.ParseFromString(secondVerseText);
             Assert.AreEqual(2, output.Contents.Count);
             Assert.IsTrue(output.Contents[0].Marker is VMarker);
-            Assert.IsTrue(output.Contents[0].Contents[1].Marker is QMarker);
+            Assert.IsTrue(output.Contents[0][1].Marker is QMarker);
             Assert.IsTrue(output.Contents[1].Marker is VMarker);
         }
 
@@ -978,6 +978,32 @@ with a newline";
                 var nodes = hierarchy.GetChildMarkers<USFMDocument>();
                 Assert.AreEqual(0, nodes.Count, "A merged USFMDocument was left as a stray node in a hierarchy");
             }
+        }
+
+        /// <summary>
+        /// When a node's CanInsert rejects the incoming marker, the algorithm should skip
+        /// only that node and keep walking up the path to find a valid ancestor. Here the
+        /// second verse hits the VMarker CanInsert (which forbids a VMarker child) via the
+        /// TextBlock under the first verse, so it must walk up to the chapter, whose
+        /// AllowedChildren include VMarker, and attach there as a sibling of the first verse.
+        /// The bug leaves needsToFindNewParent set for the rest of the walk, trimming the
+        /// chapter too, so the second verse is force-attached at the document root instead -
+        /// producing a flat tree where the chapter and verse 2 are siblings.
+        /// </summary>
+        [TestMethod]
+        public void TestCanInsertFailureFindsValidAncestor()
+        {
+            var document = parser.ParseFromString(@"\c 1 \v 1 first \v 2 second");
+
+            var root = document.Hierarchies[0];
+
+            // Only the chapter should sit directly under the root.
+            Assert.AreEqual(1, root.Contents.Count, "Verse 2 was force-attached at the root instead of under the chapter");
+
+            // Both verses should be children of the chapter.
+            var chapter = root.Contents[0];
+            Assert.IsTrue(chapter.Marker is CMarker);
+            Assert.AreEqual(2, chapter.GetChildMarkers<VMarker>().Count);
         }
 
         [TestMethod]
