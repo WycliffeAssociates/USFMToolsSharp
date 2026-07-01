@@ -227,15 +227,18 @@ namespace USFMToolsSharp
             {
                 trimmedMarker = trimmedMarker[1..];
             }
-            
-            var lookup = IgnoredMarkers.GetAlternateLookup<ReadOnlySpan<char>>();
-            if (hasIgnoredMarkers && lookup.Contains(trimmedMarker))
+
+            if (hasIgnoredMarkers)
             {
-                if (!content.IsEmpty)
+                var lookup = IgnoredMarkers.GetAlternateLookup<ReadOnlySpan<char>>();
+                if (lookup.Contains(trimmedMarker))
                 {
-                    output.Add(new TextBlock(content.TrimStart(' ').ToString()));
+                    if (!content.IsEmpty)
+                    {
+                        output.Add(new TextBlock(content.TrimStart(' ').ToString()));
+                    }
+                    return;
                 }
-                return;
             }
             var result = ConvertToMarker(trimmedMarker, content);
             result.marker.Position = index;
@@ -481,11 +484,11 @@ namespace USFMToolsSharp
             { "fig*", _ => new FIGEndMarker() },
             { "\\", _ => new TextBlock("\\") },
         };
+        private static readonly Dictionary<string, Func<ReadOnlySpan<char>, Marker>>.AlternateLookup<ReadOnlySpan<char>> MarkerAlternateLookup = MarkerFactories.GetAlternateLookup<ReadOnlySpan<char>>();
 
         private static Marker SelectMarker(ReadOnlySpan<char> identifier)
         {
-            var lookup = MarkerFactories.GetAlternateLookup<ReadOnlySpan<char>>();
-            if (lookup.TryGetValue(identifier, out var factory))
+            if (MarkerAlternateLookup.TryGetValue(identifier, out var factory))
             {
                 return factory(identifier);
             }

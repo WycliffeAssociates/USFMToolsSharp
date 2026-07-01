@@ -134,17 +134,19 @@ public class HierarchyNode
             {
                 return targets.ToDictionary(i => i, i => new List<Marker>());
             }
+
+            // Create a set for fast lookup
+            var targetSet = new HashSet<Marker>(targets);
             
             var output = new Dictionary<Marker, List<Marker>>(targets.Count);
             var parents = new Stack<(HierarchyNode marker, bool isLastInParent)>();
-            int childMarkerContentsCount;
 
             var stack = new Stack<(HierarchyNode marker, bool isLastInParent)>();
             stack.Push((this, false));
             while (stack.Count > 0)
             {
                 var (node, isLastInParent) = stack.Pop();
-                if (node.Marker != null && targets.Contains(node.Marker))
+                if (node.Marker != null && targetSet.Contains(node.Marker))
                 {
                     var tmp = new List<Marker>(parents.Count + 1)
                     {
@@ -164,7 +166,7 @@ public class HierarchyNode
                     // We're descending
                     parents.Push((node, isLastInParent));
 
-                    childMarkerContentsCount = node.Contents.Count;
+                    var childMarkerContentsCount = node.Contents.Count;
                     for (var i = 0; i < childMarkerContentsCount; i++)
                     {
                         stack.Push((node.Contents[i], i == 0));
