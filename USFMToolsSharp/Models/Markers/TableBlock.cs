@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
@@ -10,11 +7,5 @@ namespace USFMToolsSharp.Models.Markers
     public class TableBlock : Marker
     {
         public override string Identifier => string.Empty;
-
-        private static HashSet<Type> AllowedContentsStatic { get; } = new()
-        {
-            typeof(TRMarker)
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
     }
 }

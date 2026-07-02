@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace USFMToolsSharp.Models.Markers
@@ -18,33 +17,32 @@ namespace USFMToolsSharp.Models.Markers
         {
             input = input.Trim();
             Attributes = new Dictionary<string, string>();
+            var wordEntryEnumerator = input.Split('|');
+            wordEntryEnumerator.MoveNext();
+            Term = input[wordEntryEnumerator.Current].ToString();
 
-            string[] wordEntry = input.ToString().Split('|');
-            Term = wordEntry[0];
-
-            if (wordEntry.Length > 1)
+            // If we have another bit after the |
+            if (wordEntryEnumerator.MoveNext())
             {
-                string[] wordAttr = wordEntry[1].Split(' ');
-                foreach (string attr in wordAttr)
+                foreach (var attrRange in input[wordEntryEnumerator.Current].Split(' '))
                 {
-                    Match attrMatch = GetWordRegex().Match(attr);
-                    if (attrMatch.Groups[2].ValueSpan.Length == 0)
+                    var attr = input[(attrRange.Start.Value + wordEntryEnumerator.Current.Start.Value) .. (attrRange.End.Value + wordEntryEnumerator.Current.Start.Value)];
+                    var eq = attr.IndexOf('=');
+                    if (eq != -1)
                     {
-                        Attributes["lemma"] = attrMatch.Groups[1].Value;
+                        var key = attr[..eq];
+                        var value = attr[(eq + 1)..];
+                        Attributes[key.ToString()] = value.Trim('"').ToString();
                     }
                     else
                     {
-                        Attributes[attrMatch.Groups[1].Value] = attrMatch.Groups[2].Value;
+                        Attributes["lemma"] = attr.ToString();
                     }
-
                 }
 
             }
 
             return ReadOnlySpan<char>.Empty;
         }
-
-        [GeneratedRegex("([\\w-]+)=?\"?([\\w,:.]*)\"?", RegexOptions.Compiled | RegexOptions.Singleline)]
-        private static partial Regex GetWordRegex();
     }
 }

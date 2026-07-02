@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
@@ -15,8 +13,5 @@ namespace USFMToolsSharp.Models.Markers
         {
             return input.Trim();
         }
-        public override HashSet<Type> AllowedContents => new () {
-            typeof(TextBlock)
-        };
     }
 }

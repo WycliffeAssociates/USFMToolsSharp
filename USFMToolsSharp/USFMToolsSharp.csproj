@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <PackageProjectUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</PackageProjectUrl>
     <RepositoryUrl>https://github.com/WycliffeAssociates/USFMToolsSharp</RepositoryUrl>
     <Copyright />
     <PackageLicenseUrl></PackageLicenseUrl>
-    <Version>1.18.0</Version>
+    <Version>2.0.0</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Company>Wycliffe Associates</Company>
     <Authors>@rbnswartz</Authors>
@@ -14,6 +14,9 @@
     <Description>A parsing library for USFM</Description>
     <Configurations>Debug;Release</Configurations>
     <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <OutputType>Library</OutputType>
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,10 +24,6 @@
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
 
 </Project>

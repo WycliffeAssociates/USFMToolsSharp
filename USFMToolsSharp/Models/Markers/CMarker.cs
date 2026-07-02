@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace USFMToolsSharp.Models.Markers
 {
@@ -11,35 +8,31 @@ namespace USFMToolsSharp.Models.Markers
     public class CMarker : Marker
     {
         private static readonly System.Buffers.SearchValues<char> Numbers = System.Buffers.SearchValues.Create("0123456789");
-        public int Number;
+        public int Number { get; set; } = 0;
         public string PublishedChapterMarker
         {
             get
             {
-                var childCharacterMarker = GetChildMarkers<CPMarker>();
-                if (childCharacterMarker.Count > 0)
+                var childCharacterMarker = DefaultHierarchyNode?.GetChildMarkers<CPMarker>();
+                if (childCharacterMarker?.Count > 0)
                 {
-                    return childCharacterMarker[0].PublishedChapterMarker;
+                    return childCharacterMarker[0].As<CPMarker>().PublishedChapterMarker;
                 }
-                else
-                {
-                    return Number.ToString();
-                }
+                
+                return Number.ToString();
             }
         }
         public string CustomChapterLabel
         {
             get
             {
-                var childChapLabelMarker = GetChildMarkers<CLMarker>();
-                if (childChapLabelMarker.Count > 0)
+                var childChapLabelMarker = DefaultHierarchyNode?.GetChildMarkers<CLMarker>();
+                if (childChapLabelMarker?.Count > 0)
                 {
-                    return childChapLabelMarker[0].Label;
+                    return childChapLabelMarker[0].As<CLMarker>().Label;
                 }
-                else
-                {
-                    return PublishedChapterMarker;
-                }
+                
+                return PublishedChapterMarker;
 
             }
         }
@@ -63,45 +56,5 @@ namespace USFMToolsSharp.Models.Markers
 
             return input[firstBlankAfterNumber..].Trim();
         }
-
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
-
-        private static HashSet<Type> AllowedContentsStatic { get; } = new() {
-            typeof(MMarker),
-            typeof(MSMarker),
-            typeof(SMarker),
-            typeof(BMarker),
-            typeof(DMarker),
-            typeof(VMarker),
-            typeof(PMarker),
-            typeof(PCMarker),
-            typeof(PMMarker),
-            typeof(CDMarker),
-            typeof(CPMarker),
-            typeof(DMarker),
-            typeof(CLMarker),
-            typeof(QMarker),
-            typeof(QSMarker),
-            typeof(QSEndMarker),
-            typeof(QAMarker),
-            typeof(QMarker),
-            typeof(NBMarker),
-            typeof(RMarker),
-            typeof(LIMarker),
-            typeof(TableBlock),
-            typeof(MMarker),
-            typeof(MIMarker),
-            typeof(PIMarker),
-            typeof(CAMarker),
-            typeof(CAEndMarker),
-            typeof(SPMarker),
-            typeof(TextBlock),
-            typeof(REMMarker),
-            typeof(DMarker),
-            typeof(VAMarker),
-            typeof(VAEndMarker),
-            typeof(FMarker),
-            typeof(FEndMarker),
-        };
     }
 }

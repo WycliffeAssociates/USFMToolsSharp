@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace USFMToolsSharp.Models.Markers
 {
@@ -16,14 +14,5 @@ namespace USFMToolsSharp.Models.Markers
             Description = input.Trim().ToString();
             return ReadOnlySpan<char>.Empty;
         }
-        private static HashSet<Type> AllowedContentsStatic { get; } = new () {
-            typeof(FMarker),
-            typeof(FEndMarker),
-            typeof(ITMarker),
-            typeof(ITEndMarker),
-            typeof(TextBlock),
-        };
-        public override HashSet<Type> AllowedContents => AllowedContentsStatic;
-        
     }
 }
