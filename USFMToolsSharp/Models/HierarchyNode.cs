@@ -18,8 +18,26 @@ public class HierarchyNode
     {
         return (T)Marker!;
     }
-    public List<HierarchyNode> Contents { get; set; } = new List<HierarchyNode>();
-    
+    private List<HierarchyNode>? _contents;
+
+    /// <summary>
+    /// The child nodes. The backing list is allocated lazily on first access, so leaf
+    /// nodes (the vast majority of a parsed tree) cost nothing until a child is added.
+    /// Reading this on a childless node materialises the list; use <see cref="ChildCount"/>
+    /// or <see cref="HasChildren"/> for allocation-free inspection.
+    /// </summary>
+    public List<HierarchyNode> Contents
+    {
+        get => _contents ??= new List<HierarchyNode>();
+        set => _contents = value;
+    }
+
+    /// <summary>Number of children without allocating the backing list.</summary>
+    public int ChildCount => _contents?.Count ?? 0;
+
+    /// <summary>Whether this node has any children, without allocating the backing list.</summary>
+    public bool HasChildren => _contents is { Count: > 0 };
+
     public HierarchyNode this[int index]
     {
         get => Contents[index];
@@ -35,7 +53,7 @@ public class HierarchyNode
     public List<HierarchyNode> GetChildMarkers<T>(List<Type>? ignoredParents = null) where T : Marker
     {
         var output = new List<HierarchyNode>();
-        var stack = new Stack<HierarchyNode>(Contents.Count);
+        var stack = new Stack<HierarchyNode>(ChildCount);
 
         if (ignoredParents != null && ignoredParents.Contains(this.MarkerType))
         {
@@ -52,7 +70,7 @@ public class HierarchyNode
                 output.Add(node);
             }
 
-            for (var index = node.Contents.Count - 1; index >= 0; index--)
+            for (var index = node.ChildCount - 1; index >= 0; index--)
             {
                 var child = node.Contents[index];
                 if (ignoredParents == null || !ignoredParents.Contains(child.MarkerType))
@@ -66,7 +84,7 @@ public class HierarchyNode
     }
     public List<Marker> GetHierarchyToMarker(Marker target)
     {
-        if (this.Contents.Count == 0)
+        if (this.ChildCount == 0)
         {
             return [];
         }
@@ -85,12 +103,12 @@ public class HierarchyNode
                 break;
             }
 
-            if (marker.Contents.Count != 0)
+            if (marker.HasChildren)
             {
                 // We're descending
                 parents.Push((marker, isLastInParent));
 
-                childMarkerContentsCount = marker.Contents.Count;
+                childMarkerContentsCount = marker.ChildCount;
                 for (int i = 0; i < childMarkerContentsCount; i++)
                 {
                     stack.Push((marker.Contents[i], i == 0));
@@ -130,7 +148,7 @@ public class HierarchyNode
             {
                 return new Dictionary<Marker, List<Marker>>();
             }
-            if (Contents.Count == 0)
+            if (ChildCount == 0)
             {
                 return targets.ToDictionary(i => i, i => new List<Marker>());
             }
@@ -161,12 +179,12 @@ public class HierarchyNode
                     }
                 }
 
-                if (node.Contents.Count != 0)
+                if (node.HasChildren)
                 {
                     // We're descending
                     parents.Push((node, isLastInParent));
 
-                    var childMarkerContentsCount = node.Contents.Count;
+                    var childMarkerContentsCount = node.ChildCount;
                     for (var i = 0; i < childMarkerContentsCount; i++)
                     {
                         stack.Push((node.Contents[i], i == 0));
@@ -199,7 +217,7 @@ public class HierarchyNode
         {
             var types = new List<Type> { this.MarkerType };
             var current = this;
-            while (current.Contents.Count > 0)
+            while (current.HasChildren)
             {
                 current = current.Contents[^1];
                 types.Add(current.MarkerType ?? typeof(USFMDocument));
@@ -215,7 +233,7 @@ public class HierarchyNode
         public Marker GetLastDescendent()
         {
             var current = this;
-            while (current.Contents.Count > 0)
+            while (current.HasChildren)
             {
                 current = current.Contents[^1];
             }

@@ -47,7 +47,7 @@ namespace USFMToolsSharp.Models.Markers
             for (var i = 0; i < hierarchyDefinitions.Count; i++)
             {
                 var isDefaultHierarchy = i == 0;
-                if (Hierarchies[i].Contents.Count == 0)
+                if (Hierarchies[i].ChildCount == 0)
                 {
                     var firstNode = new HierarchyNode(input);
                     if (isDefaultHierarchy)
@@ -144,7 +144,7 @@ namespace USFMToolsSharp.Models.Markers
             }
             var currentNode = Hierarchies[hierarchyIndex];
             types.Add(currentNode.Marker != null ? currentNode.MarkerType : typeof(USFMDocument));
-            while (currentNode.Contents.Count > 0)
+            while (currentNode.HasChildren)
             {
                 currentNode = currentNode.Contents[^1];
                 if (currentNode.Marker == null)
