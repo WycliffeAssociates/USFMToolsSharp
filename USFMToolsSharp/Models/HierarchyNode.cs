@@ -263,12 +263,12 @@ public class HierarchyNode
                     break;
                 }
 
-                if (marker.Contents.Count != 0)
+                if (marker.HasChildren)
                 {
                     // We're descending
                     parents.Push((marker, isLastInParent));
 
-                    childMarkerContentsCount = marker.Contents.Count;
+                    childMarkerContentsCount = marker.ChildCount;
                     for (int i = 0; i < childMarkerContentsCount; i++)
                     {
                         stack.Push((marker.Contents[i], i == 0));
