@@ -10,7 +10,7 @@ namespace USFMToolsSharp.Models.Markers
         public override string Identifier => "mi";
         public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
         {
-            return input.Trim();
+            return input.TrimStart();
         }
     }
 }

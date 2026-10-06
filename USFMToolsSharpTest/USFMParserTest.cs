@@ -254,7 +254,7 @@ namespace USFMToolsSharpTest
             doc = parser.ParseFromString("\\mi Text");
             hierarchy = doc.Hierarchies[0];
             Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(MIMarker));
-            Assert.AreEqual("Text", ((TextBlock)doc.Contents[0].Contents[0]).Text);
+            Assert.AreEqual("Text", doc.Contents[0][0].As<TextBlock>().Text);
 
             doc = parser.ParseFromString("\\d A Psalm of David");
             Assert.AreEqual("A Psalm of David", ((DMarker)doc.Contents[0]).Description);
