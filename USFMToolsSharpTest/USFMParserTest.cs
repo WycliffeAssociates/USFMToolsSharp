@@ -251,10 +251,10 @@ namespace USFMToolsSharpTest
             var vm = pm.Contents[0];
             Assert.AreEqual("In the beginning God created the heavens and the earth.", ((TextBlock)vm.Contents[0]).Text);
 
-            doc = parser.ParseFromString("\\mi");
+            doc = parser.ParseFromString("\\mi Text");
             hierarchy = doc.Hierarchies[0];
-            Assert.AreEqual(1, hierarchy.Contents.Count);
             Assert.IsInstanceOfType(hierarchy[0].Marker, typeof(MIMarker));
+            Assert.AreEqual("Text", doc.Contents[0][0].As<TextBlock>().Text);
 
             doc = parser.ParseFromString("\\d A Psalm of David");
             Assert.AreEqual("A Psalm of David", ((DMarker)doc.Contents[0]).Description);

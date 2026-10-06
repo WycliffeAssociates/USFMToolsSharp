@@ -1,4 +1,6 @@
-﻿namespace USFMToolsSharp.Models.Markers
+﻿using System;
+
+namespace USFMToolsSharp.Models.Markers
 {
     /// <summary>
     /// Indented flush left paragraph
@@ -6,5 +8,9 @@
     public class MIMarker : Marker
     {
         public override string Identifier => "mi";
+        public override ReadOnlySpan<char> PreProcess(ReadOnlySpan<char> input)
+        {
+            return input.TrimStart();
+        }
     }
 }
